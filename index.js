@@ -23,7 +23,7 @@ app.get('/samples/SMJ', (req, res) => res.status(200)
     .send(indexSMJ.calculateAverage('afghanistan', 'unsafe_water_source')));
 app.get(BASE_API_URL + '/samples/OMV', (req, res) => res.status(200)
     .send(indexOMV.calculateAverage('canada', 'hdi_score')));
-app.get(BASE_API_URL + '/samples/AGC', (req, res) => res.status(200)
+app.get('/samples/AGC', (req, res) => res.status(200)
     .send(indexAGC.calculateAverageAGC('belgium', 'rabies')));
 
 // Load the routes that showcase data
