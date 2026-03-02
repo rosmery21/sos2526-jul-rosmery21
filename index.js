@@ -7,6 +7,7 @@ app.use("/", express.static("./public"));
 
 // Import routes and modules
 const cool = require('./src/cool/cool.js');
+
 const indexSMJ = require('./src/samples/index-SMJ.js');
 const indexOMV = require('./src/samples/index-OMV.js');
 const indexAGC = require('./src/samples/index-AGC.js');
@@ -30,6 +31,8 @@ app.get('/samples/AGC', (req, res) => res.status(200)
 app.use(BASE_API_URL, require('./src/routes/deaths-by-risk-factors.js'));
 app.use(BASE_API_URL, require('./src/routes/protests.js'));
 app.use(BASE_API_URL, require('./src/routes/pandemics.js'));
+
+app.use('/auth', require('./src/routes/auth.js'));
 
 // Route for the homepage
 app.get('/', (req, res) => {

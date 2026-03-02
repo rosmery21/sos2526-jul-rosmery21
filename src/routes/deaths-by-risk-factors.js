@@ -4,9 +4,6 @@ const fileReader = require('../../utils/readFile.js');
 
 const store = require('../data/store.js');
 
-// Variable to simulate login status, set to false by default
-let login = false;
-
 // Loads the data from the file and stores it in memory for the route
 router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
   if (store.deathsByRiskFactors.length === 0) {
@@ -97,15 +94,6 @@ router.delete('/deaths-by-risk-factors/:country', (req, res) => {
     
     store.deathsByRiskFactors.splice(index, 1);
     res.status(204).end();
-});
-
-router.get('/login', (req, res) => {
-  login = true;
-  res.status(200).send('Login successful');
-});
-router.get('/logout', (req, res) => {
-  login = false;
-  res.status(200).send('Logout successful');
 });
 
 module.exports = router;
