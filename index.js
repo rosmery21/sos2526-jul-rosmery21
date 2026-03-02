@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 app.get('/cool', (req, res) => {
     res.status(200).send(cool.coolFace());
 });
-app.get(BASE_API_URL + '/samples/SMJ', (req, res) => res.status(200)
+app.get('/samples/SMJ', (req, res) => res.status(200)
     .send(indexSMJ.calculateAverage('afghanistan', 'unsafe_water_source')));
 app.get(BASE_API_URL + '/samples/OMV', (req, res) => res.status(200)
     .send(indexOMV.calculateAverage('canada', 'hdi_score')));
