@@ -4,6 +4,9 @@ const fileReader = require('../../utils/readFile.js');
 
 const store = require('../data/store.js');
 
+// Variable to simulate login status, set to false by default
+let login = false;
+
 // Loads the data from the file and stores it in memory for the route
 router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
   if (store.deathsByRiskFactors.length === 0) {
@@ -20,6 +23,15 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
+  if (!login){
+    return res.status(401).send('Unauthorized: No login provided');
+  }
+  if (!newData) {
+    return res.status(400).send('Bad request: No data provided');
+  }
+  if (store.deathsByRiskFactors.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase())) {
+    return res.status(409).send('Conflict: Data for country already exists');
+  }
   store.deathsByRiskFactors.push(newData);
   res.status(201).json(newData);
 });
@@ -53,6 +65,13 @@ router.post('/deaths-by-risk-factors/:country', (req, res) => {
 
 // Updates the data stored in memory for a specific country
 router.put('/deaths-by-risk-factors/:country', (req, res) => {
+    if (!req.body){
+        return res.status(400).send('Bad request: No data provided');
+    }
+    if (!login){
+        return res.status(401).send('Unauthorized: No login provided');
+    }
+
     const country = req.params.country.toLowerCase();
     
     const index = store.deathsByRiskFactors.findIndex(item => item.Entity.toLowerCase() === country);
@@ -78,6 +97,15 @@ router.delete('/deaths-by-risk-factors/:country', (req, res) => {
     
     store.deathsByRiskFactors.splice(index, 1);
     res.status(204).end();
+});
+
+router.get('/login', (req, res) => {
+  login = true;
+  res.status(200).send('Login successful');
+});
+router.get('/logout', (req, res) => {
+  login = false;
+  res.status(200).send('Logout successful');
 });
 
 module.exports = router;
