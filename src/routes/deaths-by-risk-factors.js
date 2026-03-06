@@ -64,7 +64,7 @@ router.put('/deaths-by-risk-factors/:country', (req, res) => {
     if (!req.body) {
         return res.status(400).send('Bad request: No data provided');
     }
-    if (req.body.Entity.toLowerCase() !== country.toLowerCase()) {
+    if (req.body.Entity.toLowerCase() !== country) {
         return res.status(400).send('Bad request: Country in the body does not match the country in the URL');
     }
 
