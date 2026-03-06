@@ -84,7 +84,7 @@ router.post('/protests/:country', (req, res) => {
 
 // Updates the data stored in memory for a specific country
 router.put('/protests/:protestID', (req, res) => {
-  const protestID = req.params.protestID;
+  const protestID = Number(req.params.protestID); // <-- convertir a número
   const index = store.protests.findIndex(item => item.id === protestID);
 
   if (index === -1) {
