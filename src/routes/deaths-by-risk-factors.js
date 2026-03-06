@@ -59,12 +59,15 @@ router.post('/deaths-by-risk-factors/:country', (req, res) => {
 
 // Updates the data stored in memory for a specific country
 router.put('/deaths-by-risk-factors/:country', (req, res) => {
-    if (!req.body || req.body.Entity.toLowerCase() !== country.toLowerCase()) {
-        return res.status(400).send('Bad request: No data provided');
-    }
-
     const country = req.params.country.toLowerCase();
     
+    if (!req.body) {
+        return res.status(400).send('Bad request: No data provided');
+    }
+    if (req.body.Entity.toLowerCase() !== country.toLowerCase()) {
+        return res.status(400).send('Bad request: Country in the body does not match the country in the URL');
+    }
+
     const index = store.deathsByRiskFactors.findIndex(item => item.Entity.toLowerCase() === country);
 
     if (index === -1) {
