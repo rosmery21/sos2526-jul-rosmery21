@@ -20,9 +20,39 @@ router.get('/protests', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/protests', (req, res) => {
   const newData = req.body;
+
+  // Required fields
+  const requiredFields = [
+    "id","country","year","region","protest","protesterviolence",
+    "protesterdemand","stateresponse","electoral_ecore","liberal_score",
+    "participatory_score","deliberative_score","egalitarian_score",
+    "hdi_score","violence_status","predicted_prob"
+  ];
+
+  // Verify that all required fields are present
+  const missingFields = requiredFields.filter(field => !(field in newData));
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      error: "Faltan campos obligatorios",
+      missing: missingFields
+    });
+  }
+
+  // Verify that the ID is unique
+  const exists = store.protests.some(protest => protest.id === newData.id);
+
+  if (exists) {
+    return res.status(409).json({
+      error: "Ya existe un elemento con ese id"
+    });
+  }
+
+  // Add if no errors
   store.protests.push(newData);
   res.status(201).json(newData);
 });
+
 
 // Method not allowed for the route, since we don't want to update all the data at once
 router.put('/protests', (req, res) => {
