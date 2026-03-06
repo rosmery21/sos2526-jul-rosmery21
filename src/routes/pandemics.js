@@ -59,7 +59,7 @@ router.post('/pandemics/:country', (req, res) => {
 
 // Updates the data stored in memory for a specific country
 router.put('/pandemics/:country', (req, res) => {
-    if (!req.body){
+    if (!req.body || req.body.Entity.toLowerCase() !== country.toLowerCase()){
         return res.status(400).send('Bad request: No data provided');
     }
 
