@@ -7,7 +7,18 @@ const store = require('../data/store.js');
 // Loads the data from the file and stores it in memory for the route
 router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
   if (store.deathsByRiskFactors.length === 0) {
-    store.deathsByRiskFactors = fileReader.readFile('number-of-deaths-by-risk-factor.csv').slice(0, 10);
+    let data= fileReader.readFile('number-of-deaths-by-risk-factor.csv');
+    let filteredData = data.map(item => ({
+        Entity: item.Entity,
+        Year: item.Year,
+        'High systolic blood pressure': item['High systolic blood pressure'],
+        'Air pollution': item['Air pollution'],
+        'Child wasting': item['Child wasting'],
+        'Household air pollution from solid fuels': item['Household air pollution from solid fuels'],
+        'High fasting plasma glucose': item['High fasting plasma glucose']
+      })
+    );
+    store.deathsByRiskFactors = filteredData.slice(0, 10);
   }
   res.status(200).json(store.deathsByRiskFactors);
 });
