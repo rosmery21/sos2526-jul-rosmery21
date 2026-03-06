@@ -26,7 +26,7 @@ router.post('/pandemics', (req, res) => {
   if (!newData) {
     return res.status(400).send('Bad request: No data provided');
   }
-  if (store.pandemics.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase())) {
+  if (store.pandemics.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase() && item.Year === newData.Year)) {
     return res.status(409).send('Conflict: Data for country already exists');
   }
   store.pandemics.push(newData);

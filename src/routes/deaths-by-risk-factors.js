@@ -20,13 +20,10 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
-  if (!login){
-    return res.status(401).send('Unauthorized: No login provided');
-  }
   if (!newData) {
     return res.status(400).send('Bad request: No data provided');
   }
-  if (store.deathsByRiskFactors.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase())) {
+  if (store.deathsByRiskFactors.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase() && item.Year === newData.Year)) {
     return res.status(409).send('Conflict: Data for country already exists');
   }
   store.deathsByRiskFactors.push(newData);
@@ -64,9 +61,6 @@ router.post('/deaths-by-risk-factors/:country', (req, res) => {
 router.put('/deaths-by-risk-factors/:country', (req, res) => {
     if (!req.body){
         return res.status(400).send('Bad request: No data provided');
-    }
-    if (!login){
-        return res.status(401).send('Unauthorized: No login provided');
     }
 
     const country = req.params.country.toLowerCase();

@@ -32,8 +32,6 @@ app.use(BASE_API_URL, require('./src/routes/deaths-by-risk-factors.js'));
 app.use(BASE_API_URL, require('./src/routes/protests.js'));
 app.use(BASE_API_URL, require('./src/routes/pandemics.js'));
 
-app.use('/auth', require('./src/routes/auth.js'));
-
 // Route for the homepage
 app.get('/', (req, res) => {
     res.send('Server running!');
