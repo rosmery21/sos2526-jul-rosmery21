@@ -9,7 +9,7 @@ router.get('/protests/loadInitialData', (req, res) => {
   if (store.protests.length === 0) {
     store.protests = fileReader.readFile('protests.csv').slice(0, 10);
   }
-  res.status(200).json(store.protests);
+  res.status(200).json([]);
 });
 
 // Returns the data stored in memory for the route
@@ -53,12 +53,12 @@ router.post('/protests/:country', (req, res) => {
 });
 
 // Updates the data stored in memory for a specific country
-router.put('/protests/:country', (req, res) => {
-  const country = req.params.country.toLowerCase();
-  const index = store.protests.findIndex(item => item.country.toLowerCase() === country);
+router.put('/protests/:protestID', (req, res) => {
+  const protestID = req.params.protestID;
+  const index = store.protests.findIndex(item => item.id === protestID);
 
   if (index === -1) {
-    return res.status(404).send('Data not found for country: ' + country);
+    return res.status(404).send('Data not found for protest ID: ' + protestID);
   }
 
   store.protests[index] = req.body;
@@ -66,12 +66,12 @@ router.put('/protests/:country', (req, res) => {
 });
 
 // Deletes the data stored in memory for a specific country
-router.delete('/protests/:country', (req, res) => {
-  const country = req.params.country.toLowerCase();
-  const index = store.protests.findIndex(item => item.country.toLowerCase() === country);
+router.delete('/protests/:protestID', (req, res) => {
+  const protestID = req.params.protestID;
+  const index = store.protests.findIndex(item => item.id === protestID);
 
   if (index === -1) {
-    return res.status(404).send('Data not found for country: ' + country);
+    return res.status(404).send('Data not found for protest ID: ' + protestID);
   }
 
   store.protests.splice(index, 1);
