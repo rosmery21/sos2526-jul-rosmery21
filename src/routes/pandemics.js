@@ -20,9 +20,6 @@ router.get('/pandemics', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/pandemics', (req, res) => {
   const newData = req.body;
-  if (!login){
-    return res.status(401).send('Unauthorized: No login provided');
-  }
   if (!newData) {
     return res.status(400).send('Bad request: No data provided');
   }
@@ -64,9 +61,6 @@ router.post('/pandemics/:country', (req, res) => {
 router.put('/pandemics/:country', (req, res) => {
     if (!req.body){
         return res.status(400).send('Bad request: No data provided');
-    }
-    if (!login){
-        return res.status(401).send('Unauthorized: No login provided');
     }
 
     const country = req.params.country.toLowerCase();
