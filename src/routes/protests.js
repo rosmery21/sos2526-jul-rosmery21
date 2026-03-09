@@ -4,6 +4,14 @@ const fileReader = require('../../utils/readFile.js');
 
 const store = require('../data/store.js');
 
+// Required fields for creating or updating a protest entry
+const requiredFields = [
+  "id","country","year","region","protest","protesterviolence",
+  "protesterdemand","stateresponse","electoral_ecore","liberal_score",
+  "participatory_score","deliberative_score","egalitarian_score",
+  "hdi_score","violence_status","predicted_prob"
+];
+
 // Loads the data from the file and stores it in memory for the route
 router.get('/protests/loadInitialData', (req, res) => {
   if (store.protests.length === 0) {
@@ -21,14 +29,6 @@ router.get('/protests', (req, res) => {
 router.post('/protests', (req, res) => {
   const newData = req.body;
 
-  // Required fields
-  const requiredFields = [
-    "id","country","year","region","protest","protesterviolence",
-    "protesterdemand","stateresponse","electoral_ecore","liberal_score",
-    "participatory_score","deliberative_score","egalitarian_score",
-    "hdi_score","violence_status","predicted_prob"
-  ];
-
   // Verify that all required fields are present
   const missingFields = requiredFields.filter(field => !(field in newData));
 
@@ -39,12 +39,23 @@ router.post('/protests', (req, res) => {
     });
   }
 
+
+  // Verify that there are no extra fields
+  if (Object.keys(newData).length !== requiredFields.length) {
+    return res.status(400).json({
+      error: "Missing or extra fields in request body",
+      expected: requiredFields,
+      received: Object.keys(newData)
+    });
+  }
+
+
   // Verify that the ID is unique
   const exists = store.protests.some(protest => protest.id === newData.id);
 
   if (exists) {
     return res.status(409).json({
-      error: "Ya existe un elemento con ese id"
+      error: "ID already exists"
     });
   }
 
@@ -65,20 +76,20 @@ router.delete('/protests', (req, res) => {
   res.status(204).send("All data deleted");
 });
 
-// Returns the data stored in memory for a specific country
-router.get('/protests/:country', (req, res) => {
-  const country = req.params.country.toLowerCase();
-  const data = store.protests.filter(item => item.country.toLowerCase() === country);
+// Returns the data stored in memory for a specific protest
+router.get('/protests/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const data = store.protests.find(item => item.id === id);
 
-  if (data.length > 0) {
+  if (data) {
     res.status(200).json(data);
   } else {
-    res.status(404).send('Data not found for country: ' + country);
+    res.status(404).send('Data not found for protest ID: ' + id);
   }
 });
 
 // Method not allowed for the route, since we don't want to create a new country with a specific country
-router.post('/protests/:country', (req, res) => {
+router.post('/protests/:countryID', (req, res) => {
   res.status(405).send('Method not allowed');
 });
 
@@ -96,6 +107,23 @@ router.put('/protests/:protestID', (req, res) => {
     return res.status(400).send('ID in body must match ID in URL');
   }
 
+  const missingFields = requiredFields.filter(field => !(field in req.body));
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      error: "Missing required fields in request body",
+      missing: missingFields
+    });
+  }
+
+  if (Object.keys(req.body).length !== requiredFields.length) {
+    return res.status(400).json({
+      error: "Missing or extra fields in request body",
+      expected: requiredFields,
+      received: Object.keys(req.body)
+    });
+  }
+
   store.protests[index] = req.body;
 
   res.status(200).json(store.protests[index]);
@@ -103,7 +131,7 @@ router.put('/protests/:protestID', (req, res) => {
 
 // Deletes the data stored in memory for a specific country
 router.delete('/protests/:protestID', (req, res) => {
-  const protestID = req.params.protestID;
+  const protestID = Number(req.params.protestID);
   const index = store.protests.findIndex(item => item.id === protestID);
 
   if (index === -1) {
