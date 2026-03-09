@@ -20,13 +20,10 @@ router.get('/pandemics', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/pandemics', (req, res) => {
   const newData = req.body;
-  if (!login){
-    return res.status(401).send('Unauthorized: No login provided');
-  }
   if (!newData) {
     return res.status(400).send('Bad request: No data provided');
   }
-  if (store.pandemics.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase())) {
+  if (store.pandemics.some(item => item.Entity.toLowerCase() === newData.Entity.toLowerCase() && item.Year === newData.Year)) {
     return res.status(409).send('Conflict: Data for country already exists');
   }
   store.pandemics.push(newData);
@@ -62,14 +59,12 @@ router.post('/pandemics/:country', (req, res) => {
 
 // Updates the data stored in memory for a specific country
 router.put('/pandemics/:country', (req, res) => {
-    if (!req.body){
-        return res.status(400).send('Bad request: No data provided');
-    }
-    if (!login){
-        return res.status(401).send('Unauthorized: No login provided');
-    }
 
     const country = req.params.country.toLowerCase();
+
+    if (!req.body || req.body.Entity.toLowerCase() !== country){
+        return res.status(400).send('Bad request: No data provided');
+    }
     
     const index = store.pandemics.findIndex(item => item.Entity.toLowerCase() === country);
 
