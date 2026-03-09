@@ -84,14 +84,20 @@ router.post('/protests/:country', (req, res) => {
 
 // Updates the data stored in memory for a specific country
 router.put('/protests/:protestID', (req, res) => {
-  const protestID = Number(req.params.protestID); // <-- convertir a número
+  const protestID = Number(req.params.protestID);
   const index = store.protests.findIndex(item => item.id === protestID);
 
   if (index === -1) {
     return res.status(404).send('Data not found for protest ID: ' + protestID);
   }
 
+  // Body ID must match URL ID
+  if (req.body.id !== protestID) {
+    return res.status(400).send('ID in body must match ID in URL');
+  }
+
   store.protests[index] = req.body;
+
   res.status(200).json(store.protests[index]);
 });
 
