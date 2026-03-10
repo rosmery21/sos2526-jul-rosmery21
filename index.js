@@ -5,27 +5,9 @@ const app = express();
 app.use(express.json());
 app.use("/", express.static("./public"));
 
-// Import routes and modules
-const cool = require('./src/cool/cool.js');
-
-const indexSMJ = require('./src/samples/index-SMJ.js');
-const indexOMV = require('./src/samples/index-OMV.js');
-const indexAGC = require('./src/samples/index-AGC.js');
-
 // Define global constants
 const BASE_API_URL = '/api/v1';
 const PORT = process.env.PORT || 3000;
-
-// Load the routes that return data
-app.get('/cool', (req, res) => {
-    res.status(200).send(cool.coolFace());
-});
-app.get('/samples/SMJ', (req, res) => res.status(200)
-    .send(indexSMJ.calculateAverage('afghanistan', 'unsafe_water_source')));
-app.get('/samples/OMV', (req, res) => res.status(200)
-    .send(indexOMV.calculateAverage('canada', 'hdi_score')));
-app.get('/samples/AGC', (req, res) => res.status(200)
-    .send(indexAGC.calculateAverageAGC('belgium', 'rabies')));
 
 // Load the routes that showcase data
 app.use(BASE_API_URL, require('./src/routes/deaths-by-risk-factors.js'));
