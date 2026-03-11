@@ -19,8 +19,10 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
     })
     );
     store.deathsByRiskFactors = filteredData.slice(0, 10);
+    return res.status(200).json(store.deathsByRiskFactors);
+  }else {
+    return res.status(409).send('Conflict: Data already loaded');
   }
-  res.status(200).json(store.deathsByRiskFactors);
 });
 
 // Returns the data stored in memory for the route
