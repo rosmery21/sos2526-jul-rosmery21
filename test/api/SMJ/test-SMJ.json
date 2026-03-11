@@ -1,0 +1,309 @@
+{
+  "info": {
+    "_postman_id": "7e992f40-ac87-4d32-b850-c6fb443103c5",
+    "name": "SOS2526-10",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52276011",
+    "_collection_link": "https://go.postman.co/collection/52276011-7e992f40-ac87-4d32-b850-c6fb443103c5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "API",
+      "item": [
+        {
+          "name": "DeathsByRiskFactors",
+          "item": [
+            {
+              "name": "Post",
+              "item": [
+                {
+                  "name": "POST New Data",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \r\n\"High systolic blood pressure\": 37183.3,\r\n\"Air pollution\": 2131.01,\r\n\"Child wasting\": 2178.8,\r\n\"Household air pollution from solid fuels\": 212.4,\r\n\"High fasting plasma glucose\": 2121.6}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "POST New Data - No Country",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \r\n\"High systolic blood pressure\": 37183.3,\r\n\"Air pollution\": 2131.01,\r\n\"Household air pollution from solid fuels\": 212.4,\r\n\"High fasting plasma glucose\": 2121.6}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "POST New Data - On Country",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Put",
+              "item": [
+                {
+                  "name": "PUT - Update Collection",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT - Update Data",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \r\n\"High systolic blood pressure\": 9999.3,\r\n\"Air pollution\": 2131.01,\r\n\"Child wasting\": 2178.8,\r\n\"Household air pollution from solid fuels\": 212.4,\r\n\"High fasting plasma glucose\": 2121.6}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Delete",
+              "item": [
+                {
+                  "name": "DELETE Data",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "DELETE Data By Country",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Load Initial Data",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/loadInitialData",
+                  "host": [
+                    "{{BASE_URL}}{{BASE_API_URL}}"
+                  ],
+                  "path": [
+                    "deaths-by-risk-factors",
+                    "loadInitialData"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Data",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                  "host": [
+                    "{{BASE_URL}}{{BASE_API_URL}}"
+                  ],
+                  "path": [
+                    "deaths-by-risk-factors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Data By Country",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/afghanistan",
+                  "host": [
+                    "{{BASE_URL}}{{BASE_API_URL}}"
+                  ],
+                  "path": [
+                    "deaths-by-risk-factors",
+                    "afghanistan"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GET Main Page",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}",
+          "host": [
+            "{{BASE_URL}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET Cool",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/cool",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "cool"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET About",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/about",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "about"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -16,11 +16,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "newman-local-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/local-env.json",
+    "test-local-SMJ": "start-server-and-test start http://localhost:3000 newman-local-SMJ",
+    "newman-render-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/render-env.json",
+    "test-render-SMJ": "start-server-and-test start http://localhost:3000 newman-render-SMJ",
+    "test-deaths-by-risk-factors": "npm run test-local-SMJ"
   },
   "dependencies": {
     "cool-ascii-faces": "^1.3.4",
     "express": "^5.2.1",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "start-server-and-test": "^2.1.5"
   }
 }
