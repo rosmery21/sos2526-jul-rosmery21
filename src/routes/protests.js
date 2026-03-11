@@ -4,6 +4,11 @@ const fileReader = require('../../utils/readFile.js');
 
 const store = require('../data/store.js');
 
+const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52275979/2sBXiesEPb";
+router.get('/protests/docs', (req, res) => {
+  res.redirect(DOCUMENTATION_URL);
+});
+
 // Required fields for creating or updating a protest entry
 const requiredFields = [
   "id","country","year","region","protest","protesterviolence",
@@ -11,6 +16,16 @@ const requiredFields = [
   "participatory_score","deliberative_score","egalitarian_score",
   "hdi_score","violence_status","predicted_prob"
 ];
+
+
+
+/*
+==============================================================
+
+METHODS FOR COLLECTIONS
+
+==============================================================
+*/
 
 // Loads the data from the file and stores it in memory for the route
 router.get('/protests/loadInitialData', (req, res) => {
@@ -75,6 +90,15 @@ router.delete('/protests', (req, res) => {
   store.protests = [];
   res.status(204).send("All data deleted");
 });
+
+
+/*
+==============================================================
+
+METHODS FOR RESOURCES
+
+==============================================================
+*/
 
 // Returns the data stored in memory for a specific protest
 router.get('/protests/:id', (req, res) => {
