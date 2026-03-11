@@ -4,6 +4,12 @@ const fileReader = require('../../utils/readFile.js');
 
 const store = require('../data/store.js');
 
+const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXcLfcbP";
+
+router.get('/deaths-by-risk-factors/docs', (req, res) => {
+  res.redirect(DOCUMENTATION_URL);
+});
+
 // Loads the data from the file and stores it in memory for the route
 router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
   if (store.deathsByRiskFactors.length === 0) {
