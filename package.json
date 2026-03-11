@@ -16,10 +16,17 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+
     "newman-local-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/local-env.json",
     "test-local-SMJ": "start-server-and-test start http://localhost:3000 newman-local-SMJ",
     "newman-render-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/render-env.json",
     "test-deaths-by-risk-factors": "npm run test-local-SMJ",
+    
+    "newman-local-OMV": "npx newman run test/api/OMV/test-OMV.json -e test/enviroments/local-env.json",
+    "test-local-OMV": "start-server-and-test start http://localhost:3000 newman-local-OMV",
+    "newman-render-OMV": "npx newman run test/api/OMV/test-OMV.json -e test/enviroments/render-env.json",
+    "test-protests": "npm run test-local-OMV",
+    
     "test": "npm run test-deaths-by-risk-factors"
   },
   "dependencies": {
