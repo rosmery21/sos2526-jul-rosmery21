@@ -23,7 +23,6 @@
     "test": "npm run test-deaths-by-risk-factors"
   },
   "dependencies": {
-    "cool-ascii-faces": "^1.3.4",
     "express": "^5.2.1",
     "xlsx": "^0.18.5"
   },
