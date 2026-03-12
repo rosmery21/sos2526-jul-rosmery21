@@ -24,7 +24,11 @@
     "test-local-OMV": "start-server-and-test start http://localhost:3000 newman-local-OMV",
     "newman-render-OMV": "npx newman run test/api/OMV/test-OMV.json -e test/enviroments/render-env.json",
     "test-protests": "npm run test-local-OMV",
-    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-OMV\""
+    "newman-local-AGC": "npx newman run test/api/AGC/test-AGC.json -e test/enviroments/local-env.json",
+    "test-local-AGC": "start-server-and-test start http://localhost:3000 newman-local-AGC",
+    "newman-render-AGC": "npx newman run test/api/AGC/test-AGC.json -e test/enviroments/render-env.json",
+    "test-pandemics": "npm run test-local-AGC",
+    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-OMV && npm run newman-local-AGC\""
   },
   "dependencies": {
     "express": "^5.2.1",

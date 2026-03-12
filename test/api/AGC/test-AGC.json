@@ -1,0 +1,338 @@
+{
+  "info": {
+    "_postman_id": "6c11e835-9b68-4253-aff9-0851f9511de9",
+    "name": "API tests",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52276047",
+    "_collection_link": "https://go.postman.co/collection/52276047-6c11e835-9b68-4253-aff9-0851f9511de9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "samples",
+      "item": [
+        {
+          "name": "GET samples AGC",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/samples/AGC",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "samples",
+                "AGC"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET samples OMV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/samples/OMV",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "samples",
+                "OMV"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET samples SMJ",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/samples/SMJ",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "samples",
+                "SMJ"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API",
+      "item": [
+        {
+          "name": "pandemics",
+          "item": [
+            {
+              "name": "PUT",
+              "item": [
+                {
+                  "name": "PUT error",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT data",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "POST",
+              "item": [
+                {
+                  "name": "POST data",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "POST error",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "DELETE",
+              "item": [
+                {
+                  "name": "DELETE Collection",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "DELETE data",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "GET",
+              "item": [
+                {
+                  "name": "GET load initial data",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/loadInitialData",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "loadInitialData"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET data",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get main page",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}",
+          "host": [
+            "{{BASE_URL}}"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "GET cool",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/cool",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "cool"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET about",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/about",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "about"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
