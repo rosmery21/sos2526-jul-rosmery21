@@ -3,10 +3,8 @@
  from the different routes to make it accesible 
  and persistent across the different routes and modules.
  */
-const store = {
+export const store = {
     pandemics: [],
     protests: [],
     deathsByRiskFactors: []
-}
-
-module.exports = store;
+};

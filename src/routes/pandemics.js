@@ -1,13 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const fileReader = require('../../utils/readFile.js');
-
-const store = require('../data/store.js');
+import { readFile } from '../../utils/readFile.js';
+import { store } from '../data/store.js';
 
 // Loads the data from the file and stores it in memory for the route
 router.get('/pandemics/loadInitialData', (req, res) => {
   if (store.pandemics.length === 0) {
-    store.pandemics = fileReader.readFile('pandemics.csv').slice(0, 10);
+    store.pandemics = readFile('pandemics.csv').slice(0, 10);
   }
   res.status(200).json(store.pandemics);
 });
@@ -91,4 +90,4 @@ router.delete('/pandemics/:country', (req, res) => {
     res.status(204).end();
 });
 
-module.exports = router;
+export default router;

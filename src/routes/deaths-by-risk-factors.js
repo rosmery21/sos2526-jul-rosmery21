@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const fileReader = require('../../utils/readFile.js');
+import express from 'express';
+import { readFile } from '../../utils/readFile.js';
+import { store } from '../data/store.js';
 
-const store = require('../data/store.js');
+const router = express.Router();
 
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXcLfcbP";
 
@@ -13,7 +13,7 @@ router.get('/deaths-by-risk-factors/docs', (req, res) => {
 // Loads the data from the file and stores it in memory for the route
 router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
   if (store.deathsByRiskFactors.length === 0) {
-    let data = fileReader.readFile('number-of-deaths-by-risk-factor.csv');
+    let data = readFile('number-of-deaths-by-risk-factor.csv');
     let filteredData = data.map(item => ({
       Entity: item.Entity,
       Year: item.Year,
@@ -124,4 +124,4 @@ router.delete('/deaths-by-risk-factors/:country', (req, res) => {
   res.status(204).end();
 });
 
-module.exports = router;
+export default router;
