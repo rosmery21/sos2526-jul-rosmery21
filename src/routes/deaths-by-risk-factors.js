@@ -89,6 +89,29 @@ router.get('/deaths-by-risk-factors/:country', (req, res) => {
   });
 });
 
+router.get('/deaths-by-risk-factors/:year', (req, res) => {
+  const year = req.params.year;
+  store.find({ Year: parseInt(year) }, (err, data) => {
+    if (data.length === 0)
+      return res.status(404).send("Data not found");
+    data.forEach(d => delete d._id);
+    res.status(200).json(data);
+  });
+});
+
+
+// Returns the data stored in memory for a specific country and year
+router.get('/deaths-by-risk-factors/:country/:year', (req, res) => {
+  const country = req.params.country;
+  const year = req.params.year;
+  store.find({ Entity: new RegExp(`^${country}$`, "i"), Year: parseInt(year) }, (err, data) => {
+    if (data.length === 0)
+      return res.status(404).send("Data not found");
+    data.forEach(d => delete d._id);
+    res.status(200).json(data);
+  });
+});
+
 // Method not allowed for the route, since we don't want to create a new country with a specific country
 router.post('/deaths-by-risk-factors/:country', (req, res) => {
   res.status(405).send('Method not allowed');
