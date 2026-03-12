@@ -1,8 +1,14 @@
 import express from 'express';
 import { readFile } from '../../utils/readFile.js';
-import { store } from '../data/store.js';
+import dataStore from "nedb"
 
 const router = express.Router();
+
+const store = new dataStore();
+
+const data = [{"a": "value_a"}, {"b": "value_b"}, {"c": "value_c"}];
+
+store.insert(data);
 
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXcLfcbP";
 
@@ -26,14 +32,20 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
     );
     store.deathsByRiskFactors = filteredData.slice(0, 10);
     return res.status(200).json(store.deathsByRiskFactors);
-  }else {
+  } else {
     return res.status(409).send('Conflict: Data already loaded');
   }
 });
 
 // Returns the data stored in memory for the route
 router.get('/deaths-by-risk-factors', (req, res) => {
-  res.status(200).json(store.deathsByRiskFactors);
+  store.find({}, (err, data) => {
+    let jsonData = data.map((c) => {
+      delete c._id;
+      return c;
+    });
+    res.status(200).json(jsonData);
+  });
 });
 
 // Creates a new entry in the data stored in memory for the route
