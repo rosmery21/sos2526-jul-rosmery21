@@ -9,65 +9,6 @@
   },
   "item": [
     {
-      "name": "samples",
-      "item": [
-        {
-          "name": "GET samples AGC",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}/samples/AGC",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "samples",
-                "AGC"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "GET samples OMV",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}/samples/OMV",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "samples",
-                "OMV"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "GET samples SMJ",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}/samples/SMJ",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "samples",
-                "SMJ"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "API",
       "item": [
         {
