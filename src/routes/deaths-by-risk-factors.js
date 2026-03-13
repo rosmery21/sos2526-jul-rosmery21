@@ -56,7 +56,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 
   if (country) query.entity = new RegExp(`^${country}$`, "i");
   if (year) query.year = parseInt(year);
-  if (blood_pressure) query.blood_pressure = { $gt: parseFloat(blood_pressure) };
+  if (blood_pressure) query.high_systolic_blood_pressure = { $gt: parseFloat(blood_pressure) };
   if (air_pollution) query.air_pollution = { $gt: parseFloat(air_pollution) };
   if (child_wasting) query.child_wasting = { $gt: parseFloat(child_wasting) };
   if (household_air_pollution_from_solid_fuels) query.household_air_pollution_from_solid_fuels = { $gt: parseFloat(household_air_pollution_from_solid_fuels) };

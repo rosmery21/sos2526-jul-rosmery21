@@ -14,143 +14,6 @@
           "name": "DeathsByRiskFactors",
           "item": [
             {
-              "name": "Post",
-              "item": [
-                {
-                  "name": "POST New Data",
-                  "request": {
-                    "method": "POST",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Spain\", \"Year\": 2025, \r\n\"High systolic blood pressure\": 1234.5,\r\n\"Air pollution\": 6789.0,\r\n\"Child wasting\": 2468.0,\r\n\"Household air pollution from solid fuels\": 1357.9,\r\n\"High fasting plasma glucose\": 2211.0}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "deaths-by-risk-factors"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "POST New Data - Incomplete",
-                  "request": {
-                    "method": "POST",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Spain\", \"Year\": 2025, \r\n\"High systolic blood pressure\": 37183.3,\r\n\"Air pollution\": 2131.01,\r\n\"Household air pollution from solid fuels\": 212.4,\r\n\"High fasting plasma glucose\": 2121.6}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "deaths-by-risk-factors"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "POST New Data - On Country",
-                  "request": {
-                    "method": "POST",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/afghanistan",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "deaths-by-risk-factors",
-                        "afghanistan"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "Put",
-              "item": [
-                {
-                  "name": "PUT - Update Collection",
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": ""
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "deaths-by-risk-factors"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "PUT - Update Data",
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Spain\", \"Year\": 2026, \r\n\"High systolic blood pressure\": 9999.3,\r\n\"Air pollution\": 2131.01,\r\n\"Child wasting\": 2178.8,\r\n\"Household air pollution from solid fuels\": 212.4,\r\n\"High fasting plasma glucose\": 2121.6}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "deaths-by-risk-factors",
-                        "spain"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
               "name": "GET",
               "item": [
                 {
@@ -201,13 +64,18 @@
                       "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}"
                     },
                     "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain",
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?country=afghanistan",
                       "host": [
                         "{{BASE_URL}}{{BASE_API_URL}}"
                       ],
                       "path": [
-                        "deaths-by-risk-factors",
-                        "spain"
+                        "deaths-by-risk-factors"
+                      ],
+                      "query": [
+                        {
+                          "key": "country",
+                          "value": "afghanistan"
+                        }
                       ]
                     }
                   },
@@ -219,13 +87,18 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/2025",
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?year=1990",
                       "host": [
                         "{{BASE_URL}}{{BASE_API_URL}}"
                       ],
                       "path": [
-                        "deaths-by-risk-factors",
-                        "2025"
+                        "deaths-by-risk-factors"
+                      ],
+                      "query": [
+                        {
+                          "key": "year",
+                          "value": "1990"
+                        }
                       ]
                     }
                   },
@@ -237,14 +110,72 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain/2025",
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?country=afghanistan&year=1999",
                       "host": [
                         "{{BASE_URL}}{{BASE_API_URL}}"
                       ],
                       "path": [
-                        "deaths-by-risk-factors",
-                        "spain",
-                        "2025"
+                        "deaths-by-risk-factors"
+                      ],
+                      "query": [
+                        {
+                          "key": "country",
+                          "value": "afghanistan"
+                        },
+                        {
+                          "key": "year",
+                          "value": "1999"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET By blood_pressure",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?blood_pressure=32000",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ],
+                      "query": [
+                        {
+                          "key": "blood_pressure",
+                          "value": "32000"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET paginación",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?offset=3&limit=2",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ],
+                      "query": [
+                        {
+                          "key": "offset",
+                          "value": "3"
+                        },
+                        {
+                          "key": "limit",
+                          "value": "2"
+                        }
                       ]
                     }
                   },
@@ -271,6 +202,172 @@
               ]
             },
             {
+              "name": "Post",
+              "item": [
+                {
+                  "name": "POST New Data",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"entity\": \"Spain\", \"year\": 2025, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"child_wasting\": 2468.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "POST New Data - Incomplete",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"entity\": \"Spain\", \"year\": 2025, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "POST New Data - On Country",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"entity\": \"Spain\", \"year\": 2025, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"child_wasting\": 2468.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Put",
+              "item": [
+                {
+                  "name": "PUT - Update Collection",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "[\r\n    {\"entity\": \"Spain\", \"year\": 2025, \r\n    \"high_systolic_blood_pressure\": 1234.5,\r\n    \"air_pollution\": 6789.0,\r\n    \"child_wasting\": 2468.0,\r\n    \"household_air_pollution_from_solid_fuels\": 1357.9,\r\n    \"high_fasting_plasma_glucose\": 2211.0}\r\n    ,\r\n    {\"entity\": \"Spain\", \"year\": 2026, \r\n    \"high_systolic_blood_pressure\": 1234.5,\r\n    \"air_pollution\": 6789.0,\r\n    \"child_wasting\": 2468.0,\r\n    \"household_air_pollution_from_solid_fuels\": 1357.9,\r\n    \"high_fasting_plasma_glucose\": 2211.0}\r\n]"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT - Update Data",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"entity\": \"Spain\", \"year\": 2026, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"child_wasting\": 2468.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain/2025",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "spain",
+                        "2025"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT - Update Data - Incomplete",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"entity\": \"Spain\", \"year\": 2026, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain/2025",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "spain",
+                        "2025"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
               "name": "Delete",
               "item": [
                 {
@@ -280,16 +377,17 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Year\": 2025, \"Unsafe water source\": 1000.5, \"Unsafe sanitation\": 5138.54, \"Drug use\": 304.8}"
+                      "raw": ""
                     },
                     "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain",
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain/2026",
                       "host": [
                         "{{BASE_URL}}{{BASE_API_URL}}"
                       ],
                       "path": [
                         "deaths-by-risk-factors",
-                        "spain"
+                        "spain",
+                        "2026"
                       ]
                     }
                   },
