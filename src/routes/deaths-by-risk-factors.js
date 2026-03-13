@@ -24,13 +24,13 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
     }
     let data = readFile('number-of-deaths-by-risk-factor.csv');
     let filteredData = data.map(item => ({
-      Entity: item.Entity,
-      Year: item.Year,
-      'High systolic blood pressure': item['High systolic blood pressure'],
-      'Air pollution': item['Air pollution'],
-      'Child wasting': item['Child wasting'],
-      'Household air pollution from solid fuels': item['Household air pollution from solid fuels'],
-      'High fasting plasma glucose': item['High fasting plasma glucose']
+      entity: item.Entity,
+      year: item.Year,
+      high_systolic_blood_pressure: item['High systolic blood pressure'],
+      air_pollution: item['Air pollution'],
+      child_wasting: item['Child wasting'],
+      household_air_pollution_from_solid_fuels: item['Household air pollution from solid fuels'],
+      high_fasting_plasma_glucose: item['High fasting plasma glucose']
     }));
     store.insert(filteredData.slice(0, 10), (err, docs) => {
       docs.forEach(d => delete d._id);
@@ -39,14 +39,39 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
   });
 });
 
-// Returns the data stored in memory for the route
+// Returns the data stored in memory for a specific country and year
 router.get('/deaths-by-risk-factors', (req, res) => {
-  store.find({}, (err, data) => {
-    let jsonData = data.map((c) => {
-      delete c._id;
-      return c;
-    });
-    res.status(200).json(jsonData);
+  const query = {}
+
+  const offset = parseInt(req.query.offset) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const country = req.query.country;
+  const year = req.query.year;
+  const blood_pressure = req.query.blood_pressure;
+  const air_pollution = req.query.air_pollution;
+  const child_wasting = req.query.child_wasting;
+  const household_air_pollution_from_solid_fuels = req.query.household_air_pollution_from_solid_fuels;
+  const high_fasting_plasma_glucose = req.query.high_fasting_plasma_glucose;
+
+  if (country) query.entity = new RegExp(`^${country}$`, "i");
+  if (year) query.year = parseInt(year);
+  if (blood_pressure) query.blood_pressure = { $gt: parseFloat(blood_pressure) };
+  if (air_pollution) query.air_pollution = { $gt: parseFloat(air_pollution) };
+  if (child_wasting) query.child_wasting = { $gt: parseFloat(child_wasting) };
+  if (household_air_pollution_from_solid_fuels) query.household_air_pollution_from_solid_fuels = { $gt: parseFloat(household_air_pollution_from_solid_fuels) };
+  if (high_fasting_plasma_glucose) query.high_fasting_plasma_glucose = { $gt: parseFloat(high_fasting_plasma_glucose) };
+
+  store.find(query)
+    .skip(offset)
+    .limit(limit)
+    .exec((err, data) => {
+    if (data.length === 0)
+      return res.status(404).send("Data not found");
+    data.forEach(d => delete d._id);
+    if (data.length === 1)
+      data = data[0];
+    res.status(200).json(data);
   });
 });
 
@@ -54,7 +79,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
   store.findOne(
-    { Entity: newData.Entity, Year: newData.Year },
+    { entity: newData.entity, year: newData.year },
     (err, doc) => {
       if (doc)
         return res.status(409).send("Conflict: Data already exists");
@@ -78,33 +103,11 @@ router.delete('/deaths-by-risk-factors', (req, res) => {
   });
 });
 
-// Returns the data stored in memory for a specific country
-router.get('/deaths-by-risk-factors/:country', (req, res) => {
-  const country = req.params.country;
-  store.find({ Entity: new RegExp(`^${country}$`, "i") }, (err, data) => {
-    if (data.length === 0)
-      return res.status(404).send("Data not found");
-    data.forEach(d => delete d._id);
-    res.status(200).json(data);
-  });
-});
-
-router.get('/deaths-by-risk-factors/:year', (req, res) => {
-  const year = req.params.year;
-  store.find({ Year: parseInt(year) }, (err, data) => {
-    if (data.length === 0)
-      return res.status(404).send("Data not found");
-    data.forEach(d => delete d._id);
-    res.status(200).json(data);
-  });
-});
-
-
 // Returns the data stored in memory for a specific country and year
 router.get('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
-  const year = req.params.year;
-  store.find({ Entity: new RegExp(`^${country}$`, "i"), Year: parseInt(year) }, (err, data) => {
+  const year = parseInt(req.params.year);
+  store.find({ Entity: new RegExp(`^${country}$`, "i"), Year: year }, (err, data) => {
     if (data.length === 0)
       return res.status(404).send("Data not found");
     data.forEach(d => delete d._id);
@@ -118,12 +121,13 @@ router.post('/deaths-by-risk-factors/:country', (req, res) => {
 });
 
 // Updates the data stored in memory for a specific country
-router.put('/deaths-by-risk-factors/:country', (req, res) => {
+router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
-  if (req.body.Entity.toLowerCase() !== country.toLowerCase())
+  const year = parseInt(req.params.year);
+  if (req.body.entity.toLowerCase() !== country.toLowerCase())
     return res.status(400).send("Country mismatch");
   store.update(
-    { Entity: country },
+    { entity: country, year: year },
     req.body,
     {},
     (err, numUpdated) => {
@@ -135,9 +139,10 @@ router.put('/deaths-by-risk-factors/:country', (req, res) => {
 });
 
 // Deletes the data stored in memory for a specific country
-router.delete('/deaths-by-risk-factors/:country', (req, res) => {
+router.delete('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
-  store.remove({ Entity: country }, {}, (err, numRemoved) => {
+  const year = parseInt(req.params.year);
+  store.remove({ entity: country, year: year }, {}, (err, numRemoved) => {
     if (numRemoved === 0)
       return res.status(404).send("Data not found");
     res.status(204).send();
