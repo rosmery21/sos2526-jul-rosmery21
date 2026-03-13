@@ -1,107 +1,343 @@
 {
   "info": {
-    "_postman_id": "6705d89c-1f37-4999-bdce-be358d8ca57b",
-    "name": "Post > Get > Put > Delete | Test",
+    "_postman_id": "3abef46f-3699-47c3-b538-e49aeac1ac11",
+    "name": "SOS2526-Protests",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "52275979"
   },
   "item": [
     {
-      "name": "POST /protests (201)",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"id\": 902410001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Successfull requests",
+      "item": [
+        {
+          "name": "GET /protests/loadInitialData [LOAD DATA] (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/loadInitialData",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "loadInitialData"
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "{{BASE_URL}}/api/v1/protests",
-          "host": [
-            "{{BASE_URL}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "protests"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "GET /protests/902410001 (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{BASE_URL}}/api/v1/protests/902410001",
-          "host": [
-            "{{BASE_URL}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "protests",
-            "902410001"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "PUT /protests/902410001 (200)",
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n        \"id\": 902410001,\r\n        \"country\": \"Spain\",\r\n        \"year\": 2010,\r\n        \"region\": \"North America\",\r\n        \"protest\": 1,\r\n        \"protesterviolence\": 0,\r\n        \"protesterdemand\": \"political behavior, process\",\r\n        \"stateresponse\": \"ignore\",\r\n        \"electoral_ecore\": 0.834,\r\n        \"liberal_score\": 0.759,\r\n        \"participatory_score\": 0.58,\r\n        \"deliberative_score\": 0.756,\r\n        \"egalitarian_score\": 0.719,\r\n        \"hdi_score\": 0.85,\r\n        \"violence_status\": 0,\r\n        \"predicted_prob\": 0.299384806769452\r\n    }",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "GET /protests (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                ""
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "{{BASE_URL}}/api/v1/protests/902410001",
-          "host": [
-            "{{BASE_URL}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "protests",
-            "902410001"
-          ]
+        {
+          "name": "POST /protests (201)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 902410001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /protests/902410001 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/902410001",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "902410001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /protests/902410001 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": 902410001,\r\n        \"country\": \"Spain\",\r\n        \"year\": 2010,\r\n        \"region\": \"North America\",\r\n        \"protest\": 1,\r\n        \"protesterviolence\": 0,\r\n        \"protesterdemand\": \"political behavior, process\",\r\n        \"stateresponse\": \"ignore\",\r\n        \"electoral_ecore\": 0.834,\r\n        \"liberal_score\": 0.759,\r\n        \"participatory_score\": 0.58,\r\n        \"deliberative_score\": 0.756,\r\n        \"egalitarian_score\": 0.719,\r\n        \"hdi_score\": 0.85,\r\n        \"violence_status\": 0,\r\n        \"predicted_prob\": 0.299384806769452\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/902410001",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "902410001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /protests/902410001 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/902410001",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "902410001"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "DELETE /protests/902410001 (204)",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "{{BASE_URL}}/api/v1/protests/902410001",
-          "host": [
-            "{{BASE_URL}}"
+      "name": "Error Requests",
+      "item": [
+        {
+          "name": "PUT /protests (405)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"La API devuelve un error esperado\", function () {\r",
+                  "    pm.response.to.have.status(405); // valida que el status sea 400\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
           ],
-          "path": [
-            "api",
-            "v1",
-            "protests",
-            "902410001"
-          ]
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests/123456789 (405)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/123456789",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "123456789"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /protests/201990001 (400)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": 123456789,\r\n        \"country\": \"Spain\",\r\n        \"year\": 2010,\r\n        \"region\": \"North America\",\r\n        \"protest\": 1,\r\n        \"protesterviolence\": 0,\r\n        \"protesterdemand\": \"political behavior, process\",\r\n        \"stateresponse\": \"ignore\",\r\n        \"electoral_ecore\": 0.834,\r\n        \"liberal_score\": 0.759,\r\n        \"participatory_score\": 0.58,\r\n        \"deliberative_score\": 0.756,\r\n        \"egalitarian_score\": 0.719,\r\n        \"hdi_score\": 0.85,\r\n        \"violence_status\": 0,\r\n        \"predicted_prob\": 0.299384806769452\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/201990001",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "201990001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests [WRONG FIELDS] (400)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CAMPO_INEXISTENTE\": \"abc\",\r\n  \"id\": 202410001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests [EXISTING ID] (409)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 201990001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /protests/201990001 [WRONG FIELDS] (400)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": 201990001,\r\n        \"country\": \"Spain\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/protests/201990001",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "protests",
+                "201990001"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     }
   ]
 }
