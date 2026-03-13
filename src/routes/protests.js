@@ -60,14 +60,6 @@ router.get('/protests/loadInitialData', (req, res) => {
   });
 });
 
-// Returns the data stored in memory for the route
-router.get('/protests', (req, res) => {
-  db.find({}, (err, data) => {
-    if (err) return handleServerError(err, res);
-    const mappedData = removeIdField(data);
-    res.status(200).json(mappedData);
-  });
-});
 
 // Creates a new entry in the data stored in memory for the route
 router.post('/protests', (req, res) => {
@@ -155,6 +147,56 @@ router.get('/protests/:id', (req, res) => {
     } else {
       res.status(404).send('Data not found for protest ID: ' + id);
     }
+  });
+});
+
+
+// Get a protest by params
+router.get('/protests', (req, res) => {
+ const query = {}
+
+  const offset = parseInt(req.query.offset) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const country = req.query.country;
+  const year = req.query.year;
+  const region = req.query.region;
+  const protest = req.query.protest;
+  const protesterviolence = req.query.protesterviolence;
+  const electoral_ecore = req.query.electoral_ecore;
+  const liberal_score = req.query.liberal_score;
+  const participatory_score = req.query.participatory_score;
+  const deliberative_score = req.query.deliberative_score;
+  const egalitarian_score = req.query.egalitarian_score;
+  const hdi_score = req.query.hdi_score;
+  const violence_status = req.query.violence_status;
+  const predicted_prob = req.query.predicted_prob;
+
+  if (country) query.country = new RegExp(country, "i");
+  if (year) query.year = parseInt(year);
+  if (region) query.region = new RegExp(region, "i");
+  if (protest) query.protest = { $gte: parseInt(protest) };
+  if (protesterviolence) query.protesterviolence = { $gte: parseInt(protesterviolence) };
+  if (electoral_ecore) query.electoral_ecore = { $gte: parseFloat(electoral_ecore) };
+  if (liberal_score) query.liberal_score = { $gte: parseFloat(liberal_score) };
+  if (participatory_score) query.participatory_score = { $gte: parseFloat(participatory_score) };
+  if (deliberative_score) query.deliberative_score = { $gte: parseFloat(deliberative_score) };
+  if (egalitarian_score) query.egalitarian_score = { $gte: parseFloat(egalitarian_score) };
+  if (hdi_score) query.hdi_score = { $gte: parseFloat(hdi_score) };
+  if (violence_status) query.violence_status = { $gte: parseInt(violence_status) };
+  if (predicted_prob) query.predicted_prob = { $gte: parseFloat(predicted_prob) };
+
+  db.find(query)
+    .skip(offset)
+    .limit(limit)
+    .exec((err, data) => {
+    if (err) return handleServerError(err, res);
+    if (data.length === 0)
+      return res.status(404).send("Data not found");
+    data.forEach(d => delete d._id);
+    if (data.length === 1)
+      data = data[0];
+    res.status(200).json(data);
   });
 });
 
