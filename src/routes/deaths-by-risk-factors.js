@@ -78,6 +78,9 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
+  if(!newData || !newData.entity || !newData.year || !newData.high_systolic_blood_pressure || !newData.air_pollution || !newData.child_wasting || !newData.household_air_pollution_from_solid_fuels || !newData.high_fasting_plasma_glucose){
+    return res.status(400).send("Bad request: Missing required fields");
+  }
   store.findOne(
     { entity: newData.entity, year: newData.year },
     (err, doc) => {
@@ -124,16 +127,20 @@ router.post('/deaths-by-risk-factors/:country', (req, res) => {
 router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
-  if (req.body.entity.toLowerCase() !== country.toLowerCase())
+  const newData = req.body;
+  if(!newData || !newData.entity || !newData.year || !newData.high_systolic_blood_pressure || !newData.air_pollution || !newData.child_wasting || !newData.household_air_pollution_from_solid_fuels || !newData.high_fasting_plasma_glucose){
+    return res.status(400).send("Bad request: Missing required fields");
+  }
+  if (newData.entity.toLowerCase() !== country.toLowerCase())
     return res.status(400).send("Country mismatch");
   store.update(
-    { entity: country, year: year },
-    req.body,
+    { entity: new RegExp(`^${country}$`, "i"), year: year },
+    newData,
     {},
     (err, numUpdated) => {
       if (numUpdated === 0)
         return res.status(404).send("Data not found");
-      res.status(200).json(req.body);
+      res.status(200).json(newData);
     }
   );
 });
@@ -142,7 +149,7 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
 router.delete('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
-  store.remove({ entity: country, year: year }, {}, (err, numRemoved) => {
+  store.remove({ entity: new RegExp(`^${country}$`, "i"), year: year }, {}, (err, numRemoved) => {
     if (numRemoved === 0)
       return res.status(404).send("Data not found");
     res.status(204).send();
