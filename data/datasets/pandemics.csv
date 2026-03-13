@@ -1,4 +1,4 @@
-Entity,Code,Year,Indicator:Number of cases of yaws reported,Total (estimated) polio cases,Reported cases of guinea worm disease in humans,"Number of new cases of rabies, in both sexes aged all ages","Number of new cases of malaria, in both sexes aged all ages","Number of new cases of hiv/aids, in both sexes aged all ages","Number of new cases of tuberculosis, in both sexes aged all ages",Number of reported smallpox cases,Reported cholera cases
+Entity,Code,Year,Yaws,Polio,Guinea_worm,Rabies,Malaria,Hiv/aids,Tuberculosis,Smallpox,Cholera
 Afghanistan,AFG,1980,,6160,0,,,,,,
 Afghanistan,AFG,1981,,5859,0,,,,,,
 Afghanistan,AFG,1982,,9730,0,,,,,,
