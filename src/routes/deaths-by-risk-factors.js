@@ -7,6 +7,8 @@ const router = express.Router();
 const store = new dataStore();
 
 const data = [];
+const requiredFields = ['entity', 'year', 'high_systolic_blood_pressure', 'air_pollution', 'child_wasting',
+   'household_air_pollution_from_solid_fuels', 'high_fasting_plasma_glucose'];
 
 store.insert(data);
 
@@ -78,9 +80,16 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
-  if(!newData || !newData.entity || !newData.year || !newData.high_systolic_blood_pressure || !newData.air_pollution || !newData.child_wasting || !newData.household_air_pollution_from_solid_fuels || !newData.high_fasting_plasma_glucose){
+
+  const isMissingFields = requiredFields.some(field => !newData[field]);
+  if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
+  const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
+  if (hasExtraFields) {
+    return res.status(400).send("Bad request: Extra fields provided");
+  }
+
   store.findOne(
     { entity: newData.entity, year: newData.year },
     (err, doc) => {
@@ -128,9 +137,16 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
   const newData = req.body;
-  if(!newData || !newData.entity || !newData.year || !newData.high_systolic_blood_pressure || !newData.air_pollution || !newData.child_wasting || !newData.household_air_pollution_from_solid_fuels || !newData.high_fasting_plasma_glucose){
+
+  const isMissingFields = requiredFields.some(field => !newData[field]);
+  if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
+  const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
+  if (hasExtraFields) {
+    return res.status(400).send("Bad request: Extra fields provided");
+  }
+  
   if (newData.entity.toLowerCase() !== country.toLowerCase())
     return res.status(400).send("Country mismatch");
   store.update(

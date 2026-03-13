@@ -30,7 +30,8 @@
                         "deaths-by-risk-factors",
                         "loadInitialData"
                       ]
-                    }
+                    },
+                    "description": "## Load Initial Data\n\n**GET** `{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/loadInitialData`\n\n### Purpose\nTriggers the backend to **seed / load the initial dataset** for the *deaths-by-risk-factors* resource (typically used to bootstrap a fresh local deployment or reset the service to a known starting state).\n\n### When to use\n- After starting the API for the first time and the database is empty.\n- After clearing/resetting the database and you want to repopulate it with the initial sample data.\n- In demos or automated setups where you need a known baseline dataset.\n\n### Required variables (Environment)\nThis request uses environment variables (active environment: `local`). Ensure these are defined:\n\n- `BASE_URL` — server host and port (e.g., `http://localhost`)\n- `BASE_API_URL` — base API path prefix (e.g., `/api/v1`)\n\nFull resolved URL will look like:\n\n```\n{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/loadInitialData\n```\n\n### Expected behavior\n- The server attempts to load the predefined initial data into its storage.\n- The operation is generally **idempotent-like** in many implementations (may reinsert, ignore duplicates, or reset-and-load depending on server logic).\n\n### Typical responses (generic)\n- **200 OK** — Initial data was successfully loaded (response body may include a message and/or summary counts).\n- **4xx Client Error** — Request could not be completed due to client-side issues (e.g., invalid base URL, missing route, or not allowed by server configuration).\n- **5xx Server Error** — The server failed while loading data (e.g., database unavailable, internal error during import)."
                   },
                   "response": []
                 },
@@ -47,7 +48,8 @@
                       "path": [
                         "deaths-by-risk-factors"
                       ]
-                    }
+                    },
+                    "description": "## GET Data — Deaths by Risk Factors\n\n### Purpose\n\nRetrieves the current dataset of deaths attributed to different risk factors. Use this endpoint to list records for analysis, dashboards, or to verify data after POST/PUT/DELETE operations.\n\n### Endpoint\n\n**GET** `{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n### Variables used\n\nThis request uses environment variables so you can switch targets without editing the request:\n\n- `{{BASE_URL}}`: API host (example: `http://localhost`)\n    \n- `{{BASE_API_URL}}`: base API path/version (example: `/api/v1`)\n    \n\nExample resolved URL (local):  \n`http://localhost/api/v1/deaths-by-risk-factors`\n\n### Expected response (high-level)\n\nOn success, the API returns JSON representing a collection of records (commonly an **array** of objects).\n\nEach record typically includes an entity identifier (e.g., country/region), a time field (e.g., `year`), and one or more numeric fields representing deaths (or rates) by risk factor.\n\n> Note: Exact fields depend on your API’s schema/dataset version. \n  \n\n### Common status codes\n\n- **200 OK** — Returns JSON data successfully.\n    \n- **400 Bad Request** — Request is malformed (unexpected/invalid inputs).\n    \n- **404 Not Found** — Route not found (often indicates `BASE_API_URL` mismatch).\n    \n- **500 Internal Server Error** — Server-side error."
                   },
                   "response": []
                 },
@@ -77,7 +79,8 @@
                           "value": "afghanistan"
                         }
                       ]
-                    }
+                    },
+                    "description": "## GET Data By Country — Deaths by Risk Factors\n\n### Purpose\n\nRetrieve deaths-by-risk-factors data filtered to a single country.\n\n### Endpoint & Method\n\n**GET** `{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n### Query Parameters\n\n| Name | Required | Type | Description |\n| --- | --- | --- | --- |\n| `country` | Optional | string | Country name to filter results (e.g., `afghanistan`). If omitted, the API may return unfiltered results (implementation-dependent). |\n\n### Environment Variables Used\n\n- `{{BASE_URL}}` — Base host (e.g., `http://localhost`)\n    \n- `{{BASE_API_URL}}` — Base API path/prefix (e.g., `/api/v1`)\n    \n\n### Example Request\n\n``` http\nGET {{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?country=afghanistan\n\n ```\n\n### Example Response Shape (Generic)\n\n``` json\n[\n  {\n    \"entity\": \"Afghanistan\",\n    \"year\": 2025,\n    \"unsafe_water_source\": 1000.5,\n    \"unsafe_sanitation\": 5138.54,\n    \"drug_use\": 304.8\n  }\n]\n\n ```\n\n### Common Status Codes\n\n- **200 OK** — Request succeeded; response contains matching records.\n    \n- **400 Bad Request** — Invalid or malformed query parameter(s).\n    \n- **404 Not Found** — No data found for the provided `country` (if the API is designed to signal this).\n    \n- **500 Internal Server Error** — Unexpected server error."
                   },
                   "response": []
                 },
@@ -100,7 +103,8 @@
                           "value": "1990"
                         }
                       ]
-                    }
+                    },
+                    "description": "## GET Data By Year — Deaths by Risk Factors\n\nRetrieve **deaths-by-risk-factors** data filtered by a specific **year**.\n\n### Endpoint\n\n**GET** `{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n### Required environment variables\n\nThis request relies on the following variables (active environment):\n\n- `BASE_URL` — API host (e.g., `http://localhost`)\n    \n- `BASE_API_URL` — Base API path (e.g., `/api/v1`)\n    \n\n### Query parameters\n\n- `year` _(required)_ — Year to filter results by.\n    - Example: `1990`\n        \n\nExample full URL:\n\n```\n{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?year=1990\n\n ```\n\n### Response (high level)\n\nReturns a JSON payload containing the dataset for the requested year (typically a list/collection of records). Each record represents deaths-by-risk-factors values for an entity (e.g., country/region) and includes the year plus one or more risk-factor metrics.\n\n### Typical status codes\n\n- `200 OK` — Data returned successfully\n    \n- `400 Bad Request` — Missing/invalid `year` query parameter\n    \n- `404 Not Found` — No data available for the given year (API-dependent)\n    \n- `500 Internal Server Error` — Unexpected server error\n    \n\n### How to use in Postman\n\n1. Select the **local** (or your target) environment and ensure `BASE_URL` and `BASE_API_URL` are set.\n    \n2. Adjust the `year` query parameter in the URL (or in the **Params** tab).\n    \n3. Click **Send** to retrieve results for that year."
                   },
                   "response": []
                 },
@@ -127,7 +131,8 @@
                           "value": "1999"
                         }
                       ]
-                    }
+                    },
+                    "description": "## Purpose\n\nRetrieve deaths-by-risk-factors data filtered **by a specific country and year**.\n\nThis endpoint is typically used to fetch a narrowed dataset for a single country in a single year (e.g., for charts, comparisons, or validation after loading/updating data).\n\n## Method + Path\n\n**GET** `{{BASE_API_URL}}/deaths-by-risk-factors`\n\n> Base host is provided by `{{BASE_URL}}`. \n  \n\n## Query Parameters\n\n| Parameter | Required | Type | Description | Example |\n| --- | --- | --- | --- | --- |\n| `country` | Yes | string | Country/entity name to filter by. | `afghanistan` |\n| `year` | Yes | integer | Year to filter by. | `1999` |\n\n### Example queries\n\n- `?country=afghanistan&year=1999`\n    \n- `?country=spain&year=2010`\n    \n\n## Variables Used\n\nThis request uses the following variables (resolved from the active environment/collection):\n\n- `{{BASE_URL}}` — API host (e.g., `http://localhost`)\n    \n- `{{BASE_API_URL}}` — API base path/prefix (e.g., `/api/v1`)\n    \n\n## Example Request URL (with variables)\n\n``` text\n{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?country=afghanistan&year=1999\n\n ```\n\n## Example Success Response (shape)\n\nA successful response typically returns JSON. The exact fields may vary by implementation, but commonly include the requested country/year and one or more risk-factor metrics.\n\n``` json\n[\n  {\n    \"country\": \"afghanistan\",\n    \"year\": 1999,\n    \"riskFactor\": \"<string>\",\n    \"value\": <number>\n  }\n]\n\n ```\n\n### Field notes (generic)\n\n- `country` / `year`: identify the filtered record(s).\n    \n- `riskFactor`: name/identifier of a risk factor.\n    \n- `value`: numeric metric associated with that risk factor for the given country/year.\n    \n\n## Common Errors\n\n- **400 Bad Request**\n    \n    - Missing required query params (`country` or `year`).\n        \n    - `year` is not a valid integer (or outside allowed range).\n        \n    - Invalid/empty `country` value.\n        \n- **404 Not Found**\n    \n    - No data exists for the provided `country` + `year` combination."
                   },
                   "response": []
                 },
@@ -150,7 +155,8 @@
                           "value": "32000"
                         }
                       ]
-                    }
+                    },
+                    "description": "## Purpose\n\nRetrieve deaths-by-risk-factors data filtered by a specific **blood pressure** value.\n\n## Endpoint\n\n**GET** `{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n## Query parameters\n\n### `blood_pressure`\n\n- **Required:** Yes (for this filtered endpoint)\n    \n- **Type:** number (integer or float)\n    \n- **Meaning/units:** Blood pressure value used by the dataset/API to filter results (use the units/scale defined by your dataset).\n    \n- **Example:** `32000`\n    \n\n## Environment variables used\n\n- `{{BASE_URL}}` — Base host (e.g., `http://localhost`)\n    \n- `{{BASE_API_URL}}` — Base API path (e.g., `/api/v1`)\n    \n\n## Example call\n\n``` http\nGET {{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?blood_pressure=32000\n\n ```\n\n## Example responses\n\n### Success — 200 OK (placeholder)\n\n``` json\n{\n  \"data\": [\n    {\n      \"country\": \"<string>\",\n      \"year\": <number>,\n      \"blood_pressure\": <number>,\n      \"deaths\": <number>\n    }\n  ]\n}\n\n ```\n\n### Error — 400 Bad Request (placeholder)\n\n``` json\n{\n  \"error\": \"<message describing what is wrong with blood_pressure>\"\n}\n\n ```\n\n### Error — 404 Not Found (placeholder)\n\n``` json\n{\n  \"error\": \"<message indicating no matching records>\"\n}\n\n ```"
                   },
                   "response": []
                 },
@@ -177,7 +183,8 @@
                           "value": "2"
                         }
                       ]
-                    }
+                    },
+                    "description": "## Purpose\nRetrieve a **paginated** list of records from the *deaths-by-risk-factors* dataset.\n\n## Endpoint\n**GET** `{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n## Query parameters\n| Parameter | Type | Required | Description |\n|---|---:|:---:|---|\n| `offset` | integer | No | Number of records to skip before starting to return results (pagination start). Example: `offset=3` skips the first 3 records. |\n| `limit` | integer | No | Maximum number of records to return in the response. Example: `limit=2` returns up to 2 records. |\n\n## Environment variables used\n- `{{BASE_URL}}` — Base host (e.g., `http://localhost`)\n- `{{BASE_API_URL}}` — Base API path/prefix (e.g., `/api/v1`)\n\n## Example request URL\n```http\n{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors?offset=3&limit=2\n```\n\n## Typical response structure\nUsually returns a JSON array of records (each element is one dataset row), for example:\n```json\n[\n  {\n    \"country\": \"...\",\n    \"year\": 0,\n    \"risk_factor\": \"...\",\n    \"deaths\": 0\n  }\n]\n```\n\n> Note: Exact field names depend on the API implementation and dataset schema.\n\n## Common status codes\n- **200 OK** — Request succeeded and results are returned.\n- **400 Bad Request** — Invalid pagination values (e.g., non-integer `offset`/`limit`, negative values).\n- **404 Not Found** — Endpoint not found (wrong base URL/path).\n- **500 Internal Server Error** — Unexpected server-side error."
                   },
                   "response": []
                 },
@@ -226,7 +233,8 @@
                       "path": [
                         "deaths-by-risk-factors"
                       ]
-                    }
+                    },
+                    "description": "## POST New Data — Deaths by Risk Factors\n\n### Purpose\n\nCreate a new **deaths-by-risk-factors** record for a given **entity (country/region)** and **year**.\n\n### Endpoint\n\n`POST {{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n### Environment variables used\n\n- `{{BASE_URL}}`: API host (e.g., `http://localhost`)\n    \n- `{{BASE_API_URL}}`: Base path/version (e.g., `/api/v1`)\n    \n\n### Request body\n\nSend **raw JSON** (`Content-Type: application/json`) with:\n\n| Field | Type | Required | Description |\n| --- | --- | --- | --- |\n| `entity` | string | Yes | Country/region name (must match the API’s accepted entity values). |\n| `year` | integer | Yes | 4-digit year for the record. |\n| `high_systolic_blood_pressure` | number | Yes | Value attributed to high systolic blood pressure. |\n| `air_pollution` | number | Yes | Value attributed to air pollution. |\n| `child_wasting` | number | Yes | Value attributed to child wasting. |\n| `household_air_pollution_from_solid_fuels` | number | Yes | Value attributed to household air pollution from solid fuels. |\n| `high_fasting_plasma_glucose` | number | Yes | Value attributed to high fasting plasma glucose. |\n\n> Numeric fields are JSON `number` (integers or decimals). \n  \n\n### Example request\n\n\\`\\`\\`http  \nPOST {{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors  \nContent-Type: application/json\n\n{  \n\"entity\": \"Spain\",  \n\"year\": 2025,  \n\"high_systolic_blood_pressure\": 1234.5,  \n\"air_pollution\": 6789,  \n\"child_wasting\": 2468,  \n\"household_air_pollution_from_solid_fuels\": 1357.9,  \n\"high_fasting_plasma_glucose\": 2211  \n}"
                   },
                   "response": []
                 },
@@ -333,7 +341,8 @@
                         "spain",
                         "2025"
                       ]
-                    }
+                    },
+                    "description": "## PUT - Update Data — Deaths by Risk Factors\n\n### Purpose\n\nUpdate an existing record in the **deaths-by-risk-factors** dataset for a given **country (entity)** and **year**.\n\nThis request is useful for correcting previously loaded data or updating specific risk-factor values.\n\n---\n\n### Endpoint\n\n`PUT {{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/:country/:year`\n\n**Current request URL**  \n`{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain/2025`\n\n---\n\n### Path parameters\n\n- `country` (string): Country identifier in the URL (e.g., `spain`).  \n    Note: the API may be case-sensitive depending on implementation.\n    \n- `year` (integer): Target year to update (e.g., `2025`).\n    \n\n---\n\n### Required variables\n\nThis request uses:\n\n- `{{BASE_URL}}` — API host (example: `http://localhost`)\n    \n- `{{BASE_API_URL}}` — API base path (example: `/api/v1`)\n    \n\nCombined example:  \n`http://localhost/api/v1`\n\n---\n\n### Request body (JSON)\n\nContent-Type: `application/json`\n\nTypical fields (numbers should be non-negative):\n\n- `entity` (string) — Country name/label (e.g., `\"Spain\"`)\n    \n- `year` (integer) — Year for the record\n    \n- `high_systolic_blood_pressure` (number)\n    \n- `air_pollution` (number)\n    \n- `child_wasting` (number)\n    \n- `household_air_pollution_from_solid_fuels` (number)\n    \n- `high_fasting_plasma_glucose` (number)\n    \n\n> Your API may accept additional risk-factor fields; include only those supported by your backend schema. \n  \n\n---\n\n### Example request body\n\n\\`\\`\\`json  \n{  \n\"entity\": \"Spain\",  \n\"year\": 2026,  \n\"high_systolic_blood_pressure\": 1234.5,  \n\"air_pollution\": 6789,  \n\"child_wasting\": 2468,  \n\"household_air_pollution_from_solid_fuels\": 1357.9,  \n\"high_fasting_plasma_glucose\": 2211  \n}"
                   },
                   "response": []
                 },
@@ -388,32 +397,6 @@
                         "deaths-by-risk-factors",
                         "spain",
                         "2026"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "DELETE Data",
-                  "request": {
-                    "method": "DELETE",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "deaths-by-risk-factors"
                       ]
                     }
                   },
