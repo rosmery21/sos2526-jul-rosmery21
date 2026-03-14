@@ -7,6 +7,7 @@ const router = express.Router();
 const store = new dataStore();
 
 const data = [];
+const requiredFields = ['entity', 'code', 'year', 'yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'];
 
 store.insert(data);
 
@@ -32,7 +33,7 @@ router.get('/pandemics/loadInitialData', (req, res) => {
       guinea_worm: item.Guinea_worm || 0,
       rabies: item.Rabies || 0,
       malaria: item.Malaria || 0,
-      hiv_aids: item['Hiv/aids'] || 0,
+      hiv_aids: item['Hiv_aids'] || 0,
       tuberculosis: item.Tuberculosis || 0,
       smallpox: item.Smallpox || 0,
       cholera: item.Cholera || 0
@@ -51,7 +52,7 @@ router.get('/pandemics', (req, res) => {
   const offset = parseInt(req.query.offset) || 0;
   const limit = parseInt(req.query.limit) || 10;
 
-  const country = req.query.country;
+  const entity = req.query.entity;
   const code = req.query.code;
   const year = req.query.year;
   const yaws = req.query.yaws;
@@ -64,7 +65,7 @@ router.get('/pandemics', (req, res) => {
   const smallpox = req.query.smallpox;
   const cholera = req.query.cholera;
 
-  if (country) query.entity = new RegExp(`^${country}$`, "i");
+  if (entity) query.entity = new RegExp(`^${entity}$`, "i");
   if (code) query.code = new RegExp(`^${code}$`, "i");
   if (year) query.year = parseInt(year);
   if (yaws) query.yaws = { $gt: parseFloat(yaws) };
@@ -93,8 +94,14 @@ router.get('/pandemics', (req, res) => {
 // Creates a new entry in the data stored in memory for the route
 router.post('/pandemics', (req, res) => {
   const newData = req.body;
-  if(!newData || !newData.entity || !newData.code || !newData.year || !newData.yaws || !newData.polio || !newData.guinea_worm || !newData.rabies || !newData.malaria || !newData.hiv_aids || !newData.tuberculosis || !newData.smallpox || !newData.cholera ){
+  console.log(newData.entity);
+  const isMissingFields = requiredFields.some(field => {!newData[field]});
+  if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
+  }
+  const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
+  if (hasExtraFields) {
+    return res.status(400).send("Bad request: Extra fields provided");
   }
   store.findOne(
     { entity: newData.entity, year: newData.year },
@@ -122,10 +129,10 @@ router.delete('/pandemics', (req, res) => {
 });
 
 // Returns the data stored in memory for a specific country
-router.get('/pandemics/:country/:year', (req, res) => {
-  const country = req.params.country;
+router.get('/pandemics/:entity/:year', (req, res) => {
+  const entity = req.params.entity;
   const year = parseInt(req.params.year);
-  store.find({ entity: new RegExp(`^${country}$`, "i"), year: year }, (err, data) => {
+  store.find({ entity: new RegExp(`^${entity}$`, "i"), year: year }, (err, data) => {
     if (data.length === 0)
       return res.status(404).send("Data not found");
     data.forEach(d => delete d._id);
@@ -135,21 +142,27 @@ router.get('/pandemics/:country/:year', (req, res) => {
 
 
 // Method not allowed for the route, since we don't want to create a new country with a specific country
-router.post('/pandemics/:country', (req, res) => {
+router.post('/pandemics/:entity', (req, res) => {
     res.status(405).send('Method not allowed');
 });
 
 // Updates the data stored in memory for a specific country
-router.put('/pandemics/:country/:year', (req, res) => {
-  const country = req.params.country;
+router.put('/pandemics/:entity/:year', (req, res) => {
+  const entity = req.params.entity;
   const year = parseInt(req.params.year);
   const newData = req.body;
-  if(!newData || !newData.entity || !newData.code || !newData.year || !newData.yaws || !newData.polio || !newData.guinea_worm || !newData.rabies || !newData.malaria || !newData.hiv_aids || !newData.tuberculosis || !newData.smallpox || !newData.cholera){
+  const isMissingFields = requiredFields.some(field => {!newData[field]});
+  if (isMissingFields) {
+    return res.status(400).send("Bad request: Missing required fields");
   }
-  if (newData.entity.toLowerCase() !== country.toLowerCase())
-    return res.status(400).send("Country mismatch");
+  const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
+  if (hasExtraFields) {
+    return res.status(400).send("Bad request: Extra fields provided");
+  }
+  if (newData.entity.toLowerCase() !== entity.toLowerCase())
+    return res.status(400).send("entity mismatch");
   store.update(
-    { entity: new RegExp(`^${country}$`, "i"), year: year },
+    { entity: new RegExp(`^${entity}$`, "i"), year: year },
     newData,
     {},
     (err, numUpdated) => {
@@ -161,10 +174,10 @@ router.put('/pandemics/:country/:year', (req, res) => {
 });
 
 // Deletes the data stored in memory for a specific country
-router.delete('/pandemics/:country/:year', (req, res) => {
-  const country = req.params.country;
+router.delete('/pandemics/:entity/:year', (req, res) => {
+  const entity = req.params.entity;
   const year = parseInt(req.params.year);
-  store.remove({ entity: new RegExp(`^${country}$`, "i"), year: year }, {}, (err, numRemoved) => {
+  store.remove({ entity: new RegExp(`^${entity}$`, "i"), year: year }, {}, (err, numRemoved) => {
     if (numRemoved === 0)
       return res.status(404).send("Data not found");
     res.status(204).send();
