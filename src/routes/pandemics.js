@@ -27,15 +27,15 @@ router.get('/pandemics/loadInitialData', (req, res) => {
       entity: item.Entity,
       code: item.Code,
       year: item.Year,
-      yaws: item['Yaws'],
-      polio: item['Polio'],
-      guinea_worm: item['Guinea_worm'],
-      rabies: item['Rabies'],
-      malaria: item['Malaria'],
-      hiv_aids: item['Hiv/aids'],
-      tuberculosis: item['Tuberculosis'],
-      smallpox: item['Smallpox'],
-      cholera: item['Cholera']
+      yaws: item.Yaws || 0,
+      polio: item.Polio || 0,
+      guinea_worm: item.Guinea_worm || 0,
+      rabies: item.Rabies || 0,
+      malaria: item.Malaria || 0,
+      hiv_aids: item['Hiv/aids'] || 0,
+      tuberculosis: item.Tuberculosis || 0,
+      smallpox: item.Smallpox || 0,
+      cholera: item.Cholera || 0
     }));
     store.insert(filteredData.slice(0, 10), (err, docs) => {
       docs.forEach(d => delete d._id);
