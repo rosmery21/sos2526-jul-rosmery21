@@ -12,7 +12,7 @@ app.use("/", express.static("./public"));
 
 app.use((req, res, next) => {
   if (req.method === "POST" || req.method === "PUT") {
-    if (!req.is("application/json")) {
+    if (req.get("Content-Type") && !req.is("application/json")) {
       return res.status(415).send("Unsupported Media Type: Only JSON allowed");
     }
   }
