@@ -2,6 +2,7 @@ import express from 'express';
 import deathsRoute from './src/routes/deaths-by-risk-factors.js';
 import protestsRoute from './src/routes/protests.js';
 import pandemicsRoute from './src/routes/pandemics.js';
+import childMalnutritions from "./src/routes/child-malnutritions.js";
 
 const app = express();
 
@@ -17,6 +18,8 @@ const PORT = process.env.PORT || 3000;
 app.use(BASE_API_URL, deathsRoute);
 app.use(BASE_API_URL, protestsRoute);
 app.use(BASE_API_URL, pandemicsRoute);
+app.use(BASE_API_URL, childMalnutritions);
+
 
 // Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
