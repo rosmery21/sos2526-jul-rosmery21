@@ -18,6 +18,56 @@
               "item": [
                 {
                   "name": "Load Initial Data",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Opcional: Limpiar variables de una ejecución anterior\r",
+                          "pm.environment.unset(\"first_loaded_entity\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const loadStatus = pm.response.code;\r",
+                          "\r",
+                          "if (loadStatus === 201) {\r",
+                          "    pm.test(\"Initial load: Data created successfully\", function () {\r",
+                          "        const jsonData = pm.response.json();\r",
+                          "        pm.expect(jsonData).to.be.an('array');\r",
+                          "        pm.expect(jsonData.length).to.be.at.most(10);\r",
+                          "        \r",
+                          "        const firstItem = jsonData[0];\r",
+                          "        pm.expect(firstItem).to.not.have.property('_id');\r",
+                          "\r",
+                          "        // Guardamos en collectionVariables para que se exporte bien\r",
+                          "        pm.collectionVariables.set(\"last_entity_loaded\", firstItem.entity);\r",
+                          "        pm.collectionVariables.set(\"last_year_loaded\", firstItem.year);\r",
+                          "    });\r",
+                          "} \r",
+                          "else if (loadStatus === 409) {\r",
+                          "    pm.test(\"Initial load: Conflict (Data already loaded)\", function () {\r",
+                          "        pm.expect(pm.response.text()).to.equal(\"Conflict: Data already loaded\");\r",
+                          "    });\r",
+                          "} \r",
+                          "else {\r",
+                          "    pm.test(\"Unexpected error in load\", function () {\r",
+                          "        pm.expect(loadStatus).to.be.oneOf([201, 409]);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -37,6 +87,21 @@
                 },
                 {
                   "name": "GET Data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", () => {\r",
+                          "    pm.expect(pm.response.code === 200);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -55,6 +120,67 @@
                 },
                 {
                   "name": "GET Data By Country",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Definimos el país para la búsqueda\r",
+                          "pm.collectionVariables.set(\"search_country\", \"afghanistan\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const expectedCountry = pm.collectionVariables.get(\"search_country\").toLowerCase();\r",
+                          "\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains data for the requested country\", function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    \r",
+                          "    // Helper function to validate an individual object\r",
+                          "    const validateItem = (item) => {\r",
+                          "        // Validate that the entity matches (case-insensitive)\r",
+                          "        pm.expect(item.entity.toLowerCase()).to.eql(expectedCountry);\r",
+                          "        \r",
+                          "        // Ensure the internal NeDB _id is not exposed\r",
+                          "        pm.expect(item).to.not.have.property('_id');\r",
+                          "        \r",
+                          "        // Validate essential fields\r",
+                          "        pm.expect(item).to.have.property('year');\r",
+                          "        pm.expect(item).to.have.property('air_pollution');\r",
+                          "    };\r",
+                          "\r",
+                          "    if (Array.isArray(jsonData)) {\r",
+                          "        pm.expect(jsonData.length).to.be.at.least(1);\r",
+                          "        jsonData.forEach(validateItem);\r",
+                          "    } else {\r",
+                          "        validateItem(jsonData);\r",
+                          "    }\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Numeric values are valid\", function () {\r",
+                          "    const data = Array.isArray(pm.response.json()) ? pm.response.json()[0] : pm.response.json();\r",
+                          "    \r",
+                          "    // Check that risk factors are numbers and not strings\r",
+                          "    pm.expect(data.air_pollution).to.be.a('number');\r",
+                          "    pm.expect(data.high_systolic_blood_pressure).to.be.a('number');\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "protocolProfileBehavior": {
                     "disableBodyPruning": true
                   },
@@ -86,6 +212,71 @@
                 },
                 {
                   "name": "GET Data By Year",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Aseguramos que el parámetro de búsqueda esté definido\r",
+                          "pm.collectionVariables.set(\"search_year\", 1990);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const yearQuery = parseInt(pm.collectionVariables.get(\"search_year\"));\r",
+                          "\r",
+                          "pm.test(`Status code is 200 (Data found for ${yearQuery})`, function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response format is a valid JSON\", function () {\r",
+                          "    pm.response.to.be.withBody;\r",
+                          "    pm.response.to.be.json;\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(`All returned data belongs to the year ${yearQuery}`, function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    \r",
+                          "    // Your API returns a direct object if there's only 1 result, or an Array if there are several\r",
+                          "    if (Array.isArray(jsonData)) {\r",
+                          "        pm.expect(jsonData.length).to.be.above(0);\r",
+                          "        jsonData.forEach((item) => {\r",
+                          "            pm.expect(item.year).to.eql(yearQuery);\r",
+                          "            // Verify that the internal _id is not leaked\r",
+                          "            pm.expect(item).to.not.have.property('_id');\r",
+                          "        });\r",
+                          "    } else {\r",
+                          "        // Case for a single object\r",
+                          "        pm.expect(jsonData.year).to.eql(yearQuery);\r",
+                          "        pm.expect(jsonData).to.not.have.property('_id');\r",
+                          "    }\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Required fields are present\", function () {\r",
+                          "    const data = Array.isArray(pm.response.json()) ? pm.response.json()[0] : pm.response.json();\r",
+                          "    \r",
+                          "    const requiredFields = [\r",
+                          "        'entity', 'year', 'high_systolic_blood_pressure', \r",
+                          "        'air_pollution', 'child_wasting'\r",
+                          "    ];\r",
+                          "    \r",
+                          "    requiredFields.forEach(field => {\r",
+                          "        pm.expect(data).to.have.property(field);\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -110,6 +301,65 @@
                 },
                 {
                   "name": "GET Data by Country and Year",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Definimos los criterios de búsqueda\r",
+                          "pm.collectionVariables.set(\"search_country\", \"afghanistan\");\r",
+                          "pm.collectionVariables.set(\"search_year\", 1999);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const expectedCountry = pm.collectionVariables.get(\"search_country\").toLowerCase();\r",
+                          "const expectedYear = parseInt(pm.collectionVariables.get(\"search_year\"));\r",
+                          "\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response is a single object and not an array\", function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    // Since you are searching for a specific country and year, receiving an object is expected\r",
+                          "    pm.expect(jsonData).to.be.an('object');\r",
+                          "    pm.expect(jsonData).to.not.be.an('array');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Record exactly matches the requested country and year\", function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    \r",
+                          "    // Country Validation (Case Insensitive)\r",
+                          "    pm.expect(jsonData.entity.toLowerCase()).to.eql(expectedCountry);\r",
+                          "    \r",
+                          "    // Year Validation\r",
+                          "    pm.expect(jsonData.year).to.eql(expectedYear);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Security: The _id field has been removed\", function () {\r",
+                          "    pm.expect(pm.response.json()).to.not.have.property('_id');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Data integrity: Numeric values are correct\", function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    // Verify mandatory fields defined in the backend\r",
+                          "    pm.expect(jsonData.air_pollution).to.be.a('number');\r",
+                          "    pm.expect(jsonData.high_systolic_blood_pressure).to.be.a('number');\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -138,6 +388,59 @@
                 },
                 {
                   "name": "GET By blood_pressure",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Definimos el valor de corte para el filtro\r",
+                          "pm.collectionVariables.set(\"min_blood_pressure\", 32000);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const threshold = parseFloat(pm.collectionVariables.get(\"min_blood_pressure\"));\r",
+                          "\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(`All records have blood_pressure > ${threshold}`, function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    \r",
+                          "    // If the API returns a single object (due to a single match)\r",
+                          "    if (!Array.isArray(jsonData)) {\r",
+                          "        pm.expect(jsonData.high_systolic_blood_pressure).to.be.above(threshold);\r",
+                          "    } \r",
+                          "    // If it returns an array of objects\r",
+                          "    else {\r",
+                          "        pm.expect(jsonData.length).to.be.at.least(1);\r",
+                          "        jsonData.forEach((item) => {\r",
+                          "            pm.expect(item.high_systolic_blood_pressure).to.be.above(threshold);\r",
+                          "        });\r",
+                          "    }\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Data format is correct\", function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    const item = Array.isArray(jsonData) ? jsonData[0] : jsonData;\r",
+                          "    \r",
+                          "    pm.expect(item).to.have.property('entity');\r",
+                          "    pm.expect(item.high_systolic_blood_pressure).to.be.a('number');\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -162,6 +465,52 @@
                 },
                 {
                   "name": "GET paginación",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.collectionVariables.set(\"p_offset\", 3);\r",
+                          "pm.collectionVariables.set(\"p_limit\", 2);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const limit = parseInt(pm.collectionVariables.get(\"p_limit\"));\r",
+                          "\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(`Response contains exactly ${limit} records`, function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    \r",
+                          "    // When requesting limit=2 (or more), the response MUST be an array\r",
+                          "    pm.expect(jsonData).to.be.an('array');\r",
+                          "    pm.expect(jsonData.length).to.eql(limit);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Records do not contain the internal database ID\", function () {\r",
+                          "    const jsonData = pm.response.json();\r",
+                          "    jsonData.forEach(item => {\r",
+                          "        pm.expect(item).to.not.have.property('_id');\r",
+                          "        pm.expect(item).to.have.property('entity');\r",
+                          "        pm.expect(item).to.have.property('year');\r",
+                          "    });\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -190,6 +539,43 @@
                 },
                 {
                   "name": "DOCS",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "// Define the destination URL from your code\r",
+                          "const expectedDocUrl = \"https://documenter.getpostman.com/view/52276011/2sBXcLfcbP\";\r",
+                          "\r",
+                          "pm.test(\"Status code is 200 (OK after following redirect)\", function () {\r",
+                          "    // If Postman follows the redirect, the final code will be 200 (the Postman web page)\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Final URL is the Postman documentation\", function () {\r",
+                          "    // Verify that we landed on the correct site\r",
+                          "    pm.expect(pm.response.text()).to.include(\"Postman Documenter\");\r",
+                          "});\r",
+                          "\r",
+                          "/* TIP: If you want to specifically verify the redirect code (302),\r",
+                          "   you must go to the request Settings in Postman \r",
+                          "   and disable \"Automatically follow redirects\". \r",
+                          "   In that case, use this test:\r",
+                          "*/\r",
+                          "\r",
+                          "if (pm.response.code === 302) {\r",
+                          "    pm.test(\"Redirect correctly configured (302 Found)\", function () {\r",
+                          "        pm.response.to.have.status(302);\r",
+                          "        pm.expect(pm.response.headers.get(\"Location\")).to.eql(expectedDocUrl);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -202,23 +588,98 @@
                         "deaths-by-risk-factors",
                         "docs"
                       ]
-                    }
+                    },
+                    "description": "## Purpose\n\nReturns the **API documentation** for the `deaths-by-risk-factors` service. Use this endpoint to discover available resources, parameters, and response formats exposed by the API.\n\n## Base URL / Variables\n\nThis request uses:\n\n- `{{BASE_URL}}` — Host + protocol (e.g., `http://localhost:8080`)\n    \n- `{{BASE_API_URL}}` — Base API prefix (e.g., `/api/v1`)\n    \n\nResolved URL:  \n`{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/docs`\n\n## Authentication\n\n- **None configured in Postman for this request.**\n    \n- If your deployment protects the docs endpoint, add the required auth at the folder/collection level or directly on this request (e.g., Bearer token).\n    \n\n## Request Details\n\n- **Method:** `GET`\n    \n- **Path:** `/deaths-by-risk-factors/docs`\n    \n- **Query params:** none\n    \n- **Body:** none\n    \n\n## Expected Responses\n\n### 200 OK\n\nReturns the API documentation payload (commonly HTML or JSON/OpenAPI, depending on the implementation).\n\n### 4xx (Client errors)\n\n- `401/403` — authentication/authorization required for docs\n    \n- `404` — docs route not enabled or wrong base path\n    \n\n### 5xx (Server errors)\n\nServer failed to generate or serve documentation.\n\n## Usage Notes\n\n- Select an environment (e.g., `local` or `SOS2526-10`) where `BASE_URL` and `BASE_API_URL` are defined.\n    \n- Click **Send** to view the docs response in Postman."
                   },
                   "response": []
                 }
-              ]
+              ],
+              "description": "## GET — Read endpoints for `deaths-by-risk-factors`\n\nThis folder groups all **read-only (GET)** operations for the **`deaths-by-risk-factors`** resource.\n\n### What you can do here\n- **Bootstrap data**: load/seed the initial dataset.\n- **Fetch the full dataset**: retrieve all records.\n- **Filter results** using query parameters:\n  - `country`\n  - `year`\n  - `blood_pressure`\n- **Paginate results** with:\n  - `offset`\n  - `limit`\n- **Open documentation** via the `docs` endpoint.\n\n### Base URL variables\nAll requests use:\n- `{{BASE_URL}}` — API host (e.g., `http://localhost`)\n- `{{BASE_API_URL}}` — base path/prefix (e.g., `/api/v1`)\n\n### Requests included\n- [Load Initial Data](request/52276011-5fc11b42-9443-4259-92da-8b8dccf367da)\n- [GET Data](request/52276011-67ee4cf4-82fc-430b-b301-58c078f55a06)\n- [GET Data By Country](request/52276011-440cb76f-dad5-4181-94a2-61069cf13923)\n- [GET Data By Year](request/52276011-f9fa1443-c52d-4488-b214-709cb3b963ad)\n- [GET Data by Country and Year](request/52276011-cb5647cf-5fa9-4a8c-80f3-5fb4ba26a1aa)\n- [GET By blood_pressure](request/52276011-03f9e2f7-153e-474f-9493-6f4bfdee51f7)\n- [GET paginación](request/52276011-2dc62b4e-c070-4b8a-94cc-6c8c869c9652)\n- [DOCS](request/52276011-6a5be89c-b403-43d0-9432-2c183c326cf9)\n"
             },
             {
               "name": "Post",
               "item": [
                 {
                   "name": "POST New Data",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Data for the test\r",
+                          "const randomYear = 2026;\r",
+                          "const randomValue = 333.0;\r",
+                          "const entityName = \"Spain\";\r",
+                          "\r",
+                          "const validPayload = {\r",
+                          "    \"entity\": entityName,\r",
+                          "    \"year\": randomYear,\r",
+                          "    \"high_systolic_blood_pressure\": randomValue,\r",
+                          "    \"air_pollution\": 20.5,\r",
+                          "    \"child_wasting\": 10.2,\r",
+                          "    \"household_air_pollution_from_solid_fuels\": 5.0,\r",
+                          "    \"high_fasting_plasma_glucose\": 80.1\r",
+                          "};\r",
+                          "\r",
+                          "// Store the JSON for the Body\r",
+                          "pm.collectionVariables.set(\"post_payload\", JSON.stringify(validPayload));\r",
+                          "\r",
+                          "// Store values for the Tests\r",
+                          "pm.collectionVariables.set(\"last_posted_year\", randomYear);\r",
+                          "pm.collectionVariables.set(\"last_posted_entity\", entityName);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const postStatus = pm.response.code;\r",
+                          "const expectedPostYear = pm.collectionVariables.get(\"last_posted_year\");\r",
+                          "const expectedPostEntity = pm.collectionVariables.get(\"last_posted_entity\");\r",
+                          "\r",
+                          "if (postStatus === 201) {\r",
+                          "    pm.test(\"Success: Resource created successfully\", function () {\r",
+                          "        const jsonData = pm.response.json();\r",
+                          "        pm.expect(jsonData.entity).to.eql(expectedPostEntity);\r",
+                          "        pm.expect(Number(jsonData.year)).to.eql(Number(expectedPostYear));\r",
+                          "        pm.expect(jsonData).to.not.have.property('_id');\r",
+                          "    });\r",
+                          "} \r",
+                          "else if (postStatus === 400) {\r",
+                          "    pm.test(\"Validation: Bad Request\", function () {\r",
+                          "        pm.expect(pm.response.text()).to.be.oneOf([\r",
+                          "            \"Bad request: Missing required fields\",\r",
+                          "            \"Bad request: Extra fields provided\"\r",
+                          "        ]);\r",
+                          "    });\r",
+                          "}\r",
+                          "else if (postStatus === 409) {\r",
+                          "    pm.test(\"Validation: Duplicate conflict\", function () {\r",
+                          "        pm.expect(pm.response.text()).to.equal(\"Conflict: Data already exists\");\r",
+                          "    });\r",
+                          "}\r",
+                          "else {\r",
+                          "    pm.test(\"Unexpected server error in POST\", function () {\r",
+                          "        pm.expect(postStatus).to.be.oneOf([201, 400, 409]);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "POST",
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"entity\": \"Spain\", \"year\": 2025, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"child_wasting\": 2468.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "raw": "{\r\n    \"entity\": \"Spain\",\r\n    \"year\": 2026,\r\n    \"high_systolic_blood_pressure\": 333.0,\r\n    \"air_pollution\": 40.0,\r\n    \"child_wasting\": 4.5,\r\n    \"household_air_pollution_from_solid_fuels\": 12.0,\r\n    \"high_fasting_plasma_glucose\": 90.0\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -240,6 +701,21 @@
                 },
                 {
                   "name": "POST New Data - Incomplete",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400 - Missing fields\", () => {\r",
+                          "    pm.expect(pm.response.code === 400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "POST",
                     "header": [],
@@ -260,12 +736,28 @@
                       "path": [
                         "deaths-by-risk-factors"
                       ]
-                    }
+                    },
+                    "description": "## Purpose\n\nCreates a new record in the `deaths-by-risk-factors` dataset.\n\nUse this endpoint to **insert** a single observation for a given `entity` (country/region) and `year`, with multiple risk-factor metrics.\n\n---\n\n## Endpoint\n\n`POST {{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors`\n\n### Variables used\n\n- `{{BASE_URL}}`: Base host (e.g., `http://localhost:8080`)\n    \n- `{{BASE_API_URL}}`: Base API path (e.g., `/api/v1`)\n    \n\n> Tip: select an environment (e.g., `local` or `SOS2526-10`) that defines these variables before sending. \n  \n\n---\n\n## Authentication\n\nNot specified in this request.  \nIf your API requires auth, add it in the **Authorization** tab (e.g., Bearer token).\n\n---\n\n## Request body\n\n**Content-Type:** `application/json`  \n**Body (raw JSON):** one object with these fields:\n\n### Schema (recommended)\n\n| Field | Type | Required | Notes |\n| --- | --- | --- | --- |\n| `entity` | string | yes | Country/region name. |\n| `year` | number (integer) | yes | Year of the observation. |\n| `high_systolic_blood_pressure` | number | yes | Risk factor metric. |\n| `air_pollution` | number | yes | Risk factor metric. |\n| `household_air_pollution_from_solid_fuels` | number | yes | Risk factor metric. |\n| `high_fasting_plasma_glucose` | number | yes | Risk factor metric. |\n\n### Example\n\n\\`\\`\\`json  \n{  \n\"entity\": \"Spain\",  \n\"year\": 2025,  \n\"high_systolic_blood_pressure\": 1234.5,  \n\"air_pollution\": 6789,  \n\"household_air_pollution_from_solid_fuels\": 1357.9,  \n\"high_fasting_plasma_glucose\": 2211  \n}"
                   },
                   "response": []
                 },
                 {
                   "name": "POST New Data - On Country",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 405 - Method not allowed\", () => {\r",
+                          "    pm.expect(pm.response.code === 200);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "POST",
                     "header": [],
@@ -290,20 +782,77 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "POST New Data - TEXT",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 415 - Only JSON allowed\", () => {\r",
+                          "    pm.expect(pm.response.code === 415);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"entity\": \"Spain\", \"year\": 2025, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              ]
+              ],
+              "description": "## POST — Create endpoints\n\nCreate new resources in this API using POST requests.\n\n> Note: This folder is currently empty (no requests or subfolders yet). Add POST requests here to keep create operations organized."
             },
             {
               "name": "Put",
               "item": [
                 {
                   "name": "PUT - Update Collection",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 405 - Method not allowed\", () => {\r",
+                          "    pm.expect(pm.response.code === 405);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "PUT",
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "[\r\n    {\"entity\": \"Spain\", \"year\": 2025, \r\n    \"high_systolic_blood_pressure\": 1234.5,\r\n    \"air_pollution\": 6789.0,\r\n    \"child_wasting\": 2468.0,\r\n    \"household_air_pollution_from_solid_fuels\": 1357.9,\r\n    \"high_fasting_plasma_glucose\": 2211.0}\r\n    ,\r\n    {\"entity\": \"Spain\", \"year\": 2026, \r\n    \"high_systolic_blood_pressure\": 1234.5,\r\n    \"air_pollution\": 6789.0,\r\n    \"child_wasting\": 2468.0,\r\n    \"household_air_pollution_from_solid_fuels\": 1357.9,\r\n    \"high_fasting_plasma_glucose\": 2211.0}\r\n]"
+                      "raw": "[\r\n    {\"entity\": \"Spain\", \"year\": 2025, \r\n    \"high_systolic_blood_pressure\": 1234.5,\r\n    \"air_pollution\": 6789.0,\r\n    \"child_wasting\": 2468.0,\r\n    \"household_air_pollution_from_solid_fuels\": 1357.9,\r\n    \"high_fasting_plasma_glucose\": 2211.0}\r\n    ,\r\n    {\"entity\": \"Spain\", \"year\": 2026, \r\n    \"high_systolic_blood_pressure\": 1234.5,\r\n    \"air_pollution\": 6789.0,\r\n    \"child_wasting\": 2468.0,\r\n    \"household_air_pollution_from_solid_fuels\": 1357.9,\r\n    \"high_fasting_plasma_glucose\": 2211.0}\r\n]",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "url": {
                       "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
@@ -319,12 +868,64 @@
                 },
                 {
                   "name": "PUT - Update Data",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "const country = pm.collectionVariables.get(\"last_posted_entity\") || \"Spain\";\r",
+                          "const year = pm.collectionVariables.get(\"last_posted_year\") || 2026;\r",
+                          "\r",
+                          "const updateData = {\r",
+                          "    \"entity\": country,\r",
+                          "    \"year\": parseInt(year),\r",
+                          "    \"high_systolic_blood_pressure\": 130.0, \r",
+                          "    \"air_pollution\": 40.0,\r",
+                          "    \"child_wasting\": 4.5,\r",
+                          "    \"household_air_pollution_from_solid_fuels\": 12.0,\r",
+                          "    \"high_fasting_plasma_glucose\": 90.0\r",
+                          "};\r",
+                          "\r",
+                          "pm.collectionVariables.set(\"update_payload\", JSON.stringify(updateData));"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const putStatus = pm.response.code;\r",
+                          "\r",
+                          "pm.test(\"Validate update integrity\", () => {\r",
+                          "    if (putStatus === 200) {\r",
+                          "        const jsonData = pm.response.json();\r",
+                          "        const sentUpdateData = JSON.parse(pm.collectionVariables.get(\"update_payload\"));\r",
+                          "        \r",
+                          "        pm.expect(jsonData.entity).to.eql(sentUpdateData.entity);\r",
+                          "        pm.expect(jsonData.high_systolic_blood_pressure).to.eql(130.0);\r",
+                          "        pm.expect(jsonData).to.not.have.property('_id');\r",
+                          "    } else if (putStatus === 404) {\r",
+                          "        console.log(\"Resource does not exist for update\");\r",
+                          "    } else {\r",
+                          "        pm.expect(putStatus).to.be.oneOf([200, 404]);\r",
+                          "    }\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "PUT",
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"entity\": \"Spain\", \"year\": 2026, \r\n\"high_systolic_blood_pressure\": 1234.5,\r\n\"air_pollution\": 6789.0,\r\n\"child_wasting\": 2468.0,\r\n\"household_air_pollution_from_solid_fuels\": 1357.9,\r\n\"high_fasting_plasma_glucose\": 2211.0}",
+                      "raw": "{\r\n    \"entity\": \"Spain\",\r\n    \"year\": 2026,\r\n    \"high_systolic_blood_pressure\": 130.0,\r\n    \"air_pollution\": 40.0,\r\n    \"child_wasting\": 4.5,\r\n    \"household_air_pollution_from_solid_fuels\": 12.0,\r\n    \"high_fasting_plasma_glucose\": 90.0\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -348,6 +949,21 @@
                 },
                 {
                   "name": "PUT - Update Data - Incomplete",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400 - Bad request\", () => {\r",
+                          "    pm.expect(pm.response.code === 400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "PUT",
                     "header": [],
@@ -373,6 +989,44 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "PUT - TEXT",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 415 - Only JSON allowed\", () => {\r",
+                          "    pm.expect(pm.response.code === 415);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"entity\": \"Spain\",\r\n    \"year\": 2026,\r\n    \"high_systolic_blood_pressure\": 130.0,\r\n    \"air_pollution\": 40.0,\r\n    \"child_wasting\": 4.5,\r\n    \"household_air_pollution_from_solid_fuels\": 12.0,\r\n    \"high_fasting_plasma_glucose\": 90.0\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/spain/2025",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "spain",
+                        "2025"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
@@ -380,7 +1034,51 @@
               "name": "Delete",
               "item": [
                 {
-                  "name": "DELETE Data By Country",
+                  "name": "DELETE Data",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// Definimos los parámetros del recurso a borrar\r",
+                          "pm.collectionVariables.set(\"delete_country\", \"spain\");\r",
+                          "pm.collectionVariables.set(\"delete_year\", 2026);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const deleteStatus = pm.response.code;\r",
+                          "\r",
+                          "if (deleteStatus === 204) {\r",
+                          "    pm.test(\"Successful deletion: Resource removed\", function () {\r",
+                          "        pm.response.to.have.status(204);\r",
+                          "        pm.expect(pm.response.text()).to.equal(\"\");\r",
+                          "    });\r",
+                          "} \r",
+                          "else if (deleteStatus === 404) {\r",
+                          "    pm.test(\"Resource not found: Delete failed\", function () {\r",
+                          "        pm.response.to.have.status(404);\r",
+                          "        pm.expect(pm.response.text()).to.equal(\"Data not found\");\r",
+                          "    });\r",
+                          "}\r",
+                          "else {\r",
+                          "    pm.test(\"Unexpected error in delete\", function () {\r",
+                          "        pm.expect(deleteStatus).to.be.oneOf([204, 404]);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "DELETE",
                     "header": [],
@@ -401,15 +1099,74 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "DELETE Data - Wrong ID",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404 - Not found\", () => {\r",
+                          "    pm.expect(pm.response.code === 404);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/myCountry",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "deaths-by-risk-factors",
+                        "myCountry"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             }
-          ]
+          ],
+          "description": "## DeathsByRiskFactors\n\nThis folder groups all endpoints related to the **\"Deaths by Risk Factors\"** resource.\n\n### What you’ll find here\nRequests are organized by HTTP method into child folders that cover the standard CRUD workflow:\n\n- **GET**: Retrieve \"Deaths by Risk Factors\" records (listing, filtering, or fetching specific resources).\n- **Post**: Create new \"Deaths by Risk Factors\" records.\n- **Put**: Update existing \"Deaths by Risk Factors\" records.\n- **Delete**: Remove \"Deaths by Risk Factors\" records.\n\nUse these requests together to create, read, update, and delete data for the \"Deaths by Risk Factors\" dataset in a consistent, method-based structure."
         }
-      ]
+      ],
+      "description": "## API\n\nThis folder is the top-level section for API endpoints in this collection.\n\n### What you’ll find here\n- **DeathsByRiskFactors**: Requests grouped around retrieving and analyzing deaths data broken down by risk factors.\n\n> Note: There are currently **no requests directly inside** this **API** folder—endpoints are organized within its child folders."
     },
     {
       "name": "GET Main Page",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 - OK\", () => {\r",
+              "    pm.expect(pm.response.code === 200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -418,12 +1175,28 @@
           "host": [
             "{{BASE_URL}}"
           ]
-        }
+        },
+        "description": "## GET Main Page\n\nRetrieves the API/server **main page** (root endpoint). This is typically used as a quick **health check** to confirm the base URL is reachable and responding.\n\n### Base URL variable\n\nThis request uses an environment/collection variable:\n\n- `{{BASE_URL}}` _(required)_ — the root URL of the server (for example: `http://localhost:3000` or `https://api.example.com`).\n    \n\n> Make sure you have an active environment selected that defines `BASE_URL`. \n  \n\n### How to use in Postman\n\n1. Select an environment that contains `BASE_URL`.\n    \n2. Open this request and click **Send**.\n    \n3. Review the response **status code** and **body**.\n    \n\n### Expected responses\n\nBecause the specific implementation may vary by deployment, the most common outcomes are:\n\n- **200 OK** — Server is reachable. Body may be HTML (web page) or JSON (API welcome/metadata).\n    \n- **3xx Redirect** — The server redirects to another route (common for web apps).\n    \n- **4xx / 5xx** — Indicates an error (for example: wrong `BASE_URL`, missing route, server not running).\n    \n\n### Notes\n\n- This request has **no parameters** and **no request body**.\n    \n- If you receive a TLS/certificate error with `https://` URLs, verify the server certificate or use the correct protocol/host/port in `BASE_URL`."
       },
       "response": []
     },
     {
       "name": "GET About",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 - OK\", () => {\r",
+              "    pm.expect(pm.response.code === 200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -435,9 +1208,56 @@
           "path": [
             "about"
           ]
-        }
+        },
+        "description": "## GET About\n\nRetrieves basic information about the API/service (the **About** resource). Use this endpoint to quickly verify the service is reachable and to obtain human-readable metadata (for example: service name, description, version, links, etc.—exact fields depend on the implementation).\n\n### Request\n\n- **Method:** `GET`\n    \n- **URL:** `{{BASE_URL}}/about`\n    \n\n### Required variables\n\nThis request uses the following variable(s):\n\n- `BASE_URL` — Base URL for the running API (for example: `http://localhost:3000`)\n    \n\n### Authentication\n\n- **None**\n    \n\n### Expected response\n\n- **Success:** `200 OK`\n    - Typically returns a JSON object with general API information.\n        \n- **Common errors:**\n    - `4xx/5xx` depending on deployment and server state.\n        \n\n### Quick example\n\nExample cURL equivalent:\n\n``` bash\ncurl --request GET \"{{BASE_URL}}/about\"\n\n ```\n\nIn Postman:\n\n1. Select an environment where `BASE_URL` is set.\n    \n2. Click **Send**.\n    \n3. Inspect the `200 OK` response body for service metadata."
       },
       "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "search_year",
+      "value": ""
+    },
+    {
+      "key": "search_country",
+      "value": ""
+    },
+    {
+      "key": "min_blood_pressure",
+      "value": ""
+    },
+    {
+      "key": "p_offset",
+      "value": ""
+    },
+    {
+      "key": "p_limit",
+      "value": ""
+    },
+    {
+      "key": "post_payload",
+      "value": ""
+    },
+    {
+      "key": "last_posted_year",
+      "value": ""
+    },
+    {
+      "key": "last_posted_entity",
+      "value": ""
+    },
+    {
+      "key": "delete_country",
+      "value": ""
+    },
+    {
+      "key": "delete_year",
+      "value": ""
+    },
+    {
+      "key": "update_payload",
+      "value": ""
     }
   ]
 }
