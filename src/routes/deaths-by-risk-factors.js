@@ -4,7 +4,7 @@ import dataStore from "nedb"
 
 const router = express.Router();
 
-const store = new dataStore();
+const store = new dataStore({filename: '../../data/storage/deaths-by-risk-factors.db', autoload: true});
 
 const data = [];
 const requiredFields = ['entity', 'year', 'high_systolic_blood_pressure', 'air_pollution', 'child_wasting',
