@@ -6,7 +6,6 @@ import childMalnutritions from "./src/routes/child-malnutritions.js";
 
 const app = express();
 
-// Load URLs from public folder
 app.use(express.json());
 app.use("/", express.static("./public"));
 
@@ -19,16 +18,26 @@ app.use((req, res, next) => {
   next();
 });
 
-// Define global constants
 const BASE_API_URL = '/api/v1';
 const PORT = process.env.PORT || 3000;
 
-// Load the routes that showcase data
 app.use(BASE_API_URL, deathsRoute);
 app.use(BASE_API_URL, protestsRoute);
 app.use(BASE_API_URL, pandemicsRoute);
 app.use(BASE_API_URL, childMalnutritions);
 
+/* ROUTE SAMPLE F04 */
 
-// Start the server
+app.get("/samples/rm",(req,res)=>{
+
+const data = [13.2,12.9,12.3];
+const avg = data.reduce((a,b)=>a+b,0)/data.length;
+
+
+res.send("Average stunting rate: "+avg.toFixed(1));
+
+});
+
+/* START SERVER */
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
