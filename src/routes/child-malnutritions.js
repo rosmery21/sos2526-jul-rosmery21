@@ -1,7 +1,17 @@
 import express from "express";
 const router = express.Router();
 
-let childMalnutritions = [
+let childMalnutritions = [];
+
+router.get("/child-malnutritions", (req, res) => {
+    res.send(childMalnutritions);
+});
+
+router.get("/child-malnutritions/loadInitialData",(req,res)=>{
+
+if(childMalnutritions.length===0){
+
+childMalnutritions.push(
 {year:2015,country:"Peru",region:"South America",stunting_rate:13.2},
 {year:2016,country:"Peru",region:"South America",stunting_rate:12.9},
 {year:2017,country:"Peru",region:"South America",stunting_rate:12.3},
@@ -12,10 +22,16 @@ let childMalnutritions = [
 {year:2022,country:"Ecuador",region:"South America",stunting_rate:13.9},
 {year:2023,country:"Peru",region:"South America",stunting_rate:11.8},
 {year:2024,country:"Peru",region:"South America",stunting_rate:11.5}
-];
+);
 
-router.get("/child-malnutritions", (req, res) => {
-    res.send(childMalnutritions);
+res.status(201).send("Initial data loaded");
+
+}else{
+
+res.status(200).send("Data already loaded");
+
+}
+
 });
 
 export default router;
