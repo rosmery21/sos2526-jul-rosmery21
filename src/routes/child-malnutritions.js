@@ -17,7 +17,7 @@ const year=parseInt(req.params.year);
 const data=childMalnutritions.find(d=>d.country===country && d.year===year);
 
 if(!data){
-res.status(404).send("Not found");
+res.status(404).json({error:"Not found"});
 }else{
 res.send(data);
 }
@@ -80,6 +80,28 @@ res.status(404).send("Not found");
 
 childMalnutritions.splice(index,1);
 res.status(200).send("Deleted");
+
+}
+
+});
+
+router.put("/child-malnutritions/:country/:year",(req,res)=>{
+
+const country=req.params.country;
+const year=parseInt(req.params.year);
+
+const index=childMalnutritions.findIndex(
+d=> d && d.country===country && d.year===year
+);
+
+if(index===-1){
+
+res.status(404).send("Not found");
+
+}else{
+
+childMalnutritions[index]=req.body;
+res.status(200).send("Updated");
 
 }
 
