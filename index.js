@@ -10,6 +10,15 @@ const app = express();
 app.use(express.json());
 app.use("/", express.static("./public"));
 
+app.use((req, res, next) => {
+  if (req.method === "POST" || req.method === "PUT") {
+    if (!req.is("application/json")) {
+      return res.status(415).send("Unsupported Media Type: Only JSON allowed");
+    }
+  }
+  next();
+});
+
 // Define global constants
 const BASE_API_URL = '/api/v1';
 const PORT = process.env.PORT || 3000;
