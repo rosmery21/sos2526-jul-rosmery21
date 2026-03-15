@@ -4,7 +4,7 @@ import dataStore from 'nedb';
 
 const router = express.Router();
 
-const store = new dataStore();
+const store = new dataStore({filename: './data/storage/pandemics.db', autoload: true});
 
 const data = [];
 const requiredFields = ['entity', 'code', 'year', 'yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'];

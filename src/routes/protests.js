@@ -16,7 +16,7 @@ const requiredFields = [
   "hdi_score", "violence_status", "predicted_prob"
 ];
 
-let db = new DataStore();
+let db = new DataStore({filename: './data/storage/protests.db', autoload: true});
 
 // Helper function to handle errors
 let handleServerError = (err, res) => {
