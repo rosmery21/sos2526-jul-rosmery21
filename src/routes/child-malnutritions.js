@@ -72,14 +72,16 @@ router.delete("/child-malnutritions/:country/:year",(req,res)=>{
 const country=req.params.country;
 const year=parseInt(req.params.year);
 
-const index=childMalnutritions.findIndex(d=>d.country===country && d.year===year);
+const index=childMalnutritions.findIndex(
+d => d && d.country===country && d.year===year
+);
 
 if(index===-1){
-res.status(404).send("Not found");
+res.status(404).json({error:"Not found"});
 }else{
 
 childMalnutritions.splice(index,1);
-res.status(200).send("Deleted");
+res.status(200).json({message:"Deleted"});
 
 }
 
