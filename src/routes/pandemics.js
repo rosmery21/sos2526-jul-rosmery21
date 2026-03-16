@@ -9,8 +9,6 @@ const store = new dataStore({filename: './data/storage/pandemics.db', autoload: 
 const data = [];
 const requiredFields = ['entity', 'code', 'year', 'yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'];
 
-store.insert(data);
-
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276047/2sBXigLDEC";
 
 router.get('/pandemics/docs', (req, res) => {
@@ -82,11 +80,7 @@ router.get('/pandemics', (req, res) => {
     .skip(offset)
     .limit(limit)
     .exec((err, data) => {
-    if (data.length === 0)
-      return res.status(404).send("Data not found");
     data.forEach(d => delete d._id);
-    if (data.length === 1)
-      data = data[0];
     res.status(200).json(data);
   });
 });
@@ -95,7 +89,7 @@ router.get('/pandemics', (req, res) => {
 router.post('/pandemics', (req, res) => {
   const newData = req.body;
   console.log(newData.entity);
-  const isMissingFields = requiredFields.some(field => {!newData[field]});
+  const isMissingFields = requiredFields.some(field => !newData[field]);
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
@@ -151,7 +145,7 @@ router.put('/pandemics/:entity/:year', (req, res) => {
   const entity = req.params.entity;
   const year = parseInt(req.params.year);
   const newData = req.body;
-  const isMissingFields = requiredFields.some(field => {!newData[field]});
+  const isMissingFields = requiredFields.some(field => !newData[field]);
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
