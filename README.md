@@ -12,5 +12,5 @@
 - **APIs:**
   - https://sos2526-10.onrender.com/api/v1/deaths-by-risk-factors/docs (Developed by Santiago Muñoz)
   - https://sos2526-10.onrender.com/api/v1/protests/docs (Developed by Onésimo Morillo)
-  - https://sos2526-10.onrender.com/api/v1pandemics/docs (Developed by Alexia Gutiérrez)
+  - https://sos2526-10.onrender.com/api/v1/pandemics/docs (Developed by Alexia Gutiérrez)
   - https://sos2526-10.onrender.com/api/v1/child-malnutritions/docs (Developed by Rosmery Marculli)
