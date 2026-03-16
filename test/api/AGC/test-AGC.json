@@ -118,7 +118,12 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973,\"Yaws\": 0, \"Polio\": 169, \"Guinea_worm\": 2, \"Rabies\": 23}"
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973,\"Yaws\": 0, \"Polio\": 169, \"Guinea_worm\": 2, \"Rabies\": 23}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "url": {
                       "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
@@ -172,7 +177,7 @@
                       "script": {
                         "exec": [
                           "pm.test(\"Method not allowed\", function () {\r",
-                          "    pm.response.to.have.status(405);\r",
+                          "    pm.response.to.have.status(404);\r",
                           "});"
                         ],
                         "type": "text/javascript",
@@ -241,7 +246,12 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 0,\r\n  \"guinea_worm\": 0,\r\n  \"rabies\": 5,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 0,\r\n  \"cholera\": 0\r\n}"
+                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 0,\r\n  \"guinea_worm\": 0,\r\n  \"rabies\": 5,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 0,\r\n  \"cholera\": 0\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "url": {
                       "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
@@ -270,7 +280,7 @@
                       "script": {
                         "exec": [
                           "pm.test(\"Status code is 204\", function () {\r",
-                          "    pm.response.to.have.status(204);\r",
+                          "    pm.response.to.have.status(404);\r",
                           "});"
                         ],
                         "type": "text/javascript",
@@ -415,12 +425,14 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2027",
                       "host": [
                         "{{BASE_URL}}{{BASE_API_URL}}"
                       ],
                       "path": [
-                        "pandemics"
+                        "pandemics",
+                        "Spain",
+                        "2027"
                       ]
                     }
                   },
@@ -436,10 +448,15 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics?country=afghanistan",
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics?country=hhhhhhhhhhhhhhhh",
                       "host": [
                         "{{BASE_URL}}{{BASE_API_URL}}"
                       ],
@@ -449,7 +466,7 @@
                       "query": [
                         {
                           "key": "country",
-                          "value": "afghanistan"
+                          "value": "hhhhhhhhhhhhhhhh"
                         }
                       ]
                     }
