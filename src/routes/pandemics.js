@@ -126,10 +126,16 @@ router.delete('/pandemics', (req, res) => {
 router.get('/pandemics/:entity/:year', (req, res) => {
   const entity = req.params.entity;
   const year = parseInt(req.params.year);
-  store.find({ entity: new RegExp(`^${entity}$`, "i"), year: year }, (err, data) => {
-    if (data.length === 0)
-      return res.status(404).send("Data not found");
-    data.forEach(d => delete d._id);
+  
+  store.findOne({ entity: new RegExp(`^${entity}$`, "i"), year: year }, (err, data) => {
+    if (err) {
+        return res.status(500).send("Internal Server Error");
+    }
+    
+    if (!data) { 
+        return res.status(404).send("Data not found");
+    }
+    delete data._id;
     res.status(200).json(data);
   });
 });
