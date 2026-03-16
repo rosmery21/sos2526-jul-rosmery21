@@ -10,42 +10,6 @@
       "name": "Successfull requests",
       "item": [
         {
-          "name": "GET /protests/loadInitialData [LOAD DATA] (200)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status is 200 or 409\", () => {\r",
-                  "  pm.expect(pm.response.code).to.be.oneOf([200, 409]);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/protests/loadInitialData",
-              "host": [
-                "{{BASE_URL}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "protests",
-                "loadInitialData"
-              ]
-            },
-            "description": "Triggers the initial data seeding process by sending a GET request to `{{BASE_URL}}/api/v1/protests/loadInitialData`. This is a utility endpoint used to populate the database with a predefined set of protest records. A successful operation returns `200 OK`."
-          },
-          "response": []
-        },
-        {
           "name": "GET /protests (200)",
           "event": [
             {

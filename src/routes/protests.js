@@ -44,7 +44,7 @@ router.get('/protests/loadInitialData', (req, res) => {
     if (err) return handleServerError(err, res);
     // If theres no data load it
     if (data.length === 0) {
-      let newData = readFile('protests.csv').splice(0, 10); // Load only the first 10 entries!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      let newData = readFile('protests.csv')
 
       // Insert the new data
       db.insert(newData, (err, newDocs) => {
@@ -55,7 +55,7 @@ router.get('/protests/loadInitialData', (req, res) => {
 
     // if there is data return conflict
     else {
-      res.status(409).json('Data already loaded');
+      res.status(200).json('Data already loaded');
     }
   });
 });
