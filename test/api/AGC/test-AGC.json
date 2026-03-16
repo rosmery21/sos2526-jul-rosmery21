@@ -15,69 +15,43 @@
           "name": "pandemics",
           "item": [
             {
-              "name": "PUT",
-              "item": [
-                {
-                  "name": "PUT error",
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}"
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "PUT data",
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "afghanistan"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
               "name": "POST",
               "item": [
                 {
                   "name": "POST data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 201 or 409 or 400\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([201,400,409]);\r",
+                          "});\r",
+                          "\r",
+                          "if (pm.response.code === 201) {\r",
+                          "    let jsonData = pm.response.json();\r",
+                          "\r",
+                          "    pm.test(\"Created object has entity\", function () {\r",
+                          "        pm.expect(jsonData.entity).to.eql(\"Spain\");\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Created object has year\", function () {\r",
+                          "        pm.expect(jsonData.year).to.eql(2020);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "POST",
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}",
+                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 0,\r\n  \"guinea_worm\": 0,\r\n  \"rabies\": 1,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 0,\r\n  \"cholera\": 0\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -103,33 +77,12 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}"
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "DELETE",
-              "item": [
-                {
-                  "name": "DELETE Collection",
-                  "request": {
-                    "method": "DELETE",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"Total (estimated) polio cases\": 6169, \"Reported cases of guinea worm disease in humans\": 1}"
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973,\"Yaws\": 0, \"Polio\": 169, \"Guinea_worm\": 2, \"Rabies\": 23}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "url": {
                       "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
@@ -144,13 +97,28 @@
                   "response": []
                 },
                 {
-                  "name": "DELETE data",
+                  "name": "POST pais",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Method not allowed\", function () {\r",
+                          "    pm.response.to.have.status(405);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
-                    "method": "DELETE",
+                    "method": "POST",
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973,\"Yaws\": 0, \"Polio\": 169, \"Guinea_worm\": 2, \"Rabies\": 23}"
                     },
                     "url": {
                       "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
@@ -168,10 +136,240 @@
               ]
             },
             {
+              "name": "PUT",
+              "item": [
+                {
+                  "name": "PUT error",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Code\": \"AFG\", \"Year\": 1977, \"polio\": 6169, \"guinea_worm\": 1}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Method not allowed\", function () {\r",
+                          "    pm.response.to.have.status(405);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"entity\": \"Afghanistan\",\r\n    \"code\": \"AFG\",\r\n    \"year\": 1891,\r\n    \"yaws\": 1,\r\n    \"polio\": 5859,\r\n    \"guinea_worm\": 6,\r\n    \"rabies\": 9,\r\n    \"malaria\": 7,\r\n    \"hiv_aids\": 4,\r\n    \"tuberculosis\": 20,\r\n    \"smallpox\": 9,\r\n    \"cholera\": 10\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan/1890",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan",
+                        "1890"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT pais año",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200, 400 or 404\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([200,400,404]);\r",
+                          "});\r",
+                          "\r",
+                          "if (pm.response.code === 200) {\r",
+                          "    let data = pm.response.json();\r",
+                          "\r",
+                          "    pm.test(\"Updated entity correct\", function () {\r",
+                          "        pm.expect(data.entity).to.eql(\"Spain\");\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Updated year correct\", function () {\r",
+                          "        pm.expect(data.year).to.eql(2020);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 0,\r\n  \"guinea_worm\": 0,\r\n  \"rabies\": 5,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 0,\r\n  \"cholera\": 0\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "Spain",
+                        "2020"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "DELETE",
+              "item": [
+                {
+                  "name": "DELETE data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 204\", function () {\r",
+                          "    pm.response.to.have.status(204);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan/1891",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan",
+                        "1891"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "DELETE pais año",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 204 or 404\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([204,404]);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "Spain",
+                        "2020"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
               "name": "GET",
               "item": [
                 {
                   "name": "GET load initial data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 201 or 409\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([201,409]);\r",
+                          "});\r",
+                          "\r",
+                          "if (pm.response.code === 201) {\r",
+                          "    let jsonData = pm.response.json();\r",
+                          "\r",
+                          "    pm.test(\"Response is an array\", function () {\r",
+                          "        pm.expect(jsonData).to.be.an(\"array\");\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Objects contain required fields\", function () {\r",
+                          "        pm.expect(jsonData[0]).to.have.property(\"entity\");\r",
+                          "        pm.expect(jsonData[0]).to.have.property(\"year\");\r",
+                          "        pm.expect(jsonData[0]).to.have.property(\"malaria\");\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -190,6 +388,29 @@
                 },
                 {
                   "name": "GET data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200 or 404\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([200,404]);\r",
+                          "});\r",
+                          "\r",
+                          "if (pm.response.code === 200) {\r",
+                          "    let data = pm.response.json();\r",
+                          "\r",
+                          "    pm.test(\"Response is array or object\", function () {\r",
+                          "        pm.expect(data).to.satisfy(d => typeof d === \"object\");\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
                   "request": {
                     "method": "GET",
                     "header": [],
@@ -200,6 +421,135 @@
                       ],
                       "path": [
                         "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET pais",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics?country=afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ],
+                      "query": [
+                        {
+                          "key": "country",
+                          "value": "afghanistan"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET año",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics?year=1980",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ],
+                      "query": [
+                        {
+                          "key": "year",
+                          "value": "1980"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET polio",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics?polio=5000",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ],
+                      "query": [
+                        {
+                          "key": "polio",
+                          "value": "5000"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET pais y año",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200 or 404\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([200,404]);\r",
+                          "});\r",
+                          "\r",
+                          "if (pm.response.code === 200) {\r",
+                          "    let data = pm.response.json();\r",
+                          "\r",
+                          "    pm.test(\"Returned entity matches request\", function () {\r",
+                          "        pm.expect(data[0].entity.toLowerCase()).to.eql(\"spain\");\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Returned year matches request\", function () {\r",
+                          "        pm.expect(data[0].year).to.eql(2020);\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "Spain",
+                        "2020"
                       ]
                     }
                   },
