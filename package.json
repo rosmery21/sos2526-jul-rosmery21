@@ -16,6 +16,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "svelte": "cd src/front && npm run dev",
 
     "newman-local-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/local-env.json",
     "test-local-SMJ": "start-server-and-test start http://localhost:3000 newman-local-SMJ",

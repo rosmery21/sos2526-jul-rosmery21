@@ -1,8 +1,8 @@
 import express from 'express';
-import deathsRoute from './src/routes/deaths-by-risk-factors.js';
-import protestsRoute from './src/routes/protests.js';
-import pandemicsRoute from './src/routes/pandemics.js';
-import childMalnutritions from "./src/routes/child-malnutritions.js";
+import deathsRoute from './src/back/deaths-by-risk-factors.js';
+import protestsRoute from './src/back/protests.js';
+import pandemicsRoute from './src/back/pandemics.js';
+import childMalnutritions from "./src/back/child-malnutritions.js";
 
 const app = express();
 
