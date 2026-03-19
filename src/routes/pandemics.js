@@ -6,182 +6,134 @@ const router = express.Router();
 
 const store = new dataStore({filename: './data/storage/pandemics.db', autoload: true});
 
-const data = [];
+// Campos requeridos para validación (v2)
 const requiredFields = ['entity', 'code', 'year', 'yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'];
 
+// Actualiza esta URL con tu nueva documentación de Postman para la v2
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276047/2sBXigLDEC";
 
 router.get('/pandemics/docs', (req, res) => {
-  res.redirect(DOCUMENTATION_URL);
+    res.redirect(DOCUMENTATION_URL);
 });
 
-// Loads the data from the file and stores it in memory for the route
+// Carga de datos iniciales
 router.get('/pandemics/loadInitialData', (req, res) => {
-  store.count({}, (err, count) => {
-    if (count > 0) {
-      return res.status(409).send("Conflict: Data already loaded");
-    }
-    let data = readFile('pandemics.csv');
-    let filteredData = data.map(item => ({
-      entity: item.Entity,
-      code: item.Code,
-      year: item.Year,
-      yaws: item.Yaws || 0,
-      polio: item.Polio || 0,
-      guinea_worm: item.Guinea_worm || 0,
-      rabies: item.Rabies || 0,
-      malaria: item.Malaria || 0,
-      hiv_aids: item['Hiv_aids'] || 0,
-      tuberculosis: item.Tuberculosis || 0,
-      smallpox: item.Smallpox || 0,
-      cholera: item.Cholera || 0
-    }));
-    store.insert(filteredData.slice(0, 10), (err, docs) => {
-      docs.forEach(d => delete d._id);
-      res.status(201).json(docs);
+    store.count({}, (err, count) => {
+        if (count > 0) {
+            return res.sendStatus(409); // Conflict
+        }
+        let data = readFile('pandemics.csv');
+        let filteredData = data.map(item => ({
+            entity: item.Entity,
+            code: item.Code,
+            year: parseInt(item.Year),
+            yaws: item.Yaws || 0,
+            polio: item.Polio || 0,
+            guinea_worm: item.Guinea_worm || 0,
+            rabies: item.Rabies || 0,
+            malaria: item.Malaria || 0,
+            hiv_aids: item['Hiv_aids'] || 0,
+            tuberculosis: item.Tuberculosis || 0,
+            smallpox: item.Smallpox || 0,
+            cholera: item.Cholera || 0
+        }));
+        store.insert(filteredData.slice(0, 10), (err, docs) => {
+            docs.forEach(d => delete d._id);
+            res.status(201).json(docs);
+        });
     });
-  });
 });
 
-// Returns the data stored in memory for the route
+// GET Colección con filtrado y paginación (Estilo Santiago)
 router.get('/pandemics', (req, res) => {
-  const query = {}
+    const query = {};
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 10;
 
-  const offset = parseInt(req.query.offset) || 0;
-  const limit = parseInt(req.query.limit) || 10;
+    // Filtros
+    if (req.query.entity) query.entity = new RegExp(`^${req.query.entity}$`, "i");
+    if (req.query.code) query.code = new RegExp(`^${req.query.code}$`, "i");
+    if (req.query.year) query.year = parseInt(req.query.year);
+    // Filtros numéricos $gt
+    ['yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'].forEach(f => {
+        if (req.query[f]) query[f] = { $gt: parseFloat(req.query[f]) };
+    });
 
-  const entity = req.query.entity;
-  const code = req.query.code;
-  const year = req.query.year;
-  const yaws = req.query.yaws;
-  const polio = req.query.polio;
-  const guinea_worm = req.query.guinea_worm;
-  const rabies = req.query.rabies;
-  const malaria = req.query.malaria;
-  const hiv_aids = req.query.hiv_aids;
-  const tuberculosis = req.query.tuberculosis;
-  const smallpox = req.query.smallpox;
-  const cholera = req.query.cholera;
-
-  if (entity) query.entity = new RegExp(`^${entity}$`, "i");
-  if (code) query.code = new RegExp(`^${code}$`, "i");
-  if (year) query.year = parseInt(year);
-  if (yaws) query.yaws = { $gt: parseFloat(yaws) };
-  if (polio) query.polio = { $gt: parseFloat(polio) };
-  if (guinea_worm) query.guinea_worm = { $gt: parseFloat(guinea_worm) };
-  if (rabies) query.rabies = { $gt: parseFloat(rabies) };
-  if (malaria) query.malaria = { $gt: parseFloat(malaria) };
-  if (hiv_aids) query.hiv_aids = { $gt: parseFloat(hiv_aids) };
-  if (tuberculosis) query.tuberculosis = { $gt: parseFloat(tuberculosis) };
-  if (smallpox) query.smallpox = { $gt: parseFloat(smallpox) };
-  if (cholera) query.cholera = { $gt: parseFloat(cholera) };
-
-  store.find(query)
-    .skip(offset)
-    .limit(limit)
-    .exec((err, data) => {
-    data.forEach(d => delete d._id);
-    res.status(200).json(data);
-  });
+    store.find(query).skip(offset).limit(limit).exec((err, data) => {
+        if (data.length === 0) return res.sendStatus(404);
+        
+        data.forEach(d => delete d._id);
+        
+        // Si solo hay uno y es una búsqueda específica, devolvemos objeto, si no array
+        if (data.length === 1 && (req.query.entity && req.query.year)) {
+            res.status(200).json(data[0]);
+        } else {
+            res.status(200).json(data);
+        }
+    });
 });
 
-// Creates a new entry in the data stored in memory for the route
+// POST para crear recurso
 router.post('/pandemics', (req, res) => {
-  const newData = req.body;
-  console.log(newData.entity);
-  const isMissingFields = requiredFields.some(field => !newData[field]);
-  if (isMissingFields) {
-    return res.status(400).send("Bad request: Missing required fields");
-  }
-  const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
-  if (hasExtraFields) {
-    return res.status(400).send("Bad request: Extra fields provided");
-  }
-  store.findOne(
-    { entity: newData.entity, year: newData.year },
-    (err, doc) => {
-      if (doc)
-        return res.status(409).send("Conflict: Data already exists");
-      store.insert(newData, (err, inserted) => {
-        delete inserted._id;
-        res.status(201).json(inserted);
-      });
-    }
-  );
-});
-
-// Method not allowed for the route, since we don't want to update all the data at once
-router.put('/pandemics', (req, res) => {
-  res.status(405).send('Method not allowed');
-});
-
-// Deletes all the data stored in memory for the route
-router.delete('/pandemics', (req, res) => {
-  store.remove({}, { multi: true }, (err, numRemoved) => {
-    res.status(204).send();
-  });
-});
-
-// Returns the data stored in memory for a specific country
-router.get('/pandemics/:entity/:year', (req, res) => {
-  const entity = req.params.entity;
-  const year = parseInt(req.params.year);
-  
-  store.findOne({ entity: new RegExp(`^${entity}$`, "i"), year: year }, (err, data) => {
-    if (err) {
-        return res.status(500).send("Internal Server Error");
-    }
+    const newData = req.body;
     
-    if (!data) { 
-        return res.status(404).send("Data not found");
-    }
-    delete data._id;
-    res.status(200).json(data);
-  });
+    // Validación de campos (Acepta el valor 0)
+    const isMissingFields = requiredFields.some(field => newData[field] === undefined);
+    const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
+
+    if (isMissingFields || hasExtraFields) return res.sendStatus(400);
+
+    store.findOne({ entity: newData.entity, year: newData.year }, (err, doc) => {
+        if (doc) return res.sendStatus(409);
+        store.insert(newData, (err, inserted) => {
+            delete inserted._id;
+            res.status(201).json(inserted);
+        });
+    });
 });
 
-
-// Method not allowed for the route, since we don't want to create a new country with a specific country
-router.post('/pandemics/:entity', (req, res) => {
-    res.status(405).send('Method not allowed');
+// GET Recurso específico
+router.get('/pandemics/:entity/:year', (req, res) => {
+    const { entity, year } = req.params;
+    store.findOne({ entity: new RegExp(`^${entity}$`, "i"), year: parseInt(year) }, (err, data) => {
+        if (!data) return res.sendStatus(404);
+        delete data._id;
+        res.status(200).json(data);
+    });
 });
 
-// Updates the data stored in memory for a specific country
+// PUT Recurso específico
 router.put('/pandemics/:entity/:year', (req, res) => {
-  const entity = req.params.entity;
-  const year = parseInt(req.params.year);
-  const newData = req.body;
-  const isMissingFields = requiredFields.some(field => !newData[field]);
-  if (isMissingFields) {
-    return res.status(400).send("Bad request: Missing required fields");
-  }
-  const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
-  if (hasExtraFields) {
-    return res.status(400).send("Bad request: Extra fields provided");
-  }
-  if (newData.entity.toLowerCase() !== entity.toLowerCase())
-    return res.status(400).send("entity mismatch");
-  store.update(
-    { entity: new RegExp(`^${entity}$`, "i"), year: year },
-    newData,
-    {},
-    (err, numUpdated) => {
-      if (numUpdated === 0)
-        return res.status(404).send("Data not found");
-      res.status(200).json(newData);
-    }
-  );
+    const { entity, year } = req.params;
+    const newData = req.body;
+
+    if (newData.entity !== entity || parseInt(newData.year) !== parseInt(year)) return res.sendStatus(400);
+    
+    const isMissingFields = requiredFields.some(field => newData[field] === undefined);
+    if (isMissingFields) return res.sendStatus(400);
+
+    store.update({ entity: new RegExp(`^${entity}$`, "i"), year: parseInt(year) }, newData, {}, (err, num) => {
+        if (num === 0) return res.sendStatus(404);
+        res.sendStatus(200);
+    });
 });
 
-// Deletes the data stored in memory for a specific country
+// DELETE Recurso específico
 router.delete('/pandemics/:entity/:year', (req, res) => {
-  const entity = req.params.entity;
-  const year = parseInt(req.params.year);
-  store.remove({ entity: new RegExp(`^${entity}$`, "i"), year: year }, {}, (err, numRemoved) => {
-    if (numRemoved === 0)
-      return res.status(404).send("Data not found");
-    res.status(204).send();
-  });
+    const { entity, year } = req.params;
+    store.remove({ entity: new RegExp(`^${entity}$`, "i"), year: parseInt(year) }, {}, (err, num) => {
+        if (num === 0) return res.sendStatus(404);
+        res.sendStatus(204);
+    });
 });
+
+// DELETE Colección
+router.delete('/pandemics', (req, res) => {
+    store.remove({}, { multi: true }, () => res.sendStatus(204));
+});
+
+// Métodos no permitidos
+router.put('/pandemics', (req, res) => res.sendStatus(405));
+router.post('/pandemics/:entity', (req, res) => res.sendStatus(405));
 
 export default router;
