@@ -72,7 +72,7 @@
 	</header>
 
 	<section class="grid">
-		{#each apis as item, i}
+		{#each apis as item, i (item.recurso)}
 			<article class="card" style="--accent: {item.color}; --delay: {i * 80}ms">
 				<div class="card-top">
 					<span class="index">{String(i + 1).padStart(2, '0')}</span>

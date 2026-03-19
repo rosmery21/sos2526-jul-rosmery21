@@ -4,11 +4,13 @@ import protestsRoute from './src/back/protests.js';
 import pandemicsRoute from './src/back/pandemics.js';
 import childMalnutritions from "./src/back/child-malnutritions.js";
 
+import { handler as svelteHandler } from './src/front/build/handler.js';
+
 const app = express();
 
 app.use(express.json());
-app.use("/", express.static("./src/front/build"));
-app.use("/", express.static("./public"));
+//app.use("/", express.static("./src/front/build"));
+//app.use("/", express.static("./public"));
 
 app.use((req, res, next) => {
   if (req.method === "POST" || req.method === "PUT") {
@@ -39,6 +41,7 @@ app.get("/samples/rm", (req, res) => {
 
 });
 
-/* START SERVER */
+app.use(svelteHandler);
 
+/* START SERVER */
 app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
