@@ -1,5 +1,5 @@
 import express from 'express';
-import { readFile } from '../../utils/readFile.js';
+import { readFile } from '../utils/readFile.js';
 import dataStore from "nedb"
 
 const router = express.Router();

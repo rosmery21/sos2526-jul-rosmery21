@@ -1,8 +1,8 @@
 import express from 'express';
-import deathsRoute from './src/back/deaths-by-risk-factors.js';
-import protestsRoute from './src/back/protests.js';
-import pandemicsRoute from './src/back/pandemics.js';
-import childMalnutritions from "./src/back/child-malnutritions.js";
+import deathsRoute from './src/back/routes/deaths-by-risk-factors.js';
+import protestsRoute from './src/back/routes/protests.js';
+import pandemicsRoute from './src/back/routes/pandemics.js';
+import childMalnutritions from "./src/back/routes/child-malnutritions.js";
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
