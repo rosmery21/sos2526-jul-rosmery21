@@ -1,13 +1,16 @@
 import express from 'express';
-import deathsRoute from './src/routes/deaths-by-risk-factors.js';
-import protestsRoute from './src/routes/protests.js';
-import pandemicsRoute from './src/routes/pandemics.js';
-import childMalnutritions from "./src/routes/child-malnutritions.js";
+import deathsRoute from './src/back/routes/deaths-by-risk-factors.js';
+import protestsRoute from './src/back/routes/protests.js';
+import pandemicsRoute from './src/back/routes/pandemics.js';
+import childMalnutritions from "./src/back/routes/child-malnutritions.js";
+
+import { handler as svelteHandler } from './src/front/build/handler.js';
 
 const app = express();
 
 app.use(express.json());
-app.use("/", express.static("./public"));
+//app.use("/", express.static("./src/front/build"));
+//app.use("/", express.static("./public"));
 
 app.use((req, res, next) => {
   if (req.method === "POST" || req.method === "PUT") {
@@ -28,16 +31,17 @@ app.use(BASE_API_URL, childMalnutritions);
 
 /* ROUTE SAMPLE F04 */
 
-app.get("/samples/rm",(req,res)=>{
+app.get("/samples/rm", (req, res) => {
 
-const data = [13.2,12.9,12.3];
-const avg = data.reduce((a,b)=>a+b,0)/data.length;
+  const data = [13.2, 12.9, 12.3];
+  const avg = data.reduce((a, b) => a + b, 0) / data.length;
 
 
-res.send("Average stunting rate: "+avg.toFixed(1));
+  res.send("Average stunting rate: " + avg.toFixed(1));
 
 });
 
-/* START SERVER */
+app.use(svelteHandler);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+/* START SERVER */
+app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
