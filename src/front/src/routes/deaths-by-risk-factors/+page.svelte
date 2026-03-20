@@ -57,11 +57,28 @@
     }
   }
 
-  $effect(() => {
-    loadDeathsByRiskFactors();
-  });
+  async function deleteData() {
+    if (!confirm(`¿Estás seguro de que deseas eliminar toda la colección?`)) {
+      return;
+    }
+    try {
+      const response = await fetch(`${API}`, {
+        method: 'DELETE'
+      });
+      responseStatusCode = response.status;
+      if (response.ok) {
+        console.log('Collection deleted successfully');
+        deaths_by_risk_factors = [];
+        page = 0;
+      } else {
+        console.error('Failed to delete collection:', response.status);
+      }
+    } catch (error) {
+      console.error('Error deleting collection:', error);
+    }
+  }
 
-  onMount(() => {
+  $effect(() => {
     loadDeathsByRiskFactors();
   });
 
@@ -113,5 +130,9 @@
       <p>Page: {page}</p>
       <button onclick={() => page = page + 1} disabled={deaths_by_risk_factors.length < 10}>+</button>
     </div>
+    <div>
+      <button onclick={() => deleteData()}>Eliminar la colección</button>
+    </div>
   {/if}
 </main>
+
