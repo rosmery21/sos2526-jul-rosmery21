@@ -119,11 +119,11 @@ router.delete('/deaths-by-risk-factors', (req, res) => {
 router.get('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
-  store.find({ Entity: new RegExp(`^${country}$`, "i"), Year: year }, (err, data) => {
+  store.find({ entity: new RegExp(`^${country}$`, "i"), year: year }, (err, data) => {
     if (data.length === 0)
       return res.status(404).send("Data not found");
     data.forEach(d => delete d._id);
-    res.status(200).json(data);
+    res.status(200).json(data[0]);
   });
 });
 
