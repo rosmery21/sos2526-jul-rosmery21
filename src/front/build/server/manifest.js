@@ -10,15 +10,18 @@ return {
 	assets: new Set(["robots.txt"]),
 	mimeTypes: {".txt":"text/plain"},
 	_: {
-		client: {start:"_app/immutable/entry/start.BnYHQ6jJ.js",app:"_app/immutable/entry/app.DIX_zQTg.js",imports:["_app/immutable/entry/start.BnYHQ6jJ.js","_app/immutable/chunks/BVXOgWKb.js","_app/immutable/chunks/BYAuJWRz.js","_app/immutable/chunks/B93_p-Lf.js","_app/immutable/entry/app.DIX_zQTg.js","_app/immutable/chunks/BYAuJWRz.js","_app/immutable/chunks/Bj9E3YpF.js","_app/immutable/chunks/BBLuSfmN.js","_app/immutable/chunks/B93_p-Lf.js","_app/immutable/chunks/CTSAeImI.js","_app/immutable/chunks/BbWHltVL.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
+		client: {start:"_app/immutable/entry/start.B3WsL48g.js",app:"_app/immutable/entry/app.Dhw9bTta.js",imports:["_app/immutable/entry/start.B3WsL48g.js","_app/immutable/chunks/CyuB_Y2A.js","_app/immutable/chunks/BYAuJWRz.js","_app/immutable/chunks/B93_p-Lf.js","_app/immutable/entry/app.Dhw9bTta.js","_app/immutable/chunks/BYAuJWRz.js","_app/immutable/chunks/Bj9E3YpF.js","_app/immutable/chunks/BBLuSfmN.js","_app/immutable/chunks/B93_p-Lf.js","_app/immutable/chunks/CTSAeImI.js","_app/immutable/chunks/BbWHltVL.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
 		nodes: [
 			__memo(() => import('./chunks/0-xqCnBzN8.js')),
-			__memo(() => import('./chunks/1-BMTtdWE-.js')),
-			__memo(() => import('./chunks/2-nN9e2Y0T.js')),
-			__memo(() => import('./chunks/3-rFlgtXlK.js')),
-			__memo(() => import('./chunks/4-L9txjR4K.js')),
-			__memo(() => import('./chunks/5-BQFY4tIH.js')),
-			__memo(() => import('./chunks/6-DZcoSXor.js'))
+			__memo(() => import('./chunks/1-D58p-K2Z.js')),
+			__memo(() => import('./chunks/2-CZ_kigHu.js')),
+			__memo(() => import('./chunks/3-cGo22_bY.js')),
+			__memo(() => import('./chunks/4-CB-wbuhf.js')),
+			__memo(() => import('./chunks/5-BNt0zp1P.js')),
+			__memo(() => import('./chunks/6-tRy1OPWv.js')),
+			__memo(() => import('./chunks/7-mNYGrSBr.js')),
+			__memo(() => import('./chunks/8-DiaaROeN.js')),
+			__memo(() => import('./chunks/9-C8SU2g_N.js'))
 		],
 		remotes: {
 			
@@ -53,10 +56,31 @@ return {
 				endpoint: null
 			},
 			{
+				id: "/pandemics",
+				pattern: /^\/pandemics\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 6 },
+				endpoint: null
+			},
+			{
+				id: "/pandemics/create",
+				pattern: /^\/pandemics\/create\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 7 },
+				endpoint: null
+			},
+			{
+				id: "/pandemics/[entity]/[year]",
+				pattern: /^\/pandemics\/([^/]+?)\/([^/]+?)\/?$/,
+				params: [{"name":"entity","optional":false,"rest":false,"chained":false},{"name":"year","optional":false,"rest":false,"chained":false}],
+				page: { layouts: [0,], errors: [1,], leaf: 8 },
+				endpoint: null
+			},
+			{
 				id: "/protests",
 				pattern: /^\/protests\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 6 },
+				page: { layouts: [0,], errors: [1,], leaf: 9 },
 				endpoint: null
 			}
 		],

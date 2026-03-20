@@ -10,7 +10,7 @@ const data = [];
 const requiredFields = ['entity', 'year', 'high_systolic_blood_pressure', 'air_pollution', 'child_wasting',
    'household_air_pollution_from_solid_fuels', 'high_fasting_plasma_glucose'];
 
-store.insert(data);
+store.insert(data); 
 
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXcLfcbP";
 
