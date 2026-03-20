@@ -1,5 +1,5 @@
-import { w as with_request_store, t as text_decoder, b as base64_decode, r as root, d as decode_pathname, B as BROWSER, n as normalize_path, a as disable_search, c as decode_params, v as validate_layout_server_exports, e as validate_layout_exports, f as validate_page_server_exports, g as validate_page_exports, h as text_encoder$1, i as resolve, m as make_trackable, j as get_relative_path, k as base64_encode, l as writable, o as readable } from './chunks/exports-DzGhhKwC.js';
-import { D as DevalueError, i as is_primitive, g as get_type, a as is_plain_object, e as enumerable_symbols, s as stringify_key, b as stringify_string, v as valid_array_indices, u as uneval } from './chunks/index-D30uW_Nw.js';
+import { w as with_request_store, t as text_decoder, b as base64_decode, r as root, d as decode_pathname, B as BROWSER, n as normalize_path, a as disable_search, c as decode_params, v as validate_layout_server_exports, e as validate_layout_exports, f as validate_page_server_exports, g as validate_page_exports, h as text_encoder$1, i as resolve, m as make_trackable, j as get_relative_path, k as base64_encode, l as writable, o as readable } from './chunks/exports-DA8DR8WO.js';
+import { D as DevalueError, i as is_primitive, g as get_type, a as is_plain_object, e as enumerable_symbols, s as stringify_key, b as stringify_string, v as valid_array_indices, u as uneval } from './chunks/index-yLFEV6hr.js';
 
 /** @import { StandardSchemaV1 } from '@standard-schema/spec' */
 
@@ -1501,7 +1501,7 @@ const options = {
   service_worker_options: void 0,
   server_error_boundaries: false,
   templates: {
-    app: ({ head, body, assets, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
+    app: ({ head, body, assets, nonce, env }) => '<!doctype html>\r\n<html lang="en">\r\n	<head>\r\n		<meta charset="utf-8" />\r\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\r\n		' + head + '\r\n	</head>\r\n	<body data-sveltekit-preload-data="hover">\r\n		<div style="display: contents">' + body + "</div>\r\n	</body>\r\n</html>",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -1573,7 +1573,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "b5srln"
+  version_hash: "14866s7"
 };
 async function get_hooks() {
   let handle;
