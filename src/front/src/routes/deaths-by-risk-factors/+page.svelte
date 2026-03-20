@@ -1,8 +1,7 @@
 <script>
-  import { onMount } from "svelte";
-  // @ts-ignore
+// @ts-ignore
   let deaths_by_risk_factors = $state([]);
-  let API = '/api/v1/deaths-by-risk-factors';
+  let API = '/api/v2/deaths-by-risk-factors';
   let responseStatusCode = $state(0);
   let page = $state(0);
 
@@ -135,4 +134,3 @@
     </div>
   {/if}
 </main>
-

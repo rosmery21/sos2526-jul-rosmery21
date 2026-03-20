@@ -5,7 +5,7 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
 
-	const API = '/api/v1/deaths-by-risk-factors';
+	const API = '/api/v2/deaths-by-risk-factors';
     let responseStatusCode = $state(0);
 
 	const entity = page.params.entity;

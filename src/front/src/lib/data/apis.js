@@ -4,8 +4,8 @@ const apis = [
         miembro: 'Santiago Muñoz Jiménez',
         recurso: 'deaths-by-risk-factors',
         frontend: '/deaths-by-risk-factors',
-        api: '/api/v1/deaths-by-risk-factors',
-        docs: 'https://documenter.getpostman.com/view/52276011/2sBXcLfcbP',
+        api: '/api/v2/deaths-by-risk-factors',
+        docs: 'https://documenter.getpostman.com/view/52276011/2sBXijHrJv',
         github: 'https://github.com/123smj123',
     },
     {

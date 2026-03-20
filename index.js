@@ -1,16 +1,19 @@
 import express from 'express';
 import deathsRoute from './src/back/routes/deaths-by-risk-factors.js';
+import deathsRouteV2 from './src/back/routes/deaths-by-risk-factors-v2.js';
 import protestsRoute from './src/back/routes/protests.js';
 import pandemicsRoute from './src/back/routes/pandemics.js';
 import childMalnutritions from "./src/back/routes/child-malnutritions.js";
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
+const BASE_API_URL = '/api/v1';
+const V2_API_URL = '/api/v2';
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 
 app.use(express.json());
-//app.use("/", express.static("./src/front/build"));
-//app.use("/", express.static("./public"));
 
 app.use((req, res, next) => {
   if (req.method === "POST" || req.method === "PUT") {
@@ -21,16 +24,14 @@ app.use((req, res, next) => {
   next();
 });
 
-const BASE_API_URL = '/api/v1';
-const PORT = process.env.PORT || 3000;
-
 app.use(BASE_API_URL, deathsRoute);
 app.use(BASE_API_URL, protestsRoute);
 app.use(BASE_API_URL, pandemicsRoute);
 app.use(BASE_API_URL, childMalnutritions);
 
-/* ROUTE SAMPLE F04 */
+app.use(V2_API_URL, deathsRouteV2);
 
+/* ROUTE SAMPLE F04 */
 app.get("/samples/rm", (req, res) => {
 
   const data = [13.2, 12.9, 12.3];
