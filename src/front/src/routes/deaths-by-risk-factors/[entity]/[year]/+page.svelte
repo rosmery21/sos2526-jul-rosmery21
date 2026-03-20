@@ -57,6 +57,8 @@
 			} else {
 				console.error('Failed to delete resource:', response.status);
 			}
+            // eslint-disable-next-line svelte/no-navigation-without-resolve
+            goto('/deaths-by-risk-factors');
 		} catch (error) {
 			console.error('Error deleting resource:', error);
 		}

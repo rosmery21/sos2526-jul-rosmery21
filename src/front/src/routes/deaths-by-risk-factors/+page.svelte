@@ -35,8 +35,8 @@
         deaths_by_risk_factors = Array.isArray(data) ? data : [data];
       }else if (response.status === 404){
         deaths_by_risk_factors = []
+        responseStatusCode = response.status;
       }
-      responseStatusCode = response.status;
 		} catch (error) {
 			console.error('Error fetching deaths by risk factors:', error);
 		}
@@ -122,7 +122,33 @@
     loadDeathsByRiskFactors();
   });
 
+  $effect(() => {
+  if (responseStatusCode !== 0) {
+    const timer = setTimeout(() => {
+      responseStatusCode = 0;
+    }, 3000);
+    return () => clearTimeout(timer);
+  }
+});
+
 </script>
+
+{#if responseStatusCode !== 0}
+  <div>
+    {#if responseStatusCode === 200}
+      Operación realizada con éxito
+    {:else if responseStatusCode === 404}
+      No se han encontrado los datos buscados
+    {:else if responseStatusCode === 201}
+      Recurso añadido
+    {:else if responseStatusCode === 204}
+      Recurso eliminado
+    {:else}
+      Error: (responseStatusCode)
+    {/if}
+    <button onclick={() => responseStatusCode = 0}>x</button>
+  </div>
+{/if}
 
 <section>
   <h3>Filtros</h3>
