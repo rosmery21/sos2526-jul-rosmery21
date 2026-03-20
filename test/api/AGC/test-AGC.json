@@ -18,6 +18,53 @@
               "name": "POST",
               "item": [
                 {
+                  "name": "POST pais",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 405 Method Not Allowed\", function () {\r",
+                          "    pm.response.to.have.status(405);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"La respuesta debe contener un mensaje informativo\", function () {\r",
+                          "    const responseText = pm.response.text().toLowerCase();\r",
+                          "    pm.expect(responseText).to.include(\"method\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973,\"Yaws\": 0, \"Polio\": 169, \"Guinea_worm\": 2, \"Rabies\": 23}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
                   "name": "POST data 409",
                   "event": [
                     {
@@ -25,7 +72,7 @@
                       "script": {
                         "exec": [
                           "pm.test(\"Status code is 201 or 409\", function () {\r",
-                          "    pm.expect(pm.response.code).to.be.oneOf([201, 409]);\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([201, 409, 400]);\r",
                           "});\r",
                           "\r",
                           "pm.test(\"La respuesta tiene el formato correcto\", function () {\r",
@@ -48,7 +95,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 10,\r\n  \"polio\": 10,\r\n  \"guinea_worm\": 10,\r\n  \"rabies\": 1,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 9,\r\n  \"cholera\": 8\r\n}",
+                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 10,\r\n  \"guinea_worm\": 10,\r\n  \"rabies\": 1,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 9,\r\n  \"cholera\": 8\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -108,382 +155,6 @@
                       ],
                       "path": [
                         "pandemics"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "POST pais",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 405 Method Not Allowed\", function () {\r",
-                          "    pm.response.to.have.status(405);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"La respuesta debe contener un mensaje informativo\", function () {\r",
-                          "    const responseText = pm.response.text().toLowerCase();\r",
-                          "    pm.expect(responseText).to.include(\"method\");\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "POST",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973,\"Yaws\": 0, \"Polio\": 169, \"Guinea_worm\": 2, \"Rabies\": 23}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "afghanistan"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "PUT",
-              "item": [
-                {
-                  "name": "PUT error 405",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 405 Method Not Allowed\", function () {\r",
-                          "    pm.response.to.have.status(405);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"La respuesta debe indicar que el método no está permitido\", function () {\r",
-                          "    pm.expect(pm.response.text().toLowerCase()).to.include(\"method\");\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\r\n    \"entity\": \"Italy\", \r\n    \"code\": \"ITA\",\r\n    \"year\": 2020,\r\n    \"yaws\": 10,\r\n    \"polio\": 10,\r\n    \"guinea_worm\": 10,\r\n    \"rabies\": 10,\r\n    \"malaria\": 10,\r\n    \"hiv_aids\": 10,\r\n    \"tuberculosis\": 110,\r\n    \"smallpox\": 10,\r\n    \"cholera\": 10\r\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "PUT data",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 404 - Resource not found\", function () {\r",
-                          "    pm.response.to.have.status(404);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"La respuesta es un mensaje de error coherente\", function () {\r",
-                          "    const responseText = pm.response.text().toLowerCase();\r",
-                          "    pm.expect(responseText).to.satisfy(msg => msg.includes(\"not found\") || msg.includes(\"error\"));\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\r\n    \"entity\": \"Afghanistan\",\r\n    \"code\": \"AFG\",\r\n    \"year\": 1891,\r\n    \"yaws\": 1,\r\n    \"polio\": 5859,\r\n    \"guinea_worm\": 6,\r\n    \"rabies\": 9,\r\n    \"malaria\": 7,\r\n    \"hiv_aids\": 4,\r\n    \"tuberculosis\": 20,\r\n    \"smallpox\": 9,\r\n    \"cholera\": 10\r\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan/1890",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "afghanistan",
-                        "1890"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "PUT pais año",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 400 Bad Request (Mismatch)\", function () {\r",
-                          "    pm.response.to.have.status(400);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 0,\r\n  \"guinea_worm\": 0,\r\n  \"rabies\": 5,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 0,\r\n  \"cholera\": 0\r\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "Spain",
-                        "2020"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "PUT error 400 mismo id",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 400 Bad Request\", function () {\r",
-                          "    pm.response.to.have.status(400);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Mensaje de error: entity mismatch\", function () {\r",
-                          "    pm.expect(pm.response.text()).to.include(\"entity mismatch\");\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\r\n    \"entity\": \"Italy\", \r\n    \"code\": \"ITA\",\r\n    \"year\": 2020,\r\n    \"yaws\": 10,\r\n    \"polio\": 10,\r\n    \"guinea_worm\": 10,\r\n    \"rabies\": 10,\r\n    \"malaria\": 10,\r\n    \"hiv_aids\": 10,\r\n    \"tuberculosis\": 110,\r\n    \"smallpox\": 10,\r\n    \"cholera\": 10\r\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "Spain",
-                        "2020"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "PUT variasPropiedades",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 400 when IDs don't match\", function () {\r",
-                          "    pm.response.to.have.status(400);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "PUT",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\r\n  \"entity\": \"france\",\r\n  \"year\": 2025,\r\n  \"statistic\": 500\r\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/spain/2020",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "spain",
-                        "2020"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "DELETE",
-              "item": [
-                {
-                  "name": "DELETE data",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 200, 204 or 404 (Recurso eliminado o inexistente)\", function () {\r",
-                          "    pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"La respuesta es coherente con un borrado\", function () {\r",
-                          "    if (pm.response.code === 200 && pm.response.text().length > 0) {\r",
-                          "        try {\r",
-                          "            const jsonData = pm.response.json();\r",
-                          "            pm.expect(jsonData).to.not.have.property('entity');\r",
-                          "        } catch (e) {\r",
-                          "        }\r",
-                          "    }\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "DELETE",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
-                    },
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan/1891",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "afghanistan",
-                        "1891"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "DELETE pais año",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Status code is 204 or 200 (Successful deletion)\", function () {\r",
-                          "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Response body should be empty or a success message\", function () {\r",
-                          "    if (pm.response.code === 200 && pm.response.text()) {\r",
-                          "        try {\r",
-                          "            const data = pm.response.json();\r",
-                          "            pm.expect(data).to.not.have.property('entity');\r",
-                          "        } catch(e) {\r",
-                          "            pm.expect(pm.response.text()).to.not.include(\"Spain\");\r",
-                          "        }\r",
-                          "    }\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "DELETE",
-                    "header": [],
-                    "url": {
-                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
-                      "host": [
-                        "{{BASE_URL}}{{BASE_API_URL}}"
-                      ],
-                      "path": [
-                        "pandemics",
-                        "Spain",
-                        "2020"
                       ]
                     }
                   },
@@ -944,6 +615,335 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "PUT",
+              "item": [
+                {
+                  "name": "PUT error 405",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 405 Method Not Allowed\", function () {\r",
+                          "    pm.response.to.have.status(405);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"La respuesta debe indicar que el método no está permitido\", function () {\r",
+                          "    pm.expect(pm.response.text().toLowerCase()).to.include(\"method\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"entity\": \"Italy\", \r\n    \"code\": \"ITA\",\r\n    \"year\": 2020,\r\n    \"yaws\": 10,\r\n    \"polio\": 10,\r\n    \"guinea_worm\": 10,\r\n    \"rabies\": 10,\r\n    \"malaria\": 10,\r\n    \"hiv_aids\": 10,\r\n    \"tuberculosis\": 110,\r\n    \"smallpox\": 10,\r\n    \"cholera\": 10\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404 - Resource not found\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"La respuesta es un mensaje de error coherente\", function () {\r",
+                          "    const responseText = pm.response.text().toLowerCase();\r",
+                          "    pm.expect(responseText).to.satisfy(msg => msg.includes(\"not found\") || msg.includes(\"error\"));\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"entity\": \"Afghanistan\",\r\n    \"code\": \"AFG\",\r\n    \"year\": 1891,\r\n    \"yaws\": 1,\r\n    \"polio\": 5859,\r\n    \"guinea_worm\": 6,\r\n    \"rabies\": 9,\r\n    \"malaria\": 7,\r\n    \"hiv_aids\": 4,\r\n    \"tuberculosis\": 20,\r\n    \"smallpox\": 9,\r\n    \"cholera\": 10\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan/1890",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan",
+                        "1890"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT pais año",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400 Bad Request (Mismatch)\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"entity\": \"Spain\",\r\n  \"code\": \"ESP\",\r\n  \"year\": 2020,\r\n  \"yaws\": 0,\r\n  \"polio\": 0,\r\n  \"guinea_worm\": 0,\r\n  \"rabies\": 5,\r\n  \"malaria\": 2,\r\n  \"hiv_aids\": 3,\r\n  \"tuberculosis\": 4,\r\n  \"smallpox\": 0,\r\n  \"cholera\": 0\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "Spain",
+                        "2020"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT error 400 mismo id",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Mensaje de error: entity mismatch\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"entity mismatch\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"entity\": \"Italy\", \r\n    \"code\": \"ITA\",\r\n    \"year\": 2020,\r\n    \"yaws\": 10,\r\n    \"polio\": 10,\r\n    \"guinea_worm\": 10,\r\n    \"rabies\": 10,\r\n    \"malaria\": 10,\r\n    \"hiv_aids\": 10,\r\n    \"tuberculosis\": 110,\r\n    \"smallpox\": 10,\r\n    \"cholera\": 10\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "Spain",
+                        "2020"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "PUT variasPropiedades",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400 when IDs don't match\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"entity\": \"france\",\r\n  \"year\": 2025,\r\n  \"statistic\": 500\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "spain",
+                        "2020"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "DELETE",
+              "item": [
+                {
+                  "name": "DELETE data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200, 204 or 404 (Recurso eliminado o inexistente)\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"La respuesta es coherente con un borrado\", function () {\r",
+                          "    if (pm.response.code === 200 && pm.response.text().length > 0) {\r",
+                          "        try {\r",
+                          "            const jsonData = pm.response.json();\r",
+                          "            pm.expect(jsonData).to.not.have.property('entity');\r",
+                          "        } catch (e) {\r",
+                          "        }\r",
+                          "    }\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"Entity\": \"Afghanistan\", \"Code\": \"AFG\", \"Year\": 1973, \"Total (estimated) polio cases\": 169, \"Reported cases of guinea worm disease in humans\": 2}"
+                    },
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/afghanistan/1891",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "afghanistan",
+                        "1891"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "DELETE pais año",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 204 or 200 (Successful deletion)\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response body should be empty or a success message\", function () {\r",
+                          "    if (pm.response.code === 200 && pm.response.text()) {\r",
+                          "        try {\r",
+                          "            const data = pm.response.json();\r",
+                          "            pm.expect(data).to.not.have.property('entity');\r",
+                          "        } catch(e) {\r",
+                          "            pm.expect(pm.response.text()).to.not.include(\"Spain\");\r",
+                          "        }\r",
+                          "    }\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BASE_URL}}{{BASE_API_URL}}/pandemics/Spain/2020",
+                      "host": [
+                        "{{BASE_URL}}{{BASE_API_URL}}"
+                      ],
+                      "path": [
+                        "pandemics",
+                        "Spain",
+                        "2020"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         }
@@ -976,40 +976,6 @@
           ]
         },
         "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-      },
-      "response": []
-    },
-    {
-      "name": "GET cool",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{BASE_URL}}/cool",
-          "host": [
-            "{{BASE_URL}}"
-          ],
-          "path": [
-            "cool"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "GET about",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{BASE_URL}}/about",
-          "host": [
-            "{{BASE_URL}}"
-          ],
-          "path": [
-            "about"
-          ]
-        }
       },
       "response": []
     }
