@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { readFile } from '../../utils/readFile.js';
+import { readFile } from '../utils/readFile.js';
 import DataStore from "nedb";
 
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52275979/2sBXiesEPb";
