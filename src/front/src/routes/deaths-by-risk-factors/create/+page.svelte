@@ -1,4 +1,5 @@
 <script>
+/* eslint-disable svelte/no-navigation-without-resolve */
   import { goto } from '$app/navigation';
 
   let API = '/api/v2/deaths-by-risk-factors';
@@ -19,11 +20,11 @@
     const newResource = {
       entity,
       year: parseInt(year),
-      high_systolic_blood_pressure: parseFloat(high_systolic_blood_pressure),
-      air_pollution: parseFloat(air_pollution),
-      child_wasting: parseFloat(child_wasting),
-      household_air_pollution_from_solid_fuels: parseFloat(household_air_pollution_from_solid_fuels),
-      high_fasting_plasma_glucose: parseFloat(high_fasting_plasma_glucose)
+      high_systolic_blood_pressure: high_systolic_blood_pressure,
+      air_pollution: air_pollution,
+      child_wasting: child_wasting,
+      household_air_pollution_from_solid_fuels: household_air_pollution_from_solid_fuels,
+      high_fasting_plasma_glucose: high_fasting_plasma_glucose
     };
 
     try {

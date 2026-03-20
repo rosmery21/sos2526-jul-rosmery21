@@ -1,18 +1,42 @@
 <script>
+// @ts-nocheck
+
+/* eslint-disable svelte/no-navigation-without-resolve */
 // @ts-ignore
   let deaths_by_risk_factors = $state([]);
   let API = '/api/v2/deaths-by-risk-factors';
   let responseStatusCode = $state(0);
   let page = $state(0);
+  let isLoading = $state(false);
+
+  let searchFilters = $state({
+    country: '',
+    year: '',
+    blood_pressure: '',
+    air_pollution: '',
+    child_wasting: '',
+    household_air_pollution_from_solid_fuels: '',
+    high_fasting_plasma_glucose: ''
+  });
 
   async function loadDeathsByRiskFactors() {
 		try {
-			const response = await fetch(`${API}?offset=${page*10}&limit=10`, {
+      const params = new URLSearchParams({
+        offset: (page * 10).toString(),
+        limit: (10).toString(),
+        // eslint-disable-next-line no-unused-vars
+        ...Object.fromEntries(Object.entries(searchFilters).filter(([_, v]) => v !== '' && v !== null))
+      })
+			const response = await fetch(`${API}?${params.toString()}`, {
 				method: 'GET'
 			});
-			const data = await response.json();
+      if(response.ok){
+        const data = await response.json();
+        deaths_by_risk_factors = Array.isArray(data) ? data : [data];
+      }else if (response.status === 404){
+        deaths_by_risk_factors = []
+      }
       responseStatusCode = response.status;
-			deaths_by_risk_factors = Array.isArray(data) ? data : [data];
 		} catch (error) {
 			console.error('Error fetching deaths by risk factors:', error);
 		}
@@ -41,6 +65,7 @@
 
   async function loadInitialData() {
     try {
+      isLoading = true;
       const response = await fetch(`${API}/loadInitialData`, {
         method: 'GET'
       });
@@ -53,6 +78,8 @@
       }
     } catch (error) {
       console.error('Error loading initial data:', error);
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -77,11 +104,43 @@
     }
   }
 
+  function clearSearch(){
+    searchFilters = {
+      country: '',
+      year: '',
+      blood_pressure: '',
+      air_pollution: '',
+      child_wasting: '',
+      household_air_pollution_from_solid_fuels: '',
+      high_fasting_plasma_glucose: ''
+    };
+    page=0;
+    loadDeathsByRiskFactors();
+  }
+
   $effect(() => {
     loadDeathsByRiskFactors();
   });
 
 </script>
+
+<section>
+  <h3>Filtros</h3>
+  <div class="grid-filters">
+    <input type="text" placeholder="País" bind:value={searchFilters.country} />
+    <input type="number" placeholder="Año" bind:value={searchFilters.year} />
+    <input type="number" placeholder="Min. Presión Arterial" bind:value={searchFilters.high_systolic_blood_pressure} />
+    <input type="number" placeholder="Min. Contaminación Aire" bind:value={searchFilters.air_pollution} />
+    <input type="number" placeholder="Min. Desnutrición" bind:value={searchFilters.child_wasting} />
+    <input type="number" placeholder="Min. Combustibles" bind:value={searchFilters.household_air_pollution_from_solid_fuels} />
+    <input type="number" placeholder="Min. Glucosa" bind:value={searchFilters.high_fasting_plasma_glucose} />
+  </div>
+  
+  <div class="actions">
+    <button onclick={() => { page = 0; loadDeathsByRiskFactors(); }}>Buscar</button>
+    <button class="secondary" onclick={clearSearch}>Limpiar filtros</button>
+  </div>
+</section>
 
 <div>
   <a href="/deaths-by-risk-factors/create">
@@ -91,9 +150,13 @@
 
 <main>
   {#if deaths_by_risk_factors.length === 0}
-    <p>No hay datos disponibles.</p>
-    {#if page === 0}
-      <button onclick={() => loadInitialData()}>Cargar datos iniciales</button>
+    {#if isLoading}
+      <p>Cargando...</p>
+    {:else}
+      <p>No hay datos disponibles.</p>
+      {#if page === 0}
+        <button onclick={() => loadInitialData()}>Cargar datos iniciales</button>
+      {/if}
     {/if}
   {:else}
     <table>

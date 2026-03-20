@@ -45,12 +45,12 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
 router.get('/deaths-by-risk-factors', (req, res) => {
   const query = {}
 
-  const offset = parseInt(req.query.offset) || 0;
-  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || null;
+  const limit = parseInt(req.query.limit) || null;
 
   const country = req.query.country;
   const year = req.query.year;
-  const blood_pressure = req.query.blood_pressure;
+  const high_systolic_blood_pressure = req.query.high_systolic_blood_pressure;
   const air_pollution = req.query.air_pollution;
   const child_wasting = req.query.child_wasting;
   const household_air_pollution_from_solid_fuels = req.query.household_air_pollution_from_solid_fuels;
@@ -58,7 +58,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 
   if (country) query.entity = new RegExp(`^${country}$`, "i");
   if (year) query.year = parseInt(year);
-  if (blood_pressure) query.high_systolic_blood_pressure = { $gt: parseFloat(blood_pressure) };
+  if (high_systolic_blood_pressure) query.high_systolic_blood_pressure = { $gt: parseFloat(high_systolic_blood_pressure) };
   if (air_pollution) query.air_pollution = { $gt: parseFloat(air_pollution) };
   if (child_wasting) query.child_wasting = { $gt: parseFloat(child_wasting) };
   if (household_air_pollution_from_solid_fuels) query.household_air_pollution_from_solid_fuels = { $gt: parseFloat(household_air_pollution_from_solid_fuels) };
