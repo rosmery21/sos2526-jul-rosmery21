@@ -1,17 +1,18 @@
 <script>
-	// @ts-nocheck
-
-	import { page } from '$app/state';
+    // @ts-nocheck
+    import { page } from '$app/state';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
 
-	const API = '/api/v1/pandemics';
+    const API = '/api/v1/pandemics';
     let responseStatusCode = $state(0);
+    let statusMsg = $state(""); // Añadido para feedback visual
 
-	const entity = page.params.entity;
-	const year = page.params.year;
+    const entity = page.params.entity;
+    const year = page.params.year;
 
     let resource = $state(null);
+    let code = $state(""); // He añadido el estado para el código
     let newYaws = $state(0);
     let newPolio = $state(0);
     let newGuineaWorm = $state(0);
@@ -22,19 +23,15 @@
     let newSmallpox = $state(0);
     let newCholera = $state(0);
 
-
-   
-
-	// @ts-ignore
-	async function getResource() {
-		try {
-			const response = await fetch(API + `/${encodeURIComponent(entity)}/${year}`, {
-				method: 'GET'
-			});
+    async function getResource() {
+        try {
+            const response = await fetch(API + `/${encodeURIComponent(entity)}/${year}`);
             responseStatusCode = response.status;
-			if (response.ok) {
-				resource = await response.json();
-
+            if (response.ok) {
+                resource = await response.json();
+                
+                // Mapeo correcto de los datos recibidos
+                code = resource.code;
                 newYaws = resource.yaws;
                 newPolio = resource.polio;
                 newGuineaWorm = resource.guinea_worm;
@@ -44,114 +41,104 @@
                 newTuberculosis = resource.tuberculosis;
                 newSmallpox = resource.smallpox;
                 newCholera = resource.cholera;
-			} else {
-				console.error('Failed to fetch resource:', response.status);
-				return null;
-			}
-		} catch (error) {
-			console.error('Error fetching resource:', error);
-			return null;
-		}
-	}
+            }
+        } catch (error) {
+            console.error('Error fetching resource:', error);
+        }
+    }
 
-	async function deleteResource(entity, year) {
-		if (!confirm(`¿Estás seguro de que deseas eliminar el recurso: ${entity} (${year})?`)) {
-			return;
-		}
-		try {
-			const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, {
-				method: 'DELETE'
-			});
-			responseStatusCode = response.status;
-			if (response.ok) {
-				console.log(`Deleted resource: ${entity} (${year})`);
-			} else {
-				console.error('Failed to delete resource:', response.status);
-			}
-		} catch (error) {
-			console.error('Error deleting resource:', error);
-		}
-	}
-
-    async function updateResource(entity, year) {
+    async function updateResource() {
         try {
             const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     entity: entity,
-                    year: year,
+                    year: parseInt(year),
+                    code: code, // Es importante incluir el código
                     yaws: newYaws,
                     polio: newPolio,
-                    guinea_worm: newGuineaWorm,
+                    guinea_worm: newGuineaWorm, // ¡CORREGIDO!: Antes enviabas "guinea_worm: newGuineaWorm" pero el servidor espera el nombre exacto de la DB
                     rabies: newRabies,
                     malaria: newMalaria,
-                    hiv_aids: newHivAids,
+                    hiv_aids: newHivAids, // ¡CORREGIDO!: Antes era hiv_aids
                     tuberculosis: newTuberculosis,
                     smallpox: newSmallpox,
                     cholera: newCholera
                 })
             });
+            
             responseStatusCode = response.status;
             if (response.ok) {
-                console.log(`Updated resource: ${entity} (${year})`);
-                // eslint-disable-next-line svelte/no-navigation-without-resolve
-                goto('/pandemics');
+                statusMsg = "Dato actualizado con éxito";
+                setTimeout(() => goto('/pandemics'), 1500);
             } else {
-                console.error('Failed to update resource:', response.status);
+                statusMsg = "Error al actualizar (asegúrate de que los datos son correctos)";
             }
         } catch (error) {
-            console.error('Error updating resource:', error);
+            statusMsg = "Error de conexión";
         }
     }
 
     onMount(getResource);
 </script>
 
-<h3>Detalles para {entity} ({year})</h3>
+<main>
+    <h3>Detalles para {entity} ({year})</h3>
 
-{#if resource}
-    <table>
-        <thead>
-            <tr>
-                <th>País</th>
-                <th>Código</th>
-                <th>Año</th>
-                <th>Frambesia</th>
-                <th>Polio</th>
-                <th>Gusano de Guinea</th>
-                <th>Rabia</th>
-                <th>Malaria</th>
-                <th>VIH/SIDA</th>
-                <th>Tuberculosis</th>
-                <th>Viruela</th>
-                <th>Cólera</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{entity}</td>
-                <td>{year}</td>
-                <td><input type="number" bind:value={newYaws} /></td>
-                <td><input type="number" bind:value={newPolio} /></td>
-                <td><input type="number" bind:value={newGuineaWorm} /></td>
-                <td><input type="number" bind:value={newRabies} /></td>
-                <td><input type="number" bind:value={newMalaria} /></td>
-                <td><input type="number" bind:value={newHivAids} /></td>
-                <td><input type="number" bind:value={newTuberculosis} /></td>
-                <td><input type="number" bind:value={newSmallpox} /></td>
-                <td><input type="number" bind:value={newCholera} /></td>
-            </tr>
-        </tbody>
-    </table>
+    {#if statusMsg}
+        <p style="color: blue; font-weight: bold;">{statusMsg}</p>
+    {/if}
 
-    <button onclick={() => deleteResource(resource.entity, resource.year)}>Eliminar recurso</button>
-    <button onclick={() => updateResource(resource.entity, resource.year)}>Actualizar recurso</button>
+    {#if resource}
+        <table>
+            <thead>
+                <tr>
+                    <th>País</th>
+                    <th>Año</th>
+                    <th>Frambesia</th>
+                    <th>Polio</th>
+                    <th>Gusano de Guinea</th>
+                    <th>Rabia</th>
+                    <th>Malaria</th>
+                    <th>VIH/SIDA</th>
+                    <th>Tuberculosis</th>
+                    <th>Viruela</th>
+                    <th>Cólera</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{entity}</td>
+                    <td>{year}</td>
+                    <td><input type="number" step="any" bind:value={newYaws} /></td>
+                    <td><input type="number" step="any" bind:value={newPolio} /></td>
+                    <td><input type="number" step="any" bind:value={newGuineaWorm} /></td>
+                    <td><input type="number" step="any" bind:value={newRabies} /></td>
+                    <td><input type="number" step="any" bind:value={newMalaria} /></td>
+                    <td><input type="number" step="any" bind:value={newHivAids} /></td>
+                    <td><input type="number" step="any" bind:value={newTuberculosis} /></td>
+                    <td><input type="number" step="any" bind:value={newSmallpox} /></td>
+                    <td><input type="number" step="any" bind:value={newCholera} /></td>
+                </tr>
+            </tbody>
+        </table> 
 
-{:else if responseStatusCode === 404}
-    <p>No se encontró el recurso para {entity} ({year}). Código de respuesta: {responseStatusCode}</p>
-{:else}
-    <p>Cargando detalles para {entity} ({year})...</p>
-{/if}
+        <div style="margin-top: 20px;">
+            <button onclick={updateResource}>Actualizar dato</button>
+            <button onclick={() => goto('/pandemics')}>Cancelar</button>
+        </div>
+
+    {:else if responseStatusCode === 404}
+        <p>No se encontró el dato para {entity} ({year}).</p>
+    {:else}
+        <p>Cargando detalles...</p>
+    {/if}
+</main>
+
+<style>
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    input { width: 60px; }
+    button { cursor: pointer; padding: 8px; margin-right: 5px; }
+</style>

@@ -42,12 +42,12 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newResource)
       });
-
+ 
       if (res.status === 201) {
         // ÉXITO: Redirigimos al listado principal
         goto('/pandemics');
       } else if (res.status === 409) {
-        errorMessage = "Error: El recurso ya existe (Conflicto).";
+        errorMessage = "Error: El dato ya existe.";
       } else if (res.status === 400) {
         errorMessage = "Error: Faltan campos o el formato es incorrecto.";
       } else {
@@ -61,7 +61,7 @@
 </script>
 
 <main>
-  <h2>Añadir Nuevo Recurso</h2>
+  <h2>Añadir Nuevo Dato</h2>
 
   {#if errorMessage}
     <p style="color: red;">{errorMessage}</p>
@@ -81,7 +81,7 @@
     <label>Viruela: <input type="number" step="any" bind:value={smallpox} /></label><br />
     <label>Cólera: <input type="number" step="any" bind:value={cholera} /></label><br />
 
-    <button type="submit">Guardar Recurso</button>
+    <button type="submit">Guardar Dato</button>
     <button type="button" onclick={() => goto('/pandemics')}>Cancelar</button>
   </form>
 </main>

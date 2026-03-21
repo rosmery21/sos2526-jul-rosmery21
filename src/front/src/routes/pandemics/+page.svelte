@@ -20,64 +20,67 @@
 		}
 	}
 
-    // @ts-ignore
+// @ts-ignore
     async function deleteResource(entity, year) {
-        if (!confirm(`¿Estás seguro de que deseas eliminar el recurso: ${entity} (${year})?`)) {
-        return;
+        if (!confirm(`¿Estás seguro de que deseas eliminar el dato: ${entity} (${year})?`)) {
+            return;
         }
         try {
-        const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, {
-            method: 'DELETE'
-        });
-        responseStatusCode = response.status;
-        if (response.ok) {
-            console.log(`Deleted resource: ${entity} (${year})`);
-            loadPandemics();
-        } else {
-            console.error('Failed to delete resource:', response.status);
-        }
+            const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, {
+                method: 'DELETE'
+            });
+            responseStatusCode = response.status;
+            if (response.ok) {
+                statusMsg = `El dato de ${entity} (${year}) se ha eliminado correctamente.`;
+                loadPandemics();
+                setTimeout(() => statusMsg = "", 3000);
+            } else {
+                statusMsg = "No se ha podido eliminar el dato. Inténtelo de nuevo.";
+            }
         } catch (error) {
-        console.error('Error deleting resource:', error);
+            statusMsg = "Error de conexión al intentar eliminar.";
         }
     }
 
     async function loadInitialData() {
         try {
-        const response = await fetch(`${API}/loadInitialData`, {
-            method: 'GET'
-        });
-        responseStatusCode = response.status;
-        if (response.ok) {
-            console.log('Initial data loaded successfully');
-            loadPandemics();
-        } else {
-            console.error('Failed to load initial data:', response.status);
-        }
+            const response = await fetch(`${API}/loadInitialData`, {
+                method: 'GET'
+            });
+            responseStatusCode = response.status;
+            if (response.ok) {
+                statusMsg = "Datos de ejemplo cargados correctamente.";
+                loadPandemics();
+                setTimeout(() => statusMsg = "", 3000);
+            } else {
+                statusMsg = "Error al cargar los datos de ejemplo.";
+            }
         } catch (error) {
-        console.error('Error loading initial data:', error);
+            statusMsg = "Error de conexión al cargar datos iniciales.";
         }
     }
 
-      async function deleteData() {
-    if (!confirm(`¿Estás seguro de que deseas eliminar toda la colección?`)) {
-      return;
+    async function deleteData() {
+        if (!confirm(`¿Estás seguro de que deseas eliminar toda la colección?`)) {
+            return;
+        }
+        try {
+            const response = await fetch(`${API}`, {
+                method: 'DELETE'
+            });
+            responseStatusCode = response.status;
+            if (response.ok) {
+                statusMsg = "Todos los datos han sido eliminados con éxito.";
+                pandemics = [];
+                page = 0;
+                setTimeout(() => statusMsg = "", 3000);
+            } else {
+                statusMsg = "Error al intentar vaciar la lista.";
+            }
+        } catch (error) {
+            statusMsg = "Error de conexión al eliminar la colección.";
+        }
     }
-    try {
-      const response = await fetch(`${API}`, {
-        method: 'DELETE'
-      });
-      responseStatusCode = response.status;
-      if (response.ok) {
-        console.log('Collection deleted successfully');
-        pandemics = [];
-        page = 0;
-      } else {
-        console.error('Failed to delete collection:', response.status);
-      }
-    } catch (error) {
-      console.error('Error deleting collection:', error);
-    }
-  }
 
   $effect(() => {
     loadPandemics();
@@ -96,6 +99,11 @@
 </div>
 
 <main>
+  {#if statusMsg}
+        <p style="color: green; font-weight: bold; background-color: #d4edda; padding: 10px; border-radius: 5px;">
+            {statusMsg}
+        </p>
+  {/if}
   {#if pandemics.length === 0}
     <p>No hay datos disponibles.</p>
     {#if page === 0}
@@ -142,7 +150,7 @@
     </table>
     <div>
       <button onclick={() => page = Math.max(0, page - 1)}>-</button>
-      <p>Page: {page}</p>
+      <p>Page: {page + 1}</p>
       <button onclick={() => page = page + 1} disabled={pandemics.length < 10}>+</button>
     </div>
     <div>
