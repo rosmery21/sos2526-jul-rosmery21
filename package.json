@@ -33,8 +33,15 @@
     "test-local-AGC": "start-server-and-test start http://localhost:3000 newman-local-AGC",
     "newman-render-AGC": "npx newman run test/api/AGC/test-AGC.json -e test/enviroments/render-env.json",
     "test-pandemics": "npm run test-local-AGC",
+
+   "newman-local-RM": "npx newman run test/api/RM/test-RM.json -e test/enviroments/local-env.json",
+   "test-local-RM": "start-server-and-test start http://localhost:3000 newman-local-RM",
+   "newman-render-RM": "npx newman run test/api/RM/test-RM.json -e test/enviroments/render-env.json",
+   "test-child-malnutritions": "npm run test-local-RM",
     
-    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-OMV && npm run newman-local-AGC\""
+   "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-OMV && npm run newman-local-AGC && npm run newman-local-RM\""
+
+
   },
   "dependencies": {
     "express": "^5.2.1",
