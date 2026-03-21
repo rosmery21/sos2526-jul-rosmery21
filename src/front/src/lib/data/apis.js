@@ -31,7 +31,7 @@ const apis = [
         miembro: 'Rosmery Marculli',
         recurso: 'child-malnutritions',
         frontend: '/child-malnutritions',
-        api: '/api/v2/child-malnutritions',
+        api: '/api/v1/child-malnutritions',
         docs: 'https://documenter.getpostman.com/view/53120972/2sBXijJBsH',
         github: 'https://github.com/rosmery21',
     }
