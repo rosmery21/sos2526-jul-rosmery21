@@ -97,7 +97,7 @@ router.post('/deaths-by-risk-factors', (req, res) => {
         return res.status(409).send("Conflict: Data already exists");
       store.insert(newData, (err, inserted) => {
         delete inserted._id;
-        res.status(201).json(inserted);
+        res.status(201).send("CREATED");
       });
     }
   );
@@ -149,6 +149,8 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   
   if (newData.entity.toLowerCase() !== country.toLowerCase())
     return res.status(400).send("Country mismatch");
+  if (newData.year !== year)
+    return res.status(400).send("Year mismatch");
   store.update(
     { entity: new RegExp(`^${country}$`, "i"), year: year },
     newData,
@@ -156,7 +158,7 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
     (err, numUpdated) => {
       if (numUpdated === 0)
         return res.status(404).send("Data not found");
-      res.status(200).json(newData);
+      res.status(200).send();
     }
   );
 });

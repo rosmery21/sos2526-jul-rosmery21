@@ -36,7 +36,7 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
     }));
     store.insert(filteredData, (err, docs) => {
       docs.forEach(d => delete d._id);
-      res.status(201).json(docs);
+      res.status(201).send("CREATED");
     });
   });
 });
@@ -55,9 +55,17 @@ router.get('/deaths-by-risk-factors', (req, res) => {
   const child_wasting = req.query.child_wasting;
   const household_air_pollution_from_solid_fuels = req.query.household_air_pollution_from_solid_fuels;
   const high_fasting_plasma_glucose = req.query.high_fasting_plasma_glucose;
+  const from = req.query.from;
+  const to = req.query.to;
 
+  if (year)
+    query.year = parseInt(year);
+  else if (from || to) {
+    query.year = {};
+    query.year.$gte = parseInt(from);
+    query.year.$lte = parseInt(to);
+  }
   if (country) query.entity = new RegExp(`^${country}$`, "i");
-  if (year) query.year = parseInt(year);
   if (high_systolic_blood_pressure) query.high_systolic_blood_pressure = { $gt: parseFloat(high_systolic_blood_pressure) };
   if (air_pollution) query.air_pollution = { $gt: parseFloat(air_pollution) };
   if (child_wasting) query.child_wasting = { $gt: parseFloat(child_wasting) };
@@ -69,7 +77,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
     .limit(limit)
     .exec((err, data) => {
     if (data.length === 0)
-      return res.status(404).send("Data not found");
+      return res.status(404).send([]);
     data.forEach(d => delete d._id);
     if (data.length === 1)
       data = data[0];
@@ -97,7 +105,7 @@ router.post('/deaths-by-risk-factors', (req, res) => {
         return res.status(409).send("Conflict: Data already exists");
       store.insert(newData, (err, inserted) => {
         delete inserted._id;
-        res.status(201).json(inserted);
+        res.status(201).send("CREATED");
       });
     }
   );
@@ -149,6 +157,8 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   
   if (newData.entity.toLowerCase() !== country.toLowerCase())
     return res.status(400).send("Country mismatch");
+  if (newData.year !== year)
+    return res.status(400).send("Year mismatch");
   store.update(
     { entity: new RegExp(`^${country}$`, "i"), year: year },
     newData,
@@ -156,7 +166,7 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
     (err, numUpdated) => {
       if (numUpdated === 0)
         return res.status(404).send("Data not found");
-      res.status(200).json(newData);
+      res.status(200).send();
     }
   );
 });

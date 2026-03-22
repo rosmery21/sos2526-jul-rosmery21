@@ -215,7 +215,7 @@
     </table>
     <div>
       <button onclick={() => page = Math.max(0, page - 1)}>-</button>
-      <p>Page: {page}</p>
+      <p>Página: {page}</p>
       <button onclick={() => page = page + 1} disabled={deaths_by_risk_factors.length < 10}>+</button>
     </div>
     <div>
