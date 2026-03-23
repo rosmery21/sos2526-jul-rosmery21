@@ -1,0 +1,58 @@
+{
+	"id": "55b726c3-6c32-4f7c-834e-379e956c5d59",
+	"name": "local",
+	"values": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:3000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "BASE_API_URL",
+			"value": "/api/v2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "payload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "test_year",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "test_country",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "last_entity_loaded",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "last_year_loaded",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "update_payload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-03-23T10:44:37.396Z",
+	"_postman_exported_using": "Postman/12.3.0-260323-0233"
+}
