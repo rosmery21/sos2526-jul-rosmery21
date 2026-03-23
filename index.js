@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from "cors"; 
 import deathsRoute from './src/back/routes/deaths-by-risk-factors.js';
 import deathsRouteV2 from './src/back/routes/deaths-by-risk-factors-v2.js';
 import protestsRoute from './src/back/routes/protests.js';
@@ -12,7 +13,7 @@ const V2_API_URL = '/api/v2';
 const PORT = process.env.PORT || 3000;
 
 const app = express();
-
+app.use(cors());       
 app.use(express.json());
 
 app.use((req, res, next) => {
