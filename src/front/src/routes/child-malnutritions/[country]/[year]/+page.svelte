@@ -1,81 +1,57 @@
 <script>
-  import { goto } from '$app/navigation';
+    import { page } from '$app/state';
+    import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
 
+    const API = '/api/v1/child-malnutritions';
 
+    let responseStatusCode = $state(0);
 
-let API = '/api/v1/child-malnutritions';
+    const country = page.params.country;
+    const year = page.params.year;
 
-  let data = [];
+    let resource = $state(null);
+    let newRegion = $state('');
+    let newStunting = $state(0);
 
- 
-
-async function loadData() {
-    try {
-        const res = await fetch(API); // Rimosso country/year per caricare TUTTI i dati
-        if(res.ok) {
-            data = await res.json();
-        } else {
-            console.error("Errore caricamento");
+    async function getResource() {
+        const response = await fetch(`${API}/${encodeURIComponent(country)}/${year}`);
+        responseStatusCode = response.status;
+        if (response.ok) {
+            resource = await response.json();
+            newRegion = resource.region;
+            newStunting = resource.stunting_rate;
         }
-    } catch(e) {
-        console.error("Errore connessione", e);
     }
-}
 
-  async function loadInitialData() {
-    await fetch(`${API}/loadInitialData`);
-    await loadData();
-  }
-
-  async function deleteAll() {
-    if(confirm("¿Eliminar todos los datos?")) {
-      await fetch(API, { method: "DELETE" });
-      data = [];
+    async function updateResource() {
+        const response = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                country: country,
+                year: parseInt(year),
+                region: newRegion,
+                stunting_rate: parseFloat(newStunting)
+            })
+        });
+        if (response.ok) goto('/child-malnutritions');
     }
-  }
 
-  async function deleteOne(country, year) {
-    if(confirm(`¿Eliminar ${country} (${year})?`)) {
-      await fetch(`${API}/${country}/${year}`, { method: "DELETE" });
-      await loadData();
-    }
-  }
-
-  loadData();
+    onMount(getResource);
 </script>
 
-<h1>Malnutrición Infantil</h1>
+<h3>Detalles para {country} ({year})</h3>
 
-<button on:click={loadInitialData}>Cargar datos iniciales</button>
-<button on:click={deleteAll}>Eliminar todos los datos</button>
-<a href="/child-malnutritions/create"><button>Añadir nuevo dato</button></a>
-
-{#if data.length === 0}
-  <p>No hay datos disponibles.</p>
+{#if resource}
+    <div>
+        <label>Región: <input type="text" bind:value={newRegion} /></label><br>
+        <label>Stunting Rate: <input type="number" step="any" bind:value={newStunting} /></label><br>
+        <button onclick={updateResource}>Actualizar recurso</button>
+        <button onclick={() => goto('/child-malnutritions')}>Cancelar</button>
+    </div>
+{:else if responseStatusCode === 404}
+    <p>No se encontró el recurso para {country} ({year}).</p>
 {:else}
-  <table>
-    <thead>
-      <tr>
-        <th>País</th>
-        <th>Año</th>
-        <th>Región</th>
-        <th>Stunting Rate</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each data as item}
-        <tr>
-          <td>{item.country}</td>
-          <td>{item.year}</td>
-          <td>{item.region}</td>
-          <td>{item.stunting_rate}</td>
-          <td>
-            <button on:click={() => deleteOne(item.country, item.year)}>Eliminar</button>
-            <a href={`/child-malnutritions/${item.country}/${item.year}`}><button>Detalles</button></a>
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+    <p>Cargando...</p>
 {/if}
