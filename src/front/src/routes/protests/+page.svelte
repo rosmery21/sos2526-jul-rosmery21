@@ -85,6 +85,7 @@
 				return;
 			}
 			cargarDatos();
+			console.log("Datos cargados")
 		} catch (err) {
 			error = err;
 		}
@@ -224,7 +225,7 @@
 		<tbody>
 			{#each datos as item (item)}
 				<tr>
-					{#each Object.values(item) as value (value)}
+					{#each Object.values(item) as value, i (i)}
 						<td>{value}</td>
 					{/each}
 					<td><button onclick={() => editarItem(item)}>✏️</button></td>
@@ -240,7 +241,7 @@
 			vista === 'crear' ? crearRegistro(e) : guardarEdicion();
 		}}
 	>
-		{#each camposES as campo, i (i)}
+		{#each camposES as campo, i (campo)}
 			<label
 				>{campo}
 				{#if camposNUM.includes(campo)}
