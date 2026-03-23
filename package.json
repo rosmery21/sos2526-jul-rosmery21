@@ -18,23 +18,31 @@
     "start": "node index.js",
     "build": "cd src/front && npm install && npm run build",
     "svelte": "cd src/front && npm run dev",
+
     "newman-local-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/local-env.json",
     "test-local-SMJ": "start-server-and-test start http://localhost:3000 newman-local-SMJ",
     "newman-render-SMJ": "npx newman run test/api/SMJ/test-SMJ.json -e test/enviroments/render-env.json",
     "test-deaths-by-risk-factors": "npm run test-local-SMJ",
+    "newman-local-SMJ-v2": "npx newman run test/api/SMJ/test-SMJ-v2.json -e test/enviroments/local-env-v2.json",
+    "test-local-SMJ-v2": "start-server-and-test start http://localhost:3000 newman-local-SMJ-v2",
+    "test-deaths-by-risk-factors-v2": "npm run test-local-SMJ-v2",
+    
     "newman-local-OMV": "npx newman run test/api/OMV/test-OMV.json -e test/enviroments/local-env.json",
     "test-local-OMV": "start-server-and-test start http://localhost:3000 newman-local-OMV",
     "newman-render-OMV": "npx newman run test/api/OMV/test-OMV.json -e test/enviroments/render-env.json",
     "test-protests": "npm run test-local-OMV",
+    
     "newman-local-AGC": "npx newman run test/api/AGC/test-AGC.json -e test/enviroments/local-env.json",
     "test-local-AGC": "start-server-and-test start http://localhost:3000 newman-local-AGC",
     "newman-render-AGC": "npx newman run test/api/AGC/test-AGC.json -e test/enviroments/render-env.json",
     "test-pandemics": "npm run test-local-AGC",
+    
     "newman-local-RM": "npx newman run test/api/RM/test-RM.json -e test/enviroments/local-env.json",
     "test-local-RM": "start-server-and-test start http://localhost:3000 newman-local-RM",
     "newman-render-RM": "npx newman run test/api/RM/test-RM.json -e test/enviroments/render-env.json",
     "test-child-malnutritions": "npm run test-local-RM",
-    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-OMV && npm run newman-local-AGC && npm run newman-local-RM\""
+    
+    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-SMJ-v2 && npm run newman-local-OMV && npm run newman-local-AGC && npm run newman-local-RM\""
   },
   "dependencies": {
     "cors": "^2.8.6",
