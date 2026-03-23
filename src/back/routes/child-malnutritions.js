@@ -4,9 +4,33 @@ const router = express.Router();
 
 let childMalnutritions = [];
 
-// GET all data
+
+// GET all data 
 router.get("/child-malnutritions", (req, res) => {
-    res.send(childMalnutritions);
+    let { limit, offset, country, year, region } = req.query;
+    
+    // 1. Partiamo da tutti i dati
+    let filteredData = [...childMalnutritions];
+
+    // 2. Applichiamo i FILTRI (se presenti nella URL)
+    if (country) {
+        filteredData = filteredData.filter(d => d.country.toLowerCase() === country.toLowerCase());
+    }
+    if (year) {
+        filteredData = filteredData.filter(d => d.year === parseInt(year));
+    }
+    if (region) {
+        filteredData = filteredData.filter(d => d.region.toLowerCase() === region.toLowerCase());
+    }
+
+    // 3. Applichiamo la PAGINAZIONE (limit e offset)
+    const L = parseInt(limit) || 10; // Quanti dati mostrare (default 10)
+    const O = parseInt(offset) || 0; // Da dove iniziare (default 0)
+
+    const paginatedData = filteredData.slice(O, O + L);
+
+    // 4. Inviamo il risultato "tagliato"
+    res.json(paginatedData);
 });
 
 // LOAD INITIAL DATA (Corretto: legge il CSV e aggiunge i 10 campioni se il CSV fallisce)
