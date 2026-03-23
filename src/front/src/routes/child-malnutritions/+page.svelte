@@ -1,39 +1,39 @@
 <script>
+    import { fade } from 'svelte/transition';
     // @ts-nocheck
     let data = $state([]);
     let API = '/api/v1/child-malnutritions';
     let responseStatusCode = $state(0);
+    let feedback = $state({ msg: '', type: '' });
     let page = $state(0);
     let isLoading = $state(false);
 
-    // Filtros de búsqueda
-    let searchFilters = $state({
-        country: '',
-        year: '',
-        region: ''
-    });
+    let searchFilters = $state({ country: '', year: '', region: '' });
+
+    function showMsg(m, t) {
+        feedback = { msg: m, type: t };
+        setTimeout(() => feedback = { msg: '', type: '' }, 4000);
+    }
 
     async function loadData() {
         try {
             isLoading = true;
             const params = new URLSearchParams({
                 offset: (page * 10).toString(),
-                limit: (10).toString(),
-                // Filtra solo los campos que no están vacíos
+                limit: "10",
                 ...Object.fromEntries(Object.entries(searchFilters).filter(([_, v]) => v !== ''))
             });
             
             const response = await fetch(`${API}?${params.toString()}`);
+            responseStatusCode = response.status;
             if (response.ok) {
                 const result = await response.json();
                 data = Array.isArray(result) ? result : [result];
-                responseStatusCode = response.status;
             } else {
                 data = [];
-                responseStatusCode = response.status;
             }
         } catch (error) {
-            console.error('Error cargando datos:', error);
+            showMsg("Error de conexión con el servidor.", "error");
         } finally {
             isLoading = false;
         }
@@ -42,30 +42,35 @@
     async function loadInitialData() {
         const res = await fetch(`${API}/loadInitialData`);
         if (res.ok) {
+            showMsg("¡Datos iniciales cargados con éxito!", "success");
             page = 0;
             loadData();
+        } else {
+            showMsg("No se han podido cargar los datos iniciales.", "error");
         }
     }
 
     async function deleteOne(country, year) {
-        if (!confirm(`¿Estás seguro de que deseas eliminar el recurso: ${country} (${year})?`)) {
-            return;
-        }
-        const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, { 
-            method: 'DELETE' 
-        });
+        if (!confirm(`¿Estás seguro de eliminar ${country} (${year})?`)) return;
+        const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, { method: 'DELETE' });
         if (res.ok) {
+            showMsg(`Recurso de ${country} eliminado correctamente.`, "success");
             loadData();
+        } else {
+            showMsg("Error al intentar eliminar el recurso.", "error");
         }
     }
 
     async function deleteAll() {
-        if (!confirm("¿Estás seguro de que deseas eliminar TODA la colección?")) return;
+        if (!confirm("¿Borrar TODA la colección?")) return;
         const res = await fetch(API, { method: 'DELETE' });
         if (res.ok) {
+            showMsg("Colección vaciada con éxito.", "success");
             data = [];
             page = 0;
             loadData();
+        } else {
+            showMsg("Error al intentar vaciar la colección.", "error");
         }
     }
 
@@ -75,15 +80,18 @@
         loadData();
     }
 
-    // Recarga los datos cuando cambia la página o al iniciar
-    $effect(() => {
-        loadData();
-    });
+    $effect(() => { loadData(); });
 </script>
 
-<section>
+{#if feedback.msg}
+    <div class="alert {feedback.type}" transition:fade>
+        {feedback.msg}
+    </div>
+{/if}
+
+<section class="filter-section">
     <h3>Filtros de Búsqueda</h3>
-    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+    <div class="filters">
         <input type="text" placeholder="País" bind:value={searchFilters.country} />
         <input type="number" placeholder="Año" bind:value={searchFilters.year} />
         <input type="text" placeholder="Región" bind:value={searchFilters.region} />
@@ -92,9 +100,9 @@
     </div>
 </section>
 
-<div style="margin-bottom: 20px; display: flex; gap: 10px;">
+<div class="actions">
     <a href="/child-malnutritions/create">
-        <button style="background-color: #28a745; color: white;">Añadir nuevo dato</button>
+        <button class="btn-add">Añadir nuevo dato</button>
     </a>
     <button onclick={loadInitialData}>Cargar datos iniciales</button>
 </div>
@@ -103,19 +111,12 @@
     {#if isLoading}
         <p>Cargando datos...</p>
     {:else if data.length === 0}
-        <p>No hay datos disponibles para esta selección.</p>
-        {#if page > 0}
-            <button onclick={() => page = 0}>Volver a la primera página</button>
-        {/if}
+        <p>No se han encontrado datos para esta selección.</p>
     {:else}
-        <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+        <table>
             <thead>
-                <tr style="background-color: #f2f2f2;">
-                    <th>País</th>
-                    <th>Año</th>
-                    <th>Región</th>
-                    <th>Tasa de retraso (Stunting)</th>
-                    <th>Acciones</th>
+                <tr>
+                    <th>País</th><th>Año</th><th>Región</th><th>Tasa Stunting</th><th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -126,39 +127,34 @@
                         <td>{item.region}</td>
                         <td>{item.stunting_rate}%</td>
                         <td>
-                            <a href={`/child-malnutritions/${encodeURIComponent(item.country)}/${item.year}`}>
-                                <button>Detalles</button>
-                            </a>
-                            <button style="background-color: #dc3545; color: white;" onclick={() => deleteOne(item.country, item.year)}>Eliminar</button>
+                            <a href={`/child-malnutritions/${encodeURIComponent(item.country)}/${item.year}`}><button>Detalles</button></a>
+                            <button class="btn-delete" onclick={() => deleteOne(item.country, item.year)}>Eliminar</button>
                         </td>
                     </tr>
                 {/each}
             </tbody>
         </table>
 
-        <div style="margin-top: 20px; display: flex; align-items: center; gap: 15px;">
+        <div class="pagination">
             <button onclick={() => page = Math.max(0, page - 1)} disabled={page === 0}>Anterior</button>
             <span>Página: <strong>{page + 1}</strong></span>
             <button onclick={() => page = page + 1} disabled={data.length < 10}>Siguiente</button>
         </div>
 
-        <div style="margin-top: 30px;">
-            <button style="background-color: #6c757d; color: white;" onclick={deleteAll}>Eliminar toda la colección</button>
-        </div>
+        <button class="btn-danger-all" onclick={deleteAll}>Eliminar toda la colección</button>
     {/if}
 </main>
 
 <style>
-    table th, table td {
-        padding: 10px;
-        border: 1px solid #ddd;
-    }
-    button {
-        cursor: pointer;
-        padding: 5px 10px;
-    }
-    .secondary {
-        background-color: #f8f9fa;
-        border: 1px solid #ccc;
-    }
+    .alert { padding: 15px; margin: 10px 0; color: white; border-radius: 5px; text-align: center; font-weight: bold; position: sticky; top: 10px; z-index: 100;}
+    .success { background-color: #28a745; }
+    .error { background-color: #dc3545; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    .filter-section { background: #eee; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-add { background-color: #28a745; color: white; }
+    .btn-delete { background-color: #dc3545; color: white; }
+    .btn-danger-all { background-color: #6c757d; color: white; margin-top: 30px; }
+    .pagination { margin-top: 20px; display: flex; gap: 15px; align-items: center; }
 </style>
