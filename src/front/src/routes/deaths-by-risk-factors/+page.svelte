@@ -8,6 +8,7 @@
   let responseStatusCode = $state(0);
   let page = $state(0);
   let isLoading = $state(false);
+  let msg = $state('');
 
   let searchFilters = $state({
     country: '',
@@ -36,6 +37,7 @@
       }else if (response.status === 404){
         deaths_by_risk_factors = []
         responseStatusCode = response.status;
+        msg = "No se han encontrado datos";
       }
 		} catch (error) {
 			console.error('Error fetching deaths by risk factors:', error);
@@ -52,6 +54,7 @@
         method: 'DELETE'
       });
       responseStatusCode = response.status;
+      msg = `Recurso para (${entity}, ${year}) eliminado`;
       if (response.ok) {
         console.log(`Deleted resource: ${entity} (${year})`);
         loadDeathsByRiskFactors();
@@ -70,6 +73,7 @@
         method: 'GET'
       });
       responseStatusCode = response.status;
+      msg="Conjunto de datos iniciales cargado";
       if (response.ok) {
         console.log('Initial data loaded successfully');
         loadDeathsByRiskFactors();
@@ -92,6 +96,7 @@
         method: 'DELETE'
       });
       responseStatusCode = response.status;
+      msg = "Se han eliminado todos los recursos"
       if (response.ok) {
         console.log('Collection deleted successfully');
         deaths_by_risk_factors = [];
@@ -126,6 +131,7 @@
   if (responseStatusCode !== 0) {
     const timer = setTimeout(() => {
       responseStatusCode = 0;
+      msg = '';
     }, 3000);
     return () => clearTimeout(timer);
   }
@@ -135,17 +141,7 @@
 
 {#if responseStatusCode !== 0}
   <div>
-    {#if responseStatusCode === 200}
-      Operación realizada con éxito
-    {:else if responseStatusCode === 404}
-      No se han encontrado los datos buscados
-    {:else if responseStatusCode === 201}
-      Recurso añadido
-    {:else if responseStatusCode === 204}
-      Recurso eliminado
-    {:else}
-      Error: (responseStatusCode)
-    {/if}
+    { msg }
     <button onclick={() => responseStatusCode = 0}>x</button>
   </div>
 {/if}

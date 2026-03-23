@@ -61,7 +61,7 @@
 		try {
 			const res = await fetch(API);
 			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText}`;
+				error = `Error: ${res.status} ${res.statusText} datos no encontrados`;
 				return;
 			}
 			const respuesta = await res.json();
@@ -216,15 +216,15 @@
 	<table border="1" cellpadding="5">
 		<thead>
 			<tr>
-				{#each camposES as campo}
+				{#each camposES as campo (campo)}
 					<th>{campo}</th>
 				{/each}
 			</tr>
 		</thead>
 		<tbody>
-			{#each datos as item}
+			{#each datos as item (item)}
 				<tr>
-					{#each Object.values(item) as value}
+					{#each Object.values(item) as value (value)}
 						<td>{value}</td>
 					{/each}
 					<td><button onclick={() => editarItem(item)}>✏️</button></td>
@@ -240,7 +240,7 @@
 			vista === 'crear' ? crearRegistro(e) : guardarEdicion();
 		}}
 	>
-		{#each camposES as campo, i}
+		{#each camposES as campo, i (i)}
 			<label
 				>{campo}
 				{#if camposNUM.includes(campo)}
