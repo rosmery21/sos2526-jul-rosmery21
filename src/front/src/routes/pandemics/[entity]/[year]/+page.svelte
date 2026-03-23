@@ -6,13 +6,13 @@
 
     const API = '/api/v1/pandemics';
     let responseStatusCode = $state(0);
-    let statusMsg = $state(""); // Añadido para feedback visual
+    let statusMsg = $state(""); 
 
     const entity = page.params.entity;
     const year = page.params.year;
 
     let resource = $state(null);
-    let code = $state(""); // He añadido el estado para el código
+    let code = $state(""); 
     let newYaws = $state(0);
     let newPolio = $state(0);
     let newGuineaWorm = $state(0);
@@ -29,8 +29,6 @@
             responseStatusCode = response.status;
             if (response.ok) {
                 resource = await response.json();
-                
-                // Mapeo correcto de los datos recibidos
                 code = resource.code;
                 newYaws = resource.yaws;
                 newPolio = resource.polio;
@@ -48,32 +46,42 @@
     }
 
     async function updateResource() {
+        // --- VALIDACIÓN ANTI-NEGATIVOS ---
+        const values = [newYaws, newPolio, newGuineaWorm, newRabies, newMalaria, newHivAids, newTuberculosis, newSmallpox, newCholera];
+        if (values.some(v => v < 0)) {
+            statusMsg = "Error: No se permiten valores negativos.";
+            return; // No sigue con el envío
+        }
+
         try {
+            const updatedData = {
+                entity: entity,
+                code: code,
+                year: parseInt(year),
+                yaws: Number(newYaws),
+                polio: Number(newPolio),
+                guinea_worm: Number(newGuineaWorm),
+                rabies: Number(newRabies),
+                malaria: Number(newMalaria),
+                hiv_aids: Number(newHivAids),
+                tuberculosis: Number(newTuberculosis),
+                smallpox: Number(newSmallpox),
+                cholera: Number(newCholera)
+            };
+
             const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    entity: entity,
-                    year: parseInt(year),
-                    code: code, // Es importante incluir el código
-                    yaws: newYaws,
-                    polio: newPolio,
-                    guinea_worm: newGuineaWorm, // ¡CORREGIDO!: Antes enviabas "guinea_worm: newGuineaWorm" pero el servidor espera el nombre exacto de la DB
-                    rabies: newRabies,
-                    malaria: newMalaria,
-                    hiv_aids: newHivAids, // ¡CORREGIDO!: Antes era hiv_aids
-                    tuberculosis: newTuberculosis,
-                    smallpox: newSmallpox,
-                    cholera: newCholera
-                })
+                body: JSON.stringify(updatedData)
             });
             
             responseStatusCode = response.status;
             if (response.ok) {
-                statusMsg = "Dato actualizado con éxito";
+                statusMsg = "¡Actualizado con éxito!";
                 setTimeout(() => goto('/pandemics'), 1500);
             } else {
-                statusMsg = "Error al actualizar (asegúrate de que los datos son correctos)";
+                const errorText = await response.text();
+                statusMsg = "Error del servidor: " + errorText;
             }
         } catch (error) {
             statusMsg = "Error de conexión";
@@ -87,39 +95,31 @@
     <h3>Detalles para {entity} ({year})</h3>
 
     {#if statusMsg}
-        <p style="color: blue; font-weight: bold;">{statusMsg}</p>
+        <p style="color: {statusMsg.includes('❌') ? 'red' : 'blue'}; font-weight: bold;">{statusMsg}</p>
     {/if}
 
     {#if resource}
         <table>
             <thead>
                 <tr>
-                    <th>País</th>
-                    <th>Año</th>
-                    <th>Frambesia</th>
-                    <th>Polio</th>
-                    <th>Gusano de Guinea</th>
-                    <th>Rabia</th>
-                    <th>Malaria</th>
-                    <th>VIH/SIDA</th>
-                    <th>Tuberculosis</th>
-                    <th>Viruela</th>
-                    <th>Cólera</th>
+                    <th>País</th><th>Año</th><th>Frambesia</th><th>Polio</th>
+                    <th>Gusano</th><th>Rabia</th><th>Malaria</th><th>VIH</th>
+                    <th>TBC</th><th>Viruela</th><th>Cólera</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>{entity}</td>
                     <td>{year}</td>
-                    <td><input type="number" step="any" bind:value={newYaws} /></td>
-                    <td><input type="number" step="any" bind:value={newPolio} /></td>
-                    <td><input type="number" step="any" bind:value={newGuineaWorm} /></td>
-                    <td><input type="number" step="any" bind:value={newRabies} /></td>
-                    <td><input type="number" step="any" bind:value={newMalaria} /></td>
-                    <td><input type="number" step="any" bind:value={newHivAids} /></td>
-                    <td><input type="number" step="any" bind:value={newTuberculosis} /></td>
-                    <td><input type="number" step="any" bind:value={newSmallpox} /></td>
-                    <td><input type="number" step="any" bind:value={newCholera} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newYaws} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newPolio} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newGuineaWorm} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newRabies} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newMalaria} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newHivAids} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newTuberculosis} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newSmallpox} /></td>
+                    <td><input type="number" step="any" min="0" bind:value={newCholera} /></td>
                 </tr>
             </tbody>
         </table> 

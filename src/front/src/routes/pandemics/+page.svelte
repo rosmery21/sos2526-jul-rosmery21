@@ -7,90 +7,172 @@
   let statusMsg = $state("");
   let page = $state(0);
 
+  let searchEntity = $state("");
+  let searchFrom = $state("");
+  let searchTo = $state("");
+  let searchYaws = $state("");
+  let searchPolio = $state("");
+  let searchGuinea = $state("");
+  let searchRabies = $state("");
+  let searchMalaria = $state("");
+  let searchHiv = $state("");
+  let searchTuberculosis = $state("");
+  let searchSmallpox = $state("");
+  let searchCholera = $state("");
+
   async function loadPandemics() {
-		try {
-			const response = await fetch(`${API}?offset=${page*10}&limit=10`, {
-				method: 'GET'
-			});
-			const data = await response.json();
+    try {
+      let url = `${API}?offset=${page*10}&limit=10`;
+      
+      if (searchEntity) url += `&entity=${encodeURIComponent(searchEntity)}`;
+      if (searchFrom)   url += `&from=${searchFrom}`;
+      if (searchTo)     url += `&to=${searchTo}`;
+
+      if (searchYaws)   url += `&yaws=${searchYaws}`;
+      if (searchPolio)  url += `&polio=${searchPolio}`;
+      if (searchGuinea) url += `&guinea_worm=${searchGuinea}`;
+      if (searchRabies) url += `&rabies=${searchRabies}`;
+      if (searchMalaria) url += `&malaria=${searchMalaria}`;
+      if (searchHiv)     url += `&hiv_aids=${searchHiv}`;
+      if (searchTuberculosis) url += `&tuberculosis=${searchTuberculosis}`;
+      if (searchSmallpox) url += `&smallpox=${searchSmallpox}`;
+      if (searchCholera)  url += `&cholera=${searchCholera}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
       responseStatusCode = response.status;
-			pandemics = Array.isArray(data) ? data : [data];
-		} catch (error) {
-			console.error('Error fetching pandemics:', error);
-		}
-	}
-
-// @ts-ignore
-    async function deleteResource(entity, year) {
-        if (!confirm(`¿Estás seguro de que deseas eliminar el dato: ${entity} (${year})?`)) {
-            return;
-        }
-        try {
-            const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, {
-                method: 'DELETE'
-            });
-            responseStatusCode = response.status;
-            if (response.ok) {
-                statusMsg = `El dato de ${entity} (${year}) se ha eliminado correctamente.`;
-                loadPandemics();
-                setTimeout(() => statusMsg = "", 3000);
-            } else {
-                statusMsg = "No se ha podido eliminar el dato. Inténtelo de nuevo.";
-            }
-        } catch (error) {
-            statusMsg = "Error de conexión al intentar eliminar.";
-        }
+      
+      if (response.ok) {
+        pandemics = Array.isArray(data) ? data : [data];
+      } else {
+        pandemics = [];
+      }
+    } catch (error) {
+      console.error('Error fetching pandemics:', error);
     }
+  }
 
-    async function loadInitialData() {
-        try {
-            const response = await fetch(`${API}/loadInitialData`, {
-                method: 'GET'
-            });
-            responseStatusCode = response.status;
-            if (response.ok) {
-                statusMsg = "Datos de ejemplo cargados correctamente.";
-                loadPandemics();
-                setTimeout(() => statusMsg = "", 3000);
-            } else {
-                statusMsg = "Error al cargar los datos de ejemplo.";
-            }
-        } catch (error) {
-            statusMsg = "Error de conexión al cargar datos iniciales.";
-        }
-    }
-
-    async function deleteData() {
-        if (!confirm(`¿Estás seguro de que deseas eliminar toda la colección?`)) {
-            return;
-        }
-        try {
-            const response = await fetch(`${API}`, {
-                method: 'DELETE'
-            });
-            responseStatusCode = response.status;
-            if (response.ok) {
-                statusMsg = "Todos los datos han sido eliminados con éxito.";
-                pandemics = [];
-                page = 0;
-                setTimeout(() => statusMsg = "", 3000);
-            } else {
-                statusMsg = "Error al intentar vaciar la lista.";
-            }
-        } catch (error) {
-            statusMsg = "Error de conexión al eliminar la colección.";
-        }
-    }
-
-  $effect(() => {
+  function clearFilters() {
+    searchEntity = ""; searchFrom = ""; searchTo = "";
+    searchYaws = ""; searchPolio = ""; searchGuinea = "";
+    searchRabies = ""; searchMalaria = ""; searchHiv = "";
+    searchTuberculosis = ""; searchSmallpox = ""; searchCholera = "";
+    page = 0;
     loadPandemics();
-  });
+  }
 
-  onMount(() => {
-    loadPandemics();
-  });
+  // @ts-ignore
+  async function deleteResource(entity, year) {
+    if (!confirm(`¿Estás seguro de que deseas eliminar el dato: ${entity} (${year})?`)) return;
+    try {
+      const response = await fetch(`${API}/${encodeURIComponent(entity)}/${year}`, { method: 'DELETE' });
+      responseStatusCode = response.status;
+      if (response.ok) {
+        statusMsg = `El dato de ${entity} (${year}) se ha eliminado correctamente.`;
+        loadPandemics();
+        setTimeout(() => statusMsg = "", 3000);
+      } else {
+        statusMsg = "No se ha podido eliminar el dato. Inténtelo de nuevo.";
+      }
+    } catch (error) { statusMsg = "Error de conexión al intentar eliminar."; }
+  }
 
+  async function loadInitialData() {
+    try {
+      const response = await fetch(`${API}/loadInitialData`, { method: 'GET' });
+      responseStatusCode = response.status;
+      if (response.ok) {
+        statusMsg = "Datos de ejemplo cargados correctamente.";
+        loadPandemics();
+        setTimeout(() => statusMsg = "", 3000);
+      } else {
+        statusMsg = "Error al cargar los datos de ejemplo.";
+      }
+    } catch (error) { statusMsg = "Error de conexión al cargar datos iniciales."; }
+  }
+
+  async function deleteData() {
+    if (!confirm(`¿Estás seguro de que deseas eliminar toda la colección?`)) return;
+    try {
+      const response = await fetch(`${API}`, { method: 'DELETE' });
+      responseStatusCode = response.status;
+      if (response.ok) {
+        statusMsg = "Todos los datos han sido eliminados con éxito.";
+        pandemics = [];
+        page = 0;
+        setTimeout(() => statusMsg = "", 3000);
+      } else {
+        statusMsg = "Error al intentar vaciar la lista.";
+      }
+    } catch (error) { statusMsg = "Error de conexión al eliminar la colección."; }
+  }
+
+  $effect(() => { loadPandemics(); });
+  onMount(() => { loadPandemics(); });
 </script>
+
+<div style="margin: 20px 0; padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9; border-radius: 8px;">
+  <h4 style="margin-top: 0;">Buscador</h4>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; align-items: flex-end;">
+    
+    <label>País: <br>
+      <input type="text" bind:value={searchEntity} style="width: 90%"/>
+    </label>
+    
+    <label>Desde (Año): <br>
+      <input type="number" min="0" bind:value={searchFrom} style="width: 90%"/>
+    </label>
+    
+    <label>Hasta (Año): <br>
+      <input type="number" min="0" bind:value={searchTo} style="width: 90%"/>
+    </label>
+
+    <label> Frambesia: <br>
+      <input type="number" min="0" bind:value={searchYaws} style="width: 90%"/>
+    </label>
+
+    <label> Polio: <br>
+      <input type="number" min="0" bind:value={searchPolio} style="width: 90%"/>
+    </label>
+
+    <label>Gusano de Guinea: <br>
+      <input type="number" min="0" bind:value={searchGuinea} style="width: 90%"/>
+    </label>
+
+    <label>Rabia: <br>
+      <input type="number" min="0" bind:value={searchRabies} style="width: 90%"/>
+    </label>
+
+    <label>Malaria: <br>
+      <input type="number" min="0" bind:value={searchMalaria} style="width: 90%"/>
+    </label>
+
+    <label>VIH/SIDA: <br>
+      <input type="number" min="0" bind:value={searchHiv} style="width: 90%"/>
+    </label>
+
+    <label>Tuberculosis: <br>
+      <input type="number" min="0" bind:value={searchTuberculosis} style="width: 90%"/>
+    </label>
+
+    <label>Viruela: <br>
+      <input type="number" min="0" bind:value={searchSmallpox} style="width: 90%"/>
+    </label>
+
+    <label>Cólera: <br>
+      <input type="number" min="0" bind:value={searchCholera} style="width: 90%"/>
+    </label>
+  </div>
+
+  <div style="margin-top: 15px; display: flex; gap: 10px;">
+    <button onclick={loadPandemics} style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+      Filtrar
+    </button>
+    <button onclick={clearFilters} style="background-color: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+      Limpiar
+    </button>
+  </div>
+</div>
 
 <div>
   <a href="/pandemics/create">
@@ -100,10 +182,11 @@
 
 <main>
   {#if statusMsg}
-        <p style="color: green; font-weight: bold; background-color: #d4edda; padding: 10px; border-radius: 5px;">
-            {statusMsg}
-        </p>
+    <p style="color: green; font-weight: bold; background-color: #d4edda; padding: 10px; border-radius: 5px;">
+      {statusMsg}
+    </p>
   {/if}
+
   {#if pandemics.length === 0}
     <p>No hay datos disponibles.</p>
     {#if page === 0}
@@ -113,18 +196,10 @@
     <table>
       <thead>
         <tr>
-          <th>País</th>
-          <th>Código</th>
-          <th>Año</th>
-          <th>Frambesia</th>
-          <th>Polio</th>
-          <th>Gusano de Guinea</th>
-          <th>Rabia</th>
-          <th>Malaria</th>
-          <th>VIH/SIDA</th>
-          <th>Tuberculosis</th>
-          <th>Viruela</th>
-          <th>Cólera</th>
+          <th>País</th><th>Código</th><th>Año</th>
+          <th>Frambesia</th><th>Polio</th><th>Gusano de Guinea</th><th>Rabia</th>
+          <th>Malaria</th><th>VIH/SIDA</th><th>Tuberculosis</th><th>Viruela</th><th>Cólera</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -142,17 +217,19 @@
             <td>{resource.tuberculosis}</td>
             <td>{resource.smallpox}</td>
             <td>{resource.cholera}</td>
-            <td><button onclick={() =>deleteResource(resource.entity, resource.year)}>Eliminar</button></td>
+            <td><button onclick={() => deleteResource(resource.entity, resource.year)}>Eliminar</button></td>
             <td><a href={`/pandemics/${encodeURIComponent(resource.entity)}/${resource.year}`}>Detalles</a></td>
           </tr>
         {/each}
       </tbody>
     </table>
+    
     <div>
       <button onclick={() => page = Math.max(0, page - 1)}>-</button>
       <p>Page: {page + 1}</p>
       <button onclick={() => page = page + 1} disabled={pandemics.length < 10}>+</button>
     </div>
+
     <div>
       <button onclick={() => deleteData()}>Eliminar la colección</button>
     </div>
