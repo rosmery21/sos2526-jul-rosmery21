@@ -2,20 +2,23 @@
   import { goto } from '$app/navigation';
 
 
-  const API = "/api/v1/child-malnutritions";
+
+let API = '/api/v1/child-malnutritions';
 
   let data = [];
 
  
-  async function loadData() {
-    if(!country || !year) return;
+
+async function loadData() {
     try {
-        const res = await fetch(`${API}/${country}/${year}`);
-        if(res.ok) data = await res.json();
-        else error = `No se encontró el recurso (${res.status})`;
+        const res = await fetch(API); // Rimosso country/year per caricare TUTTI i dati
+        if(res.ok) {
+            data = await res.json();
+        } else {
+            console.error("Errore caricamento");
+        }
     } catch(e) {
-        error = "Error de conexión al servidor";
-        console.error(e);
+        console.error("Errore connessione", e);
     }
 }
 
