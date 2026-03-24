@@ -22,7 +22,7 @@ const apis = [
         miembro: 'Alexia Gutiérrez Casado',
         recurso: 'pandemics',
         frontend: '/pandemics',
-        api: '/api/v1/pandemics',
+        api: '/api/v2/pandemics',
         docs: 'https://documenter.getpostman.com/view/52276047/2sBXigLDEC',
         github: 'https://github.com/alexiagutierrezcasado',
     },
