@@ -36,7 +36,7 @@ router.get('/pandemics/loadInitialData', (req, res) => {
       smallpox: item.Smallpox || 0,
       cholera: item.Cholera || 0
     }));
-    store.insert(filteredData.slice(0, 10), (err, docs) => {
+    store.insert(filteredData, (err, docs) => {
       docs.forEach(d => delete d._id);
       res.status(201).json(docs);
     });

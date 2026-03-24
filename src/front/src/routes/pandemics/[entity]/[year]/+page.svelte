@@ -4,7 +4,7 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
 
-    const API = '/api/v1/pandemics';
+    const API = '/api/v2/pandemics';
     let responseStatusCode = $state(0);
     let statusMsg = $state(""); 
 

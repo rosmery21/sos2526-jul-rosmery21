@@ -1,7 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
 
-  let API = '/api/v1/pandemics';
+  let API = '/api/v2/pandemics';
 
   // Estados para los campos del formulario
   let entity = $state('');

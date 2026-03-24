@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   // @ts-ignore
   let pandemics = $state([]);
-  let API = '/api/v1/pandemics';
+  let API = '/api/v2/pandemics';
   let responseStatusCode = $state(0);
   let statusMsg = $state("");
   let page = $state(0);
