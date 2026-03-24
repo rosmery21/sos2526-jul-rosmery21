@@ -16,22 +16,22 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
-      - name: Levantar la aplicación en segundo plano
-        run: npm run svelte -- --host & 
+      - name: Levantar la aplicación completa
+        run: npm start & 
         
-      - name: Esperar a que el servidor arranque
-        run: sleep 40
+      - name: Esperar a que el servidor responda
+        run: npx wait-on http://localhost:3000 --timeout 60000
 
-      - name: Instalar Newman (Para probar la API)
+      - name: Instalar Newman
         run: npm install -g newman
 
       - name: Ejecutar Tests de API (AGC v1)
-        run: newman run test/api/AGC/test-AGC.json --env-var "BASE_URL=http://localhost:5173" --env-var "BASE_API_URL=/api/v1"
+        run: newman run test/api/AGC/test-AGC.json --env-var "BASE_URL=http://localhost:3000" --env-var "BASE_API_URL=/api/v1"
 
       - name: Ejecutar Tests de API (AGC v2)
-        run: newman run test/api/AGC/test-AGC-v2.json --env-var "BASE_URL=http://localhost:5173" --env-var "BASE_API_URL=/api/v2"
+        run: newman run test/api/AGC/test-AGC-v2.json --env-var "BASE_URL=http://localhost:3000" --env-var "BASE_API_URL=/api/v2"
 
-      - name: Instalar Navegadores de Playwright (Para probar el Frontend)
+      - name: Instalar Navegadores de Playwright
         run: npx playwright install --with-deps
 
       - name: Ejecutar Tests E2E de Playwright (AGC)
