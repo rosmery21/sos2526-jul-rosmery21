@@ -39,15 +39,14 @@
                 newTuberculosis = resource.tuberculosis;
                 newSmallpox = resource.smallpox;
                 newCholera = resource.cholera;
-            } else if (response.status === 404) {
-                statusMsg = `Error: No existe ningún registro para '${entity}' en el año ${year}.`;
             }
-        }  catch (error) {
-            statusMsg = "Error de conexión al obtener los datos.";
+        } catch (error) {
+            console.error('Error fetching resource:', error);
         }
     }
 
     async function updateResource() {
+        // --- VALIDACIÓN ANTI-NEGATIVOS ---
         const values = [newYaws, newPolio, newGuineaWorm, newRabies, newMalaria, newHivAids, newTuberculosis, newSmallpox, newCholera];
         if (values.some(v => v < 0)) {
             statusMsg = "Error: No se permiten valores negativos.";
@@ -80,11 +79,9 @@
             if (response.ok) {
                 statusMsg = "¡Actualizado con éxito!";
                 setTimeout(() => goto('/pandemics'), 1500);
-            } else if (response.status === 400) {
-                statusMsg = "Error: Los datos introducidos no son válidos.";
-            }else {
+            } else {
                 const errorText = await response.text();
-                statusMsg = "Error al guardar los cambios.";
+                statusMsg = "Error del servidor: " + errorText;
             }
         } catch (error) {
             statusMsg = "Error de conexión";
@@ -98,22 +95,21 @@
     <h3>Detalles para {entity} ({year})</h3>
 
     {#if statusMsg}
-        <p style="color: {statusMsg.includes('Error') ? 'red' : 'blue'}; font-weight: bold;">{statusMsg}</p>
+        <p style="color: {statusMsg.includes('❌') ? 'red' : 'blue'}; font-weight: bold;">{statusMsg}</p>
     {/if}
 
     {#if resource}
         <table>
             <thead>
                 <tr>
-                    <th>País</th><th>Código</th><th>Año</th><th>Frambesia</th><th>Polio</th>
-                    <th>Gusano de Guinea</th><th>Rabia</th><th>Malaria</th><th>VIH/SIDA</th>
-                    <th>Tuberculosis</th><th>Viruela</th><th>Cólera</th>
+                    <th>País</th><th>Año</th><th>Frambesia</th><th>Polio</th>
+                    <th>Gusano</th><th>Rabia</th><th>Malaria</th><th>VIH</th>
+                    <th>TBC</th><th>Viruela</th><th>Cólera</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>{entity}</td>
-                    <td>{code}</td>
                     <td>{year}</td>
                     <td><input type="number" step="any" min="0" bind:value={newYaws} /></td>
                     <td><input type="number" step="any" min="0" bind:value={newPolio} /></td>
@@ -129,7 +125,7 @@
         </table> 
 
         <div style="margin-top: 20px;">
-            <button onclick={updateResource}>Guardar cambios</button>
+            <button onclick={updateResource}>Actualizar dato</button>
             <button onclick={() => goto('/pandemics')}>Cancelar</button>
         </div>
 
