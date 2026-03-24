@@ -20,7 +20,13 @@
   let errorMessage = $state('');
 
   async function handleAddResource() {
-    // Construimos el objeto respetando los nombres de tu API
+
+    const values = [yaws, polio, guinea_worm, rabies, malaria, hiv_aids, tuberculosis, smallpox, cholera];
+    if (values.some(v => parseFloat(v) < 0) || parseInt(year) < 0) {
+      errorMessage = "Error: No se permiten valores negativos.";
+      return;
+    }
+
     const newResource = {
       entity,
       code,
@@ -44,14 +50,13 @@
       });
  
       if (res.status === 201) {
-        // ÉXITO: Redirigimos al listado principal
         goto('/pandemics');
       } else if (res.status === 409) {
-        errorMessage = "Error: El dato ya existe.";
+        errorMessage = `Error: Ya existe un dato guardado para ${entity} en el año ${year}.`;
       } else if (res.status === 400) {
         errorMessage = "Error: Faltan campos o el formato es incorrecto.";
       } else {
-        errorMessage = "Error inesperado: " + res.status;
+         errorMessage = "Error inesperado al intentar guardar el dato.";
       }
     } catch (error) {
       console.error('Error al añadir:', error);
@@ -70,16 +75,16 @@
   <form onsubmit={(e) => { e.preventDefault(); handleAddResource(); }}>
     <label>País: <input type="text" bind:value={entity} required /></label><br />
     <label>Código: <input type="text" bind:value={code} required /></label><br />
-    <label>Año: <input type="number" bind:value={year} required /></label><br />
-    <label>Frambesia: <input type="number" step="any" bind:value={yaws} /></label><br />
-    <label>Polio: <input type="number" step="any" bind:value={polio} /></label><br />
-    <label>Gusano de Guinea: <input type="number" step="any" bind:value={guinea_worm} /></label><br />
-    <label>Rabia: <input type="number" step="any" bind:value={rabies} /></label><br />
-    <label>Malaria: <input type="number" step="any" bind:value={malaria} /></label><br />
-    <label>VIH/SIDA: <input type="number" step="any" bind:value={hiv_aids} /></label><br />
-    <label>Tuberculosis: <input type="number" step="any" bind:value={tuberculosis} /></label><br />
-    <label>Viruela: <input type="number" step="any" bind:value={smallpox} /></label><br />
-    <label>Cólera: <input type="number" step="any" bind:value={cholera} /></label><br />
+    <label>Año: <input type="number" min="0" bind:value={year} required /></label><br />
+    <label>Frambesia: <input type="number" step="any" bind:value={yaws} min="0"/></label><br />
+    <label>Polio: <input type="number" step="any" bind:value={polio} min="0"/></label><br />
+    <label>Gusano de Guinea: <input type="number" step="any" bind:value={guinea_worm} min="0"/></label><br />
+    <label>Rabia: <input type="number" step="any" bind:value={rabies} min="0"/></label><br />
+    <label>Malaria: <input type="number" step="any" bind:value={malaria} min="0"/></label><br />
+    <label>VIH/SIDA: <input type="number" step="any" bind:value={hiv_aids} min="0"/></label><br />
+    <label>Tuberculosis: <input type="number" step="any" bind:value={tuberculosis} min="0"/></label><br />
+    <label>Viruela: <input type="number" step="any" bind:value={smallpox} min="0"/></label><br />
+    <label>Cólera: <input type="number" step="any" bind:value={cholera} min="0"/></label><br />
 
     <button type="submit">Guardar Dato</button>
     <button type="button" onclick={() => goto('/pandemics')}>Cancelar</button>

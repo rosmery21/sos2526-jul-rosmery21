@@ -8,6 +8,7 @@
   let page = $state(0);
 
   let searchEntity = $state("");
+  let searchCode = $state("");
   let searchFrom = $state("");
   let searchTo = $state("");
   let searchYaws = $state("");
@@ -25,6 +26,7 @@
       let url = `${API}?offset=${page*10}&limit=10`;
       
       if (searchEntity !== "") url += `&entity=${encodeURIComponent(searchEntity)}`;
+      if (searchCode !== "")   url += `&code=${encodeURIComponent(searchCode)}`;
       if (searchFrom !== "")   url += `&from=${searchFrom}`;
       if (searchTo !== "")     url += `&to=${searchTo}`;
 
@@ -53,7 +55,7 @@
   }
 
   function clearFilters() {
-    searchEntity = ""; searchFrom = ""; searchTo = "";
+    searchEntity = ""; searchCode = ""; searchFrom = ""; searchTo = "";
     searchYaws = ""; searchPolio = ""; searchGuinea = "";
     searchRabies = ""; searchMalaria = ""; searchHiv = "";
     searchTuberculosis = ""; searchSmallpox = ""; searchCholera = "";
@@ -72,7 +74,7 @@
         loadPandemics();
         setTimeout(() => statusMsg = "", 3000);
       } else {
-        statusMsg = "No se ha podido eliminar el dato. Inténtelo de nuevo.";
+        statusMsg = `Error: No se ha podido eliminar el dato de ${entity} del año ${year}.`;;
       }
     } catch (error) { statusMsg = "Error de conexión al intentar eliminar."; }
   }
@@ -82,17 +84,17 @@
       const response = await fetch(`${API}/loadInitialData`, { method: 'GET' });
       responseStatusCode = response.status;
       if (response.ok) {
-        statusMsg = "Datos de ejemplo cargados correctamente.";
+        statusMsg = "Datos cargados correctamente.";
         loadPandemics();
         setTimeout(() => statusMsg = "", 3000);
       } else {
-        statusMsg = "Error al cargar los datos de ejemplo.";
+        statusMsg = "Error al cargar los datos.";
       }
     } catch (error) { statusMsg = "Error de conexión al cargar datos iniciales."; }
   }
 
   async function deleteData() {
-    if (!confirm(`¿Estás seguro de que deseas eliminar toda la colección?`)) return;
+    if (!confirm(`¿Estás seguro de que deseas eliminar todos los datos?`)) return;
     try {
       const response = await fetch(`${API}`, { method: 'DELETE' });
       responseStatusCode = response.status;
@@ -104,7 +106,7 @@
       } else {
         statusMsg = "Error al intentar vaciar la lista.";
       }
-    } catch (error) { statusMsg = "Error de conexión al eliminar la colección."; }
+    } catch (error) { statusMsg = "Error de conexión al eliminar todos los datos"; }
   }
 
   $effect(() => { loadPandemics(); });
@@ -118,12 +120,16 @@
     <label>País: <br>
       <input type="text" bind:value={searchEntity} style="width: 90%"/>
     </label>
+
+    <label>Código del País: <br>
+      <input type="text" bind:value={searchCode} style="width: 90%"/>
+    </label>
     
-    <label>Desde (Año): <br>
+    <label>Desde el año: <br>
       <input type="number" min="0" bind:value={searchFrom} style="width: 90%"/>
     </label>
     
-    <label>Hasta (Año): <br>
+    <label>Hasta el año: <br>
       <input type="number" min="0" bind:value={searchTo} style="width: 90%"/>
     </label>
 
@@ -166,7 +172,7 @@
 
   <div style="margin-top: 15px; display: flex; gap: 10px;">
     <button onclick={loadPandemics}>
-      Filtrar
+      Buscar dato
     </button>
     <button onclick={clearFilters}>
       Limpiar
@@ -182,7 +188,7 @@
 
 <main>
   {#if statusMsg}
-    <p style="color: green; font-weight: bold; background-color: #d4edda; padding: 10px; border-radius: 5px;">
+    <p style="color: red; padding: 10px;">
       {statusMsg}
     </p>
   {/if}
@@ -199,7 +205,6 @@
           <th>País</th><th>Código</th><th>Año</th>
           <th>Frambesia</th><th>Polio</th><th>Gusano de Guinea</th><th>Rabia</th>
           <th>Malaria</th><th>VIH/SIDA</th><th>Tuberculosis</th><th>Viruela</th><th>Cólera</th>
-          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -218,20 +223,20 @@
             <td>{resource.smallpox}</td>
             <td>{resource.cholera}</td>
             <td><button onclick={() => deleteResource(resource.entity, resource.year)}>Eliminar</button></td>
-            <td><a href={`/pandemics/${encodeURIComponent(resource.entity)}/${resource.year}`}>Detalles</a></td>
+            <td><a href={`/pandemics/${encodeURIComponent(resource.entity)}/${resource.year}`}>Editar</a></td>
           </tr>
         {/each}
       </tbody>
     </table>
     
     <div>
-      <button onclick={() => page = Math.max(0, page - 1)}>-</button>
-      <p>Página: {page + 1}</p>
-      <button onclick={() => page = page + 1} disabled={pandemics.length < 10}>+</button>
+      <button onclick={() => page = Math.max(0, page - 1)} disabled={page === 0}>Anterior</button>
+      <span>Página: {page + 1}</span>
+      <button onclick={() => page = page + 1} disabled={pandemics.length < 10}>Siguiente</button>
     </div>
 
     <div>
-      <button onclick={() => deleteData()}>Eliminar la colección</button>
+      <button onclick={() => deleteData()}>Eliminar todos los datos</button>
     </div>
   {/if}
 </main>
