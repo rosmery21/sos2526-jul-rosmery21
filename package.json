@@ -36,13 +36,18 @@
     "test-local-AGC": "start-server-and-test start http://localhost:3000 newman-local-AGC",
     "newman-render-AGC": "npx newman run test/api/AGC/test-AGC.json -e test/enviroments/render-env.json",
     "test-pandemics": "npm run test-local-AGC",
+    "newman-local-AGC-v2": "npx newman run test/api/AGC/test-AGC-v2.json -e test/enviroments/local-env-v2.json",
+    "test-local-AGC-v2": "start-server-and-test start http://localhost:3000 newman-local-AGC-v2",
+    "test-pandemics-v2": "npm run test-local-AGC-v2",
+
+
     
     "newman-local-RM": "npx newman run test/api/RM/test-RM.json -e test/enviroments/local-env.json",
     "test-local-RM": "start-server-and-test start http://localhost:3000 newman-local-RM",
     "newman-render-RM": "npx newman run test/api/RM/test-RM.json -e test/enviroments/render-env.json",
     "test-child-malnutritions": "npm run test-local-RM",
     
-    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-SMJ-v2 && npm run newman-local-OMV && npm run newman-local-AGC && npm run newman-local-RM\""
+    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-SMJ-v2 && npm run newman-local-OMV && npm run newman-local-AGC && npm run newman-local-AGC-v2 && npm run newman-local-RM\""
   },
   "dependencies": {
     "cors": "^2.8.6",
