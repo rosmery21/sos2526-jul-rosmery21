@@ -165,10 +165,10 @@
   </div>
 
   <div style="margin-top: 15px; display: flex; gap: 10px;">
-    <button onclick={loadPandemics} style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+    <button onclick={loadPandemics}>
       Filtrar
     </button>
-    <button onclick={clearFilters} style="background-color: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+    <button onclick={clearFilters}>
       Limpiar
     </button>
   </div>
@@ -226,7 +226,7 @@
     
     <div>
       <button onclick={() => page = Math.max(0, page - 1)}>-</button>
-      <p>Page: {page + 1}</p>
+      <p>Página: {page + 1}</p>
       <button onclick={() => page = page + 1} disabled={pandemics.length < 10}>+</button>
     </div>
 

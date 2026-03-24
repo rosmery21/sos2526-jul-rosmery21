@@ -4,7 +4,7 @@ import dataStore from 'nedb';
 
 const router = express.Router();
 
-const store = new dataStore({filename: './data/storage/pandemics-2.db', autoload: true});
+const store = new dataStore({ filename: './data/storage/pandemics-2.db', autoload: true });
 
 const data = [];
 const requiredFields = ['entity', 'code', 'year', 'yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'];
@@ -51,18 +51,18 @@ router.get('/pandemics', (req, res) => {
 
   const { entity, code, year, from, to, yaws, polio, guinea_worm, rabies, malaria, hiv_aids, tuberculosis, smallpox, cholera } = req.query;
 
-  if (entity) query.entity = new RegExp(entity, "i"); 
+  if (entity) query.entity = new RegExp(entity, "i");
   if (code) query.code = new RegExp(code, "i");
 
   if (year) {
-      query.year = parseInt(year);
+    query.year = parseInt(year);
   } else if (from || to) {
-      query.year = {};
-      if (from) query.year.$gte = parseInt(from); 
-      if (to)   query.year.$lte = parseInt(to);   
+    query.year = {};
+    if (from) query.year.$gte = parseInt(from);
+    if (to) query.year.$lte = parseInt(to);
   }
 
-  if (yaws) query.yaws = parseFloat(yaws) ;
+  if (yaws) query.yaws = parseFloat(yaws);
   if (polio) query.polio = parseFloat(polio);
   if (guinea_worm) query.guinea_worm = parseFloat(guinea_worm);
   if (rabies) query.rabies = parseFloat(rabies);
@@ -76,16 +76,16 @@ router.get('/pandemics', (req, res) => {
     .skip(offset)
     .limit(limit)
     .exec((err, data) => {
-    if (err) return res.status(500).send("Internal Server Error");
-    data.forEach(d => delete d._id);
-    res.status(200).json(data);
-  });
+      if (err) return res.status(500).send("Internal Server Error");
+      data.forEach(d => delete d._id);
+      res.status(200).json(data);
+    });
 });
 
 // Creates a new entry
 router.post('/pandemics', (req, res) => {
   const newData = req.body;
-  const isMissingFields = requiredFields.some(field => 
+  const isMissingFields = requiredFields.some(field =>
     newData[field] === undefined || newData[field] === "" || newData[field] === null
   );
   if (isMissingFields) {
@@ -121,7 +121,7 @@ router.delete('/pandemics', (req, res) => {
 router.get('/pandemics/:entity/:year', (req, res) => {
   const entity = req.params.entity;
   const year = parseInt(req.params.year);
-  
+
   store.findOne({ entity: new RegExp(`^${entity}$`, "i"), year: year }, (err, data) => {
     if (err) return res.status(500).send("Internal Server Error");
     if (!data) return res.status(404).send("Data not found");
@@ -131,14 +131,16 @@ router.get('/pandemics/:entity/:year', (req, res) => {
 });
 
 router.post('/pandemics/:entity', (req, res) => {
-    res.status(405).send('Method not allowed');
+  res.status(405).send('Method not allowed');
 });
 
 router.put('/pandemics/:entity/:year', (req, res) => {
   const entity = req.params.entity;
   const year = parseInt(req.params.year);
   const newData = req.body;
-  const isMissingFields = requiredFields.some(field => !newData[field]);
+  const isMissingFields = requiredFields.some(field =>
+    newData[field] === undefined || newData[field] === null || newData[field] === ""
+  );
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }

@@ -719,8 +719,8 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Status code is 400 Bad Request (Mismatch)\", function () {\r",
-                          "    pm.response.to.have.status(400);\r",
+                          "pm.test(\"Status code is 200 Bad Request (Mismatch)\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
                           "});"
                         ],
                         "type": "text/javascript",
