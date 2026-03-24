@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from "cors"; 
-import deathsRoute from './src/back/routes/deaths-by-risk-factors.js';
-import deathsRouteV2 from './src/back/routes/deaths-by-risk-factors-v2.js';
-import protestsRoute from './src/back/routes/protests.js';
-import pandemicsRoute from './src/back/routes/pandemics.js';
-import pandemicsRouteV2 from './src/back/routes/pandemics-v2.js'
-import childMalnutritions from "./src/back/routes/child-malnutritions.js";
+import deathsRoute from './src/back/routes/deaths-by-risk-factors/deaths-by-risk-factors.js';
+import deathsRouteV2 from './src/back/routes/deaths-by-risk-factors/deaths-by-risk-factors-v2.js';
+import protestsRoute from './src/back/routes/protests/protests.js';
+import pandemicsRoute from './src/back/routes/pandemics/pandemics.js';
+import pandemicsRouteV2 from './src/back/routes/pandemics/pandemics-v2.js'
+import childMalnutritions from "./src/back/routes/child-malnutritions/child-malnutritions.js";
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
