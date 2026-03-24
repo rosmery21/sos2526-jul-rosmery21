@@ -1,14 +1,38 @@
 name: CI_CD
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install dependencies
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
         run: npm install
-      - name: Build frontend
-        run: npm run build
-      - name: Run tests
-        run: npm run test
+
+      - name: Levantar la aplicación completa
+        run: npm start & 
+        
+      - name: Esperar a que el servidor responda
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Instalar Newman
+        run: npm install -g newman
+
+      - name: Ejecutar Tests de API (AGC v1)
+        run: newman run test/api/AGC/test-AGC.json --env-var "BASE_URL=http://localhost:3000" --env-var "BASE_API_URL=/api/v1"
+
+      - name: Ejecutar Tests de API (AGC v2)
+        run: newman run test/api/AGC/test-AGC-v2.json --env-var "BASE_URL=http://localhost:3000" --env-var "BASE_API_URL=/api/v2"
+
+      - name: Instalar Navegadores de Playwright y Dependencias
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar Tests E2E de Playwright (AGC)
+        run: npx playwright test e2e/tests/AGC.spec.js
