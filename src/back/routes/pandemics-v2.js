@@ -9,7 +9,7 @@ const store = new dataStore({filename: './data/storage/pandemics-2.db', autoload
 const data = [];
 const requiredFields = ['entity', 'code', 'year', 'yaws', 'polio', 'guinea_worm', 'rabies', 'malaria', 'hiv_aids', 'tuberculosis', 'smallpox', 'cholera'];
 
-const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276047/2sBXigLDEC";
+const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276047/2sBXijKsCU";
 
 router.get('/pandemics/docs', (req, res) => {
   res.redirect(DOCUMENTATION_URL);

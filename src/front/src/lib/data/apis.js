@@ -23,7 +23,7 @@ const apis = [
         recurso: 'pandemics',
         frontend: '/pandemics',
         api: '/api/v2/pandemics',
-        docs: 'https://documenter.getpostman.com/view/52276047/2sBXigLDEC',
+        docs: 'https://documenter.getpostman.com/view/52276047/2sBXijKsCU',
         github: 'https://github.com/alexiagutierrezcasado',
     },
     {
