@@ -17,10 +17,10 @@ jobs:
         run: npm install
 
       - name: Levantar la aplicación en segundo plano
-        run: npm run dev &
+        run: npm run svelte &
         
       - name: Esperar a que el servidor arranque
-        run: sleep 10
+        run: sleep 30
 
       - name: Instalar Newman (Para probar la API)
         run: npm install -g newman
