@@ -31,8 +31,8 @@ jobs:
       - name: Ejecutar Tests de API (AGC v2)
         run: newman run test/api/AGC/test-AGC-v2.json --env-var "BASE_URL=http://localhost:3000" --env-var "BASE_API_URL=/api/v2"
 
-      - name: Instalar Navegadores de Playwright
-        run: npx playwright install --with-deps
+      - name: Instalar Navegadores de Playwright y Dependencias
+        run: npx playwright install --with-deps chromium
 
       - name: Ejecutar Tests E2E de Playwright (AGC)
         run: npx playwright test e2e/tests/AGC.spec.js
