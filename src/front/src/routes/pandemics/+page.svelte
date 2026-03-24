@@ -24,19 +24,19 @@
     try {
       let url = `${API}?offset=${page*10}&limit=10`;
       
-      if (searchEntity) url += `&entity=${encodeURIComponent(searchEntity)}`;
-      if (searchFrom)   url += `&from=${searchFrom}`;
-      if (searchTo)     url += `&to=${searchTo}`;
+      if (searchEntity !== "") url += `&entity=${encodeURIComponent(searchEntity)}`;
+      if (searchFrom !== "")   url += `&from=${searchFrom}`;
+      if (searchTo !== "")     url += `&to=${searchTo}`;
 
-      if (searchYaws)   url += `&yaws=${searchYaws}`;
-      if (searchPolio)  url += `&polio=${searchPolio}`;
-      if (searchGuinea) url += `&guinea_worm=${searchGuinea}`;
-      if (searchRabies) url += `&rabies=${searchRabies}`;
-      if (searchMalaria) url += `&malaria=${searchMalaria}`;
-      if (searchHiv)     url += `&hiv_aids=${searchHiv}`;
-      if (searchTuberculosis) url += `&tuberculosis=${searchTuberculosis}`;
-      if (searchSmallpox) url += `&smallpox=${searchSmallpox}`;
-      if (searchCholera)  url += `&cholera=${searchCholera}`;
+      if (searchYaws !== "" && searchYaws !== null)         url += `&yaws=${searchYaws}`;
+      if (searchPolio !== "" && searchPolio !== null)       url += `&polio=${searchPolio}`;
+      if (searchGuinea !== "" && searchGuinea !== null)     url += `&guinea_worm=${searchGuinea}`;
+      if (searchRabies !== "" && searchRabies !== null)     url += `&rabies=${searchRabies}`;
+      if (searchMalaria !== "" && searchMalaria !== null)   url += `&malaria=${searchMalaria}`;
+      if (searchHiv !== "" && searchHiv !== null)           url += `&hiv_aids=${searchHiv}`;
+      if (searchTuberculosis !== "" && searchTuberculosis !== null) url += `&tuberculosis=${searchTuberculosis}`;
+      if (searchSmallpox !== "" && searchSmallpox !== null) url += `&smallpox=${searchSmallpox}`;
+      if (searchCholera !== "" && searchCholera !== null)   url += `&cholera=${searchCholera}`;
 
       const response = await fetch(url);
       const data = await response.json();

@@ -62,23 +62,29 @@ router.get('/pandemics', (req, res) => {
     if (to) query.year.$lte = parseInt(to);
   }
 
-  if (yaws) query.yaws = parseFloat(yaws);
-  if (polio) query.polio = parseFloat(polio);
-  if (guinea_worm) query.guinea_worm = parseFloat(guinea_worm);
-  if (rabies) query.rabies = parseFloat(rabies);
-  if (malaria) query.malaria = parseFloat(malaria);
-  if (hiv_aids) query.hiv_aids = parseFloat(hiv_aids);
-  if (tuberculosis) query.tuberculosis = parseFloat(tuberculosis);
-  if (smallpox) query.smallpox = parseFloat(smallpox);
-  if (cholera) query.cholera = parseFloat(cholera);
+  if (yaws !== undefined && yaws !== "") query.yaws = parseFloat(yaws);
+  if (polio !== undefined && polio !== "") query.polio = parseFloat(polio);
+  if (guinea_worm !== undefined && guinea_worm !== "") query.guinea_worm = parseFloat(guinea_worm);
+  if (rabies !== undefined && rabies !== "") query.rabies = parseFloat(rabies);
+  if (malaria !== undefined && malaria !== "") query.malaria = parseFloat(malaria);
+  if (hiv_aids !== undefined && hiv_aids !== "") query.hiv_aids = parseFloat(hiv_aids);
+  if (tuberculosis !== undefined && tuberculosis !== "") query.tuberculosis = parseFloat(tuberculosis);
+  if (smallpox !== undefined && smallpox !== "") query.smallpox = parseFloat(smallpox);
+  if (cholera !== undefined && cholera !== "") query.cholera = parseFloat(cholera);
 
   store.find(query)
     .skip(offset)
     .limit(limit)
     .exec((err, data) => {
       if (err) return res.status(500).send("Internal Server Error");
-      data.forEach(d => delete d._id);
-      res.status(200).json(data);
+      
+      const result = data.map(d => {
+          const copy = { ...d };
+          delete copy._id;
+          return copy;
+      });
+
+      res.status(200).json(result);
     });
 });
 
