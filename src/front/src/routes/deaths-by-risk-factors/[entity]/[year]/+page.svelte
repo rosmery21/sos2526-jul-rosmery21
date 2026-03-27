@@ -3,7 +3,7 @@
 
 	import { page } from '$app/state';
     import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
+    import { goto, invalidateAll } from '$app/navigation';
 
 	const API = '/api/v2/deaths-by-risk-factors';
     let responseStatusCode = $state(0);
@@ -17,6 +17,9 @@
     let newChildWasting = $state(0);
     let newHouseholdAirPollutionFromSolidFuels = $state(0);
     let newHighFastingPlasmaGlucose = $state(0);
+
+    let errorMessage = $state('');
+    let infoMessage = $state('');
 
 	// @ts-ignore
 	async function getResource() {
@@ -54,11 +57,12 @@
 			responseStatusCode = response.status;
 			if (response.ok) {
 				console.log(`Deleted resource: ${entity} (${year})`);
+                errorMessage = '';
+                infoMessage = `Eliminado el recurso: ${entity} (${year})`;
+                await returnToMainPage();
 			} else {
 				console.error('Failed to delete resource:', response.status);
 			}
-            // eslint-disable-next-line svelte/no-navigation-without-resolve
-            goto('/deaths-by-risk-factors');
 		} catch (error) {
 			console.error('Error deleting resource:', error);
 		}
@@ -84,18 +88,33 @@
             responseStatusCode = response.status;
             if (response.ok) {
                 console.log(`Updated resource: ${entity} (${year})`);
-                // eslint-disable-next-line svelte/no-navigation-without-resolve
-                goto('/deaths-by-risk-factors');
+                errorMessage = ''
+                infoMessage = `Actualizado el recurso: ${entity} (${year})`;
+                await returnToMainPage()
             } else {
                 console.error('Failed to update resource:', response.status);
+                errorMessage = "Debe rellenar todos los parametros"
             }
         } catch (error) {
             console.error('Error updating resource:', error);
         }
     }
 
+    async function returnToMainPage() {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        // eslint-disable-next-line svelte/no-navigation-without-resolve
+        goto('/deaths-by-risk-factors', {invalidateAll: true});
+
+    }
+
     onMount(getResource);
 </script>
+
+{#if infoMessage}
+    <p>{infoMessage}</p>
+{:else if errorMessage}
+    <p style="color: red;">{errorMessage}</p>
+{/if}
 
 <h3>Detalles para {entity} ({year})</h3>
 
