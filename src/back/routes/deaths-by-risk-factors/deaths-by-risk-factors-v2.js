@@ -60,7 +60,9 @@ router.get('/deaths-by-risk-factors', (req, res) => {
     query.year = parseInt(year);
   else if (from || to) {
     query.year = {};
-    query.year.$gte = parseInt(from);
+    if (from)
+      query.year.$gte = parseInt(from);
+    if (to)
     query.year.$lte = parseInt(to);
   }
   if (country) query.entity = new RegExp(`^${country}$`, "i");

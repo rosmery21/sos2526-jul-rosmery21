@@ -55,10 +55,10 @@
 
 <main>
 
-  {#if errorMessage}
-    <p style="color: red;">{errorMessage}</p>
-  {:else if infoMessage}
+  {#if infoMessage}
     <p>{infoMessage}</p>
+  {:else if errorMessage}
+    <p style="color: red;">{errorMessage}</p>
   {/if}
 
   <h2>Añadir Nuevo Recurso</h2>

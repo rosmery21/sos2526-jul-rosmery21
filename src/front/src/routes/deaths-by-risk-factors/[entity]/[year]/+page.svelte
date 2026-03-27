@@ -3,7 +3,7 @@
 
 	import { page } from '$app/state';
     import { onMount } from 'svelte';
-    import { goto, invalidateAll } from '$app/navigation';
+    import { goto } from '$app/navigation';
 
 	const API = '/api/v2/deaths-by-risk-factors';
     let responseStatusCode = $state(0);
