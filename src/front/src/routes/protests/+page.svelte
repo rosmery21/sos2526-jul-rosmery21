@@ -1,25 +1,15 @@
 <script>
 	// @ts-nocheck
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	const APIFIELDS = [
-		'id',
-		'country',
-		'year',
-		'region',
-		'protest',
-		'protesterviolence',
-		'protesterdemand',
-		'stateresponse',
-		'electoral_ecore',
-		'liberal_score',
-		'participatory_score',
-		'deliberative_score',
-		'egalitarian_score',
-		'hdi_score',
-		'violence_status',
-		'predicted_prob'
-	];
+	const ERROR_MESSAGES = {
+		500: 'Error del servidor. Por favor, inténtalo de nuevo más tarde. (500)',
+		404: 'No se han encontrado datos para los campos especificados. (404)',
+		400: 'Solicitud incorrecta. Por favor, revisa los filtros establecidos. (400)'
+	};
+
+	
 	const camposES = [
 		'Identificador',
 		'País',
@@ -38,38 +28,40 @@
 		'Estado violento',
 		'Probabilidad éxito'
 	];
-	const camposDEC = [
-		'Pt. electoral',
-		'Pt. liberal',
-		'Pt. participación',
-		'Pt. deliberativo',
-		'Pt. igualitario',
-		'Pt. HDI',
-		'Probabilidad éxito'
-	];
-    
-	const camposNUM = ['Identificador', 'Año', 'Protesta', 'Violencia', 'Estado violento'];
-	let vista = $state('tabla');
+
 	let datos = $state([]);
 	let error = $state(null);
-	let API = '/api/v1/protests';
-	let formData = $state({});
+	let API = '/api/v2/protests';
 	let mensaje = $state(null);
 
+	function cargarMsgError(codigo) {
+		error = ERROR_MESSAGES[codigo] || `Error: ${codigo} ${response.statusText}`;
+		setTimeout(() => {
+			error = '';
+		}, 3000);
+	}
+
+	function limpiarMensaje() {
+		setTimeout(() => {
+			mensaje = '';
+		}, 4500);
+	}
 
 	async function cargarDatos() {
 		try {
-			const res = await fetch(API);
+			const res = await fetch(API + '?limit=15');
 			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText} datos no encontrados`;
+				cargarMsgError(res.status);
 				return;
 			}
 			const respuesta = await res.json();
 			datos = Array.isArray(respuesta) ? respuesta : [respuesta];
 			error = null;
-            mensaje = 'Datos cargados correctamente';
+			mensaje = 'Datos cargados correctamente';
+			limpiarMensaje();
 		} catch (err) {
-			error = err;
+			cargarMsgError(500);
+			console.log(err);
 		}
 	}
 
@@ -81,13 +73,14 @@
 		try {
 			const res = await fetch(API + '/loadInitialData');
 			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText}`;
+				cargarMsgError(res.status);
 				return;
 			}
 			cargarDatos();
-			console.log("Datos cargados")
+			console.log('Datos cargados');
 		} catch (err) {
-			error = err;
+			cargarMsgError(500);
+			console.log(err);
 		}
 	}
 
@@ -101,14 +94,15 @@
 		try {
 			const res = await fetch(API, { method: 'DELETE' });
 			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText}`;
+				cargarMsgError(res.status);
 				return;
 			}
 			datos = [];
-            mensaje = 'Datos eliminados correctamente';
-
+			mensaje = 'Datos eliminados correctamente';
+			limpiarMensaje();
 		} catch (err) {
-			error = err;
+			cargarMsgError(500);
+			console.log(err);
 		}
 	}
 
@@ -118,91 +112,36 @@
 		try {
 			const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
 			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText}`;
+				cargarMsgError(res.status);
 				return;
 			}
 			datos = datos.filter((item) => item.id !== id);
 			await cargarDatos();
-            mensaje = 'Dato eliminado correctamente';
-
+			mensaje = 'Protesta #' + id + ' eliminada correctamente';
+			limpiarMensaje();
 		} catch (err) {
-			error = err;
+			cargarMsgError(500);
+			console.log(err);
 		}
-	}
-
-	function cambiarVista(nuevaVista) {
-		if (vista === 'editar') {
-			if (!confirm('¿Seguro que quieres salir sin guardar los cambios?')) return;
-			formData = {};
-		}
-		vista = nuevaVista;
 	}
 
 	function editarItem(item) {
-		formData = { ...item };
-		cambiarVista('editar');
-	}
-
-	function vistaCreacion() {
-		formData = {};
-		cambiarVista('crear');
-	}
-
-	async function crearRegistro(e) {
-		const formData = new FormData(e.target);
-		const nuevoRegistro = {};
-		for (let [key, value] of formData.entries()) {
-			nuevoRegistro[key] = camposNUM.includes(key) ? Number(value) : value;
-		}
-
-		try {
-			const res = await fetch(API, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(nuevoRegistro)
-			});
-			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText}`;
-				return;
-			}
-			await cargarDatos();
-			vista = 'tabla';
-			mensaje = 'Registro creado correctamente';
-
-		} catch (err) {
-			error = err;
-		}
-	}
-
-	async function guardarEdicion() {
-		try {
-			const res = await fetch(`${API}/${formData.id}`, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData)
-			});
-			if (!res.ok) {
-				error = `Error: ${res.status} ${res.statusText}`;
-				return;
-			}
-			await cargarDatos();
-			vista = 'tabla';
-			mensaje = 'Registro actualizado correctamente';
-		} catch (err) {
-			error = err;
-		}
+		goto('/protests/' + item.id);
 	}
 
 	onMount(() => cargarDatos());
+
+	function crearItem() {
+		goto('/protests/create');
+	}
 </script>
 
-<button onclick={() => cambiarVista('tabla')}>Ver tabla</button>
 <button onclick={cargarDatosIniciales}>Cargar datos iniciales</button>
 <button onclick={eliminarDatos}>Eliminar datos</button>
-<button onclick={vistaCreacion}>Crear registro</button>
+<button onclick={crearItem}>Crear registro</button>
 
 {#if mensaje}
-	<p style="color:green">{mensaje}</p>
+	<h1 style="color:green">{mensaje}</h1>
 {/if}
 
 {#if error}
@@ -213,55 +152,23 @@
 	<p>No hay datos</p>
 {/if}
 
-{#if vista === 'tabla'}
-	<table border="1" cellpadding="5">
-		<thead>
-			<tr>
-				{#each camposES as campo (campo)}
-					<th>{campo}</th>
-				{/each}
-			</tr>
-		</thead>
-		<tbody>
-			{#each datos as item (item)}
-				<tr>
-					{#each Object.values(item) as value, i (i)}
-						<td>{value}</td>
-					{/each}
-					<td><button onclick={() => editarItem(item)}>✏️</button></td>
-					<td><button onclick={() => eliminarDato(item.id)}>🗑️</button></td>
-				</tr>
+<table border="1" cellpadding="5">
+	<thead>
+		<tr>
+			{#each camposES as campo (campo)}
+				<th>{campo}</th>
 			{/each}
-		</tbody>
-	</table>
-{:else if vista === 'editar' || vista === 'crear'}
-	<form
-		onsubmit={(e) => {
-			e.preventDefault();
-			vista === 'crear' ? crearRegistro(e) : guardarEdicion();
-		}}
-	>
-		{#each camposES as campo, i (campo)}
-			<label
-				>{campo}
-				{#if camposNUM.includes(campo)}
-					<input type="number" name={APIFIELDS[i]} bind:value={formData[APIFIELDS[i]]} />
-				{:else if camposDEC.includes(campo)}
-					<input
-						type="number"
-						step="0.001"
-						min="0"
-						max="1"
-						name={APIFIELDS[i]}
-						bind:value={formData[APIFIELDS[i]]}
-					/>
-				{:else}
-					<input type="text" name={APIFIELDS[i]} bind:value={formData[APIFIELDS[i]]} />
-				{/if}
-			</label>
-			<br />
+		</tr>
+	</thead>
+	<tbody>
+		{#each datos as item (item)}
+			<tr>
+				{#each Object.values(item) as value, i (i)}
+					<td>{value}</td>
+				{/each}
+				<td><button onclick={() => editarItem(item)}>✏️</button></td>
+				<td><button onclick={() => eliminarDato(item.id)}>🗑️</button></td>
+			</tr>
 		{/each}
-
-		<button type="submit">Guardar cambios</button>
-	</form>
-{/if}
+	</tbody>
+</table>
