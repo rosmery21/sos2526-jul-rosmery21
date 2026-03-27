@@ -89,7 +89,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
 
-  const isMissingFields = requiredFields.some(field => !newData[field]);
+  const isMissingFields = requiredFields.some(field => newData[field] === null || newData[field] === undefined || newData[field] === "");
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
@@ -146,7 +146,7 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const year = parseInt(req.params.year);
   const newData = req.body;
 
-  const isMissingFields = requiredFields.some(field => !newData[field] || newData[field] === undefined);
+  const isMissingFields = requiredFields.some(field => newData[field] === null || newData[field] === undefined || newData[field] === "");
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
