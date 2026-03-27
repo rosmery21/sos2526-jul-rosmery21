@@ -3,6 +3,7 @@ import cors from "cors";
 import deathsRoute from './src/back/routes/deaths-by-risk-factors/deaths-by-risk-factors.js';
 import deathsRouteV2 from './src/back/routes/deaths-by-risk-factors/deaths-by-risk-factors-v2.js';
 import protestsRoute from './src/back/routes/protests/protests.js';
+import protestsRouteV2 from './src/back/routes/protests/protests-v2.js';
 import pandemicsRoute from './src/back/routes/pandemics/pandemics.js';
 import pandemicsRouteV2 from './src/back/routes/pandemics/pandemics-v2.js'
 import childMalnutritions from "./src/back/routes/child-malnutritions/child-malnutritions.js";
@@ -31,6 +32,7 @@ app.use(BASE_API_URL, protestsRoute);
 app.use(BASE_API_URL, pandemicsRoute);
 app.use(BASE_API_URL, childMalnutritions);
 
+app.use(V2_API_URL, protestsRouteV2);
 app.use(V2_API_URL, deathsRouteV2);
 app.use(V2_API_URL, pandemicsRouteV2)
 

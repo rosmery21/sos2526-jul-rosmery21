@@ -1,0 +1,586 @@
+{
+  "info": {
+    "_postman_id": "3abef46f-3699-47c3-b538-e49aeac1ac11",
+    "name": "SOS2526-Protests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52275979"
+  },
+  "item": [
+    {
+      "name": "Successfull requests",
+      "item": [
+        {
+          "name": "DELETE /protests (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response code is 204\", function () {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests"
+              ]
+            },
+            "description": "Deletes all protest records by sending a DELETE request to `{{BASE_URL}}/api/v1/protests`. No request body is required. A successful operation returns a `204 No Content` response, indicating the data has been removed with no response body."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /protests/loadInitialData [LOAD DATA] (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200 or 409\", () => {\r",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 409]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/loadInitialData",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "loadInitialData"
+              ]
+            },
+            "description": "Triggers the initial data seeding process by sending a GET request to `{{BASE_URL}}/api/v1/protests/loadInitialData`. This is a utility endpoint used to populate the database with a predefined set of protest records. A successful operation returns `200 OK`."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /protests (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Non empty array\", () => {\r",
+                  "  const json = pm.response.json();\r",
+                  "  pm.expect(json).to.be.an(\"array\").that.is.not.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                ""
+              ]
+            },
+            "description": "Retrieves the full list of protest records by sending a GET request to `{{BASE_URL}}/api/v1/protests/`. No request body is required. A successful response returns `200 OK` with an array of all available protest entries."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Matching fields\", () => {\r",
+                  "  const json = pm.response.json();\r",
+                  "  pm.expect(json).to.include.keys(\"country\", \"year\", \"region\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 902410001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests"
+              ]
+            },
+            "description": "Creates a new protest record by sending a POST request to `{{BASE_URL}}/api/v1/protests`. The request body should include all required protest fields such as country, year, region, scores, and violence indicators. A successful creation returns a `201 Created` response."
+          },
+          "response": []
+        },
+        {
+          "name": "GET with params (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Array has 2 elements\", () => {\r",
+                  "  const json = pm.response.json();\r",
+                  "  pm.expect(json).to.have.lengthOf(2);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Every element is from 1990\", () => {\r",
+                  "  const json = pm.response.json();\r",
+                  "  json.forEach(item => {\r",
+                  "    pm.expect(item.year).to.equal(1990);\r",
+                  "  });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/?limit=2&year=1990",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "year",
+                  "value": "1990"
+                }
+              ]
+            },
+            "description": "Retrieves the full list of protest records by sending a GET request to `{{BASE_URL}}/api/v1/protests/`. No request body is required. A successful response returns `200 OK` with an array of all available protest entries."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /protests/902410001 (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/902410001",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "902410001"
+              ]
+            },
+            "description": "Retrieves the protest record with ID `902410001` by sending a GET request to `{{BASE_URL}}/api/v1/protests/902410001`. No request body is required. A successful response returns `200 OK` along with the full details of the specified protest record."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /protests/902410001 (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": 902410001,\r\n        \"country\": \"Spain\",\r\n        \"year\": 2010,\r\n        \"region\": \"North America\",\r\n        \"protest\": 1,\r\n        \"protesterviolence\": 0,\r\n        \"protesterdemand\": \"political behavior, process\",\r\n        \"stateresponse\": \"ignore\",\r\n        \"electoral_ecore\": 0.834,\r\n        \"liberal_score\": 0.759,\r\n        \"participatory_score\": 0.58,\r\n        \"deliberative_score\": 0.756,\r\n        \"egalitarian_score\": 0.719,\r\n        \"hdi_score\": 0.85,\r\n        \"violence_status\": 0,\r\n        \"predicted_prob\": 0.299384806769452\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/902410001",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "902410001"
+              ]
+            },
+            "description": "Updates the protest record with ID `902410001` by sending a PUT request to `{{BASE_URL}}/api/v1/protests/902410001`. The request body should contain the fields to be updated for that record. A successful update returns a `200 OK` response with the updated resource."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /protests/902410001 (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response code is 204\", function () {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/902410001",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "902410001"
+              ]
+            },
+            "description": "Deletes the protest record with ID `902410001` by sending a DELETE request to `{{BASE_URL}}/api/v1/protests/902410001`. No request body is needed. A successful deletion returns a `204 No Content` response."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Requests",
+      "item": [
+        {
+          "name": "PUT /protests (405)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Expected error (405) for the request\", function () {\r",
+                  "    pm.response.to.have.status(405);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests"
+              ]
+            },
+            "description": "Intentionally sends a PUT request to the collection endpoint `{{BASE_URL}}/api/v1/protests` (without a specific resource ID) to verify that the API correctly rejects unsupported methods on this route. The expected response is `405 Method Not Allowed`, confirming that PUT is not permitted on the collection-level endpoint."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests/123456789 (405)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Expected error (405) for the request\", function () {\r",
+                  "    pm.response.to.have.status(405);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/123456789",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "123456789"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /protests/201990001 (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Expected error (400) for the request\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": 123456789,\r\n        \"country\": \"Spain\",\r\n        \"year\": 2010,\r\n        \"region\": \"North America\",\r\n        \"protest\": 1,\r\n        \"protesterviolence\": 0,\r\n        \"protesterdemand\": \"political behavior, process\",\r\n        \"stateresponse\": \"ignore\",\r\n        \"electoral_ecore\": 0.834,\r\n        \"liberal_score\": 0.759,\r\n        \"participatory_score\": 0.58,\r\n        \"deliberative_score\": 0.756,\r\n        \"egalitarian_score\": 0.719,\r\n        \"hdi_score\": 0.85,\r\n        \"violence_status\": 0,\r\n        \"predicted_prob\": 0.299384806769452\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/201990001",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "201990001"
+              ]
+            },
+            "description": "Attempts to update the protest record with ID `201990001` via a PUT request to `{{BASE_URL}}/api/v1/protests/201990001`, expecting a `400 Bad Request` response. This request is used to verify that the API correctly rejects invalid or malformed update data for an existing record."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests [WRONG FIELDS] (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Expected error (400) for the request\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    const expected = json.expected\r",
+                  "    const received = json.received\r",
+                  "    pm.expect(expected).to.have.lengthOf(16);\r",
+                  "    pm.expect(received).to.have.lengthOf(17);\r",
+                  "    pm.expect(json).to.include.keys(\"error\", \"expected\", \"received\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"CAMPO_INEXISTENTE\": \"abc\",\r\n  \"id\": 202410001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests"
+              ]
+            },
+            "description": "Sends a POST request to `{{BASE_URL}}/api/v1/protests` with intentionally invalid or unrecognized body fields to verify that the API enforces input validation. The expected response is `400 Bad Request`, confirming that the server rejects payloads that do not match the required schema."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /protests [EXISTING ID] (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response code is 409\", function () {\r",
+                  "    pm.response.to.have.status(409);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 201990001,\r\n  \"country\": \"France\",\r\n  \"year\": 2024,\r\n  \"region\": \"Europe\",\r\n  \"protest\": 1,\r\n  \"protesterviolence\": 1,\r\n  \"protesterdemand\": \"economic policy, cost of living\",\r\n  \"stateresponse\": \"police intervention\",\r\n  \"electoral_ecore\": 0.812,\r\n  \"liberal_score\": 0.745,\r\n  \"participatory_score\": 0.603,\r\n  \"deliberative_score\": 0.732,\r\n  \"egalitarian_score\": 0.701,\r\n  \"hdi_score\": 0.903,\r\n  \"violence_status\": 1,\r\n  \"predicted_prob\": 0.417529381245\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /protests/201990001 [WRONG FIELDS] (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": 201990001,\r\n        \"country\": \"Spain\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/201990001",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                "201990001"
+              ]
+            },
+            "description": "Sends a PUT request to `{{BASE_URL}}/api/v1/protests/201990001` with intentionally wrong or unrecognized fields to test the API's validation on updates. The expected response is `400 Bad Request`, confirming that the server rejects payloads that do not conform to the expected schema."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
