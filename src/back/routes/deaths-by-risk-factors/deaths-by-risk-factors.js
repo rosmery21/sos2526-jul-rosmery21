@@ -1,10 +1,8 @@
 import express from 'express';
 import { readFile } from '../../utils/readFile.js';
-import dataStore from "nedb"
+import store from '../../db/deaths-by-risk-factors.js';
 
 const router = express.Router();
-
-const store = new dataStore({filename: './data/storage/deaths-by-risk-factors.db', autoload: true});
 
 const data = [];
 const requiredFields = ['entity', 'year', 'high_systolic_blood_pressure', 'air_pollution', 'child_wasting',
