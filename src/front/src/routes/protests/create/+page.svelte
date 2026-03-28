@@ -82,19 +82,19 @@
     <label>ID: <input type="number" bind:value={id} required /></label><br />
     <label>País: <input type="text" bind:value={country} required /></label><br />
     <label>Año: <input type="number" bind:value={year} required /></label><br />
-    <label>Región: <input type="text" bind:value={region} /></label><br />
-    <label>Protesta: <input type="number" max="1" min="0" bind:value={protest} /></label><br />
-    <label>Violencia manifestantes: <input type="number" max="1" min="0" bind:value={protesterviolence} /></label><br />
-    <label>Demanda manifestantes: <input type="text" bind:value={protesterdemand} /></label><br />
-    <label>Respuesta del estado: <input type="text" bind:value={stateresponse} /></label><br />
-    <label>Score electoral: <input type="number" max="1" min="0" step="0.001" bind:value={electoral_ecore} /></label><br />
-    <label>Score liberal: <input type="number" max="1" min="0" step="0.001" bind:value={liberal_score} /></label><br />
-    <label>Score participativo: <input type="number" max="1" min="0" step="0.001" bind:value={participatory_score} /></label><br />
-    <label>Score deliberativo: <input type="number" max="1" min="0" step="0.001" bind:value={deliberative_score} /></label><br />
-    <label>Score igualitario: <input type="number" max="1" min="0" step="0.001" bind:value={egalitarian_score} /></label><br />
-    <label>Score HDI: <input type="number" max="1" min="0" step="0.001" bind:value={hdi_score} /></label><br />
-    <label>Estado de violencia: <input type="number" max="1" min="0" bind:value={violence_status} /></label><br />
-    <label>Prob. predicha: <input type="number" max="1" min="0" step="0.000000000000001" bind:value={predicted_prob} /></label><br />
+    <label>Región: <input type="text" bind:value={region} required/></label><br />
+    <label>Protesta: <input type="number" max="1" min="0" bind:value={protest} required/></label><br />
+    <label>Violencia manifestantes: <input type="number" max="1" min="0" bind:value={protesterviolence} required/></label><br />
+    <label>Demanda manifestantes: <input type="text" bind:value={protesterdemand} required/></label><br />
+    <label>Respuesta del estado: <input type="text" bind:value={stateresponse} required/></label><br />
+    <label>Score electoral: <input type="number" max="1" min="0" step="0.001" bind:value={electoral_ecore} required/></label><br />
+    <label>Score liberal: <input type="number" max="1" min="0" step="0.001" bind:value={liberal_score} required/></label><br />
+    <label>Score participativo: <input type="number" max="1" min="0" step="0.001" bind:value={participatory_score} required/></label><br />
+    <label>Score deliberativo: <input type="number" max="1" min="0" step="0.001" bind:value={deliberative_score} required/></label><br />
+    <label>Score igualitario: <input type="number" max="1" min="0" step="0.001" bind:value={egalitarian_score} required/></label><br />
+    <label>Score HDI: <input type="number" max="1" min="0" step="0.001" bind:value={hdi_score} required/></label><br />
+    <label>Estado de violencia: <input type="number" max="1" min="0" bind:value={violence_status} required/></label><br />
+    <label>Prob. predicha: <input type="number" max="1" min="0" step="0.000000000000001" bind:value={predicted_prob} required/></label><br />
 
     <button type="submit">Añadir Protesta</button>
     <button type="button" onclick={() => goto('/protests')}>Cancelar</button>
