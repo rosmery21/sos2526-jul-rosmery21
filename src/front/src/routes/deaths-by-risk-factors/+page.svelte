@@ -154,6 +154,10 @@
 {/if}
 
 <section>
+	<h2>Muertes por Factores de Riesgo</h2>
+</section>
+
+<section data-testid="filters">
 	<h3>Filtros</h3>
 	<div class="grid-filters">
 		<div class="mode-selector">
