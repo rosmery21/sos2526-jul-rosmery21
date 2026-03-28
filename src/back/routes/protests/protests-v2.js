@@ -3,7 +3,7 @@ const router = express.Router();
 import { readFile } from '../../utils/readFile.js';
 import DataStore from "nedb";
 
-const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52275979/2sBXiesEPb";
+const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52275979/2sBXinFVKK";
 router.get('/protests/docs', (req, res) => {
   res.redirect(DOCUMENTATION_URL);
 });

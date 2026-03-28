@@ -13,8 +13,8 @@ const apis = [
         miembro: 'Onésimo Morillo Vecino',
         recurso: 'protests',
         frontend: '/protests',
-        api: '/api/v1/protests',
-        docs: 'https://documenter.getpostman.com/view/52275979/2sBXiesEPb',
+        api: '/api/v2/protests',
+        docs: 'https://documenter.getpostman.com/view/52275979/2sBXinFVKK',
         github: 'https://github.com/onesimomorillo',
     },
     {

@@ -18,3 +18,4 @@
   ### v2
   - https://sos2526-10.onrender.com/api/v2/deaths-by-risk-factors/docs (Developed by Santiago Muñoz)
   - https://sos2526-10.onrender.com/api/v2/pandemics/docs (Developed by Alexia Gutiérrez)
+  - https://sos2526-10.onrender.com/api/v2/protests/docs (Developed by Onésimo Morillo)
