@@ -66,8 +66,6 @@ test.describe('Test layout', () => {
 });
 
 test.describe('Tests de Creación de Recursos', () => {
-
-  // Limpieza inicial: Borramos todo antes de empezar los tests de esta suite
   test.beforeAll(async ({ browser }) => {
     const page = await browser.newPage();
     // Manejador para aceptar el confirm() de borrar colección
@@ -129,25 +127,39 @@ test.describe('Tests de Creación de Recursos', () => {
     // El navegador bloquea el envío por el atributo 'required'
     await page.getByRole('button', { name: /añadir recurso/i }).click();
 
+    // @ts-ignore
     const isInvalid = await page.getByLabel(/país:/i).evaluate((node) => node.validity.valueMissing);
     expect(isInvalid).toBeTruthy();
   });
 });
 
 test.describe('Tests de Listado de Recursos', () => {
+  test.beforeAll(async ({ browser }) => {
+    const page = await browser.newPage();
 
-  test.beforeEach(async ({ page }) => {
-    // Aseguramos que haya datos cargando el conjunto inicial antes de cada test de listado
     await page.goto(`${APP_URL}${PAGE_PATH}`);
-    await page.on('dialog', dialog => dialog.accept());
 
-    // Si el botón de cargar datos iniciales es visible, lo pulsamos
+    page.on('dialog', dialog => dialog.accept());
+
     const loadBtn = page.getByRole('button', { name: /cargar datos iniciales/i });
-    if (!await loadBtn.isVisible()) {
-      await page.getByRole('button', { name: /eliminar la colección/i }).click();
-      await page.waitForLoadState('networkidle');
+    const deleteBtn = page.getByRole('button', { name: /eliminar la colección/i });
+
+    await Promise.race([
+      loadBtn.waitFor({ state: 'visible' }),
+      deleteBtn.waitFor({ state: 'visible' }),
+      page.locator('table tbody tr').first().waitFor({ state: 'visible' })
+    ]);
+
+    if (await deleteBtn.isVisible()) {
+      await deleteBtn.click();
     }
-    await loadBtn.click();
+
+    if (await loadBtn.isVisible()) {
+      await loadBtn.click();
+    }
+
+    await page.locator('table tbody tr').first().waitFor({ state: 'visible' });
+    await page.close();
   });
 
   test('Debería mostrar la tabla con al menos un recurso', async ({ page }) => {
