@@ -223,8 +223,8 @@
 				<tr>
 					{#each Object.values(item) as value, i (i)}<td>{value}</td>{/each}
 					<td>
-						<button onclick={() => editarItem(item)}>✏️</button>
-						<button onclick={() => eliminarDato(item.id)}>🗑️</button>
+						<button aria-label="editar-recurso" onclick={() => editarItem(item)}>✏️</button>
+						<button aria-label="borrar-recurso" onclick={() => eliminarDato(item.id)}>🗑️</button>
 					</td>
 				</tr>
 			{/each}
@@ -233,9 +233,9 @@
 
 	<!-- PAGINACIÓN -->
 	<div>
-		<button onclick={() => (page = Math.max(0, page - 1))} disabled={page === 0}>‹ Anterior</button>
+		<button onclick={() => (page = Math.max(0, page - 1))} disabled={page === 0}>Anterior</button>
 		<span>Página {page + 1}</span>
-		<button onclick={() => (page = page + 1)} disabled={datos.length < 10}>Siguiente ›</button>
+		<button onclick={() => (page = page + 1)} disabled={datos.length < 10}>Siguiente</button>
 	</div>
 
 	<button onclick={eliminarDatos} style="background-color: red; color: white;">Eliminar la colección</button>
