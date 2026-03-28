@@ -66,11 +66,16 @@
   <form onsubmit={(e) => { e.preventDefault(); handleAddResource(); }}>
     <label>País: <input type="text" bind:value={entity} required /></label><br />
     <label>Año: <input type="number" bind:value={year} required /></label><br />
-    <label>Alta presión arterial: <input type="number" step="any" bind:value={high_systolic_blood_pressure} /></label><br />
-    <label>Contaminación del aire: <input type="number" step="any" bind:value={air_pollution} /></label><br />
-    <label>Desnutrición infantil: <input type="number" step="any" bind:value={child_wasting} /></label><br />
-    <label>Contaminación combustibles sólidos: <input type="number" step="any" bind:value={household_air_pollution_from_solid_fuels} /></label><br />
-    <label>Glucosa en sangre: <input type="number" step="any" bind:value={high_fasting_plasma_glucose} /></label><br />
+    <label>Alta presión arterial: <input type="number" step="any" bind:value={high_systolic_blood_pressure} 
+      min=0 /></label><br />
+    <label>Contaminación del aire: <input type="number" step="any" bind:value={air_pollution} 
+      min=0 /></label><br />
+    <label>Desnutrición infantil: <input type="number" step="any" bind:value={child_wasting}
+      min=0 /></label><br />
+    <label>Contaminación combustibles sólidos: <input type="number" step="any" bind:value={household_air_pollution_from_solid_fuels}
+      min=0 /></label><br />
+    <label>Glucosa en sangre: <input type="number" step="any" bind:value={high_fasting_plasma_glucose}
+      min=0 /></label><br />
 
     <button type="submit">Añadir Recurso</button>
     <button type="button" onclick={() => goto('/deaths-by-risk-factors')}>Cancelar</button>

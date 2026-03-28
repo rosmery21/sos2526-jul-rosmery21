@@ -93,7 +93,10 @@
                 await returnToMainPage()
             } else {
                 console.error('Failed to update resource:', response.status);
-                errorMessage = "Debe rellenar todos los parametros"
+                if(await response.text() === "Bad request: Factors cannot be negative")
+                    errorMessage = "Todos los campos deben de ser positivos"
+                else
+                    errorMessage = "Debe rellenar todos los parametros"
             }
         } catch (error) {
             console.error('Error updating resource:', error);
@@ -135,11 +138,11 @@
             <tr>
                 <td>{entity}</td>
                 <td>{year}</td>
-                <td><input type="number" bind:value={newHighSystolicBloodPressure} /></td>
-                <td><input type="number" bind:value={newAirPollution} /></td>
-                <td><input type="number" bind:value={newChildWasting} /></td>
-                <td><input type="number" bind:value={newHouseholdAirPollutionFromSolidFuels} /></td>
-                <td><input type="number" bind:value={newHighFastingPlasmaGlucose} /></td>
+                <td><input type="number" bind:value={newHighSystolicBloodPressure} min=0/></td>
+                <td><input type="number" bind:value={newAirPollution} min=0/></td>
+                <td><input type="number" bind:value={newChildWasting} min=0/></td>
+                <td><input type="number" bind:value={newHouseholdAirPollutionFromSolidFuels} min=0/></td>
+                <td><input type="number" bind:value={newHighFastingPlasmaGlucose} min=0/></td>
             </tr>
         </tbody>
     </table>

@@ -2,6 +2,8 @@ import express from 'express';
 import { readFile } from '../../utils/readFile.js';
 import store from '../../db/deaths-by-risk-factors.js';
 
+import { validateTypes, validateYear, validateRiskFactors } from '../../utils/validators/validateInputs.js';
+
 const router = express.Router();
 
 const data = [];
@@ -93,6 +95,19 @@ router.post('/deaths-by-risk-factors', (req, res) => {
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
+
+  if( !validateTypes(newData.entity, newData.year)){
+    return res.status(400).send("Bad request: Invalid data types");
+  }
+
+  if( !validateYear(newData.year)){
+    return res.status(400).send("Bad request: Invalid year (year must be between 1900 and current year)");
+  }
+
+  if( !validateRiskFactors(newData)){
+    return res.status(400).send("Bad request: Factors cannot be negative");
+  }
+
   const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
   if (hasExtraFields) {
     return res.status(400).send("Bad request: Extra fields provided");
@@ -150,6 +165,29 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
+
+  if( !validateTypes(newData.entity, newData.year)){
+    return res.status(400).send("Bad request: Invalid data types");
+  }
+
+  if( !validateYear(newData.year)){
+    return res.status(400).send("Bad request: Invalid year (year must be between 1900 and current year)");
+  }
+
+  if( !validateRiskFactors(newData)){
+    return res.status(400).send("Bad request: Factors cannot be negative");
+  }if( !validateTypes(newData.entity, newData.year)){
+    return res.status(400).send("Bad request: Invalid data types");
+  }
+
+  if( !validateYear(newData.year)){
+    return res.status(400).send("Bad request: Invalid year (year must be between 1900 and current year)");
+  }
+
+  if( !validateRiskFactors(newData)){
+    return res.status(400).send("Bad request: Factors cannot be negative");
+  }
+
   const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
   if (hasExtraFields) {
     return res.status(400).send("Bad request: Extra fields provided");
