@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "3abef46f-3699-47c3-b538-e49aeac1ac11",
-    "name": "SOS2526-Protests",
+    "_postman_id": "418dde22-d0bc-42d3-8694-e8e5013268cb",
+    "name": "SOS2526-Protests-v2",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "52275979"
   },
@@ -38,7 +38,7 @@
                 "protests"
               ]
             },
-            "description": "Deletes all protest records by sending a DELETE request to `{{BASE_URL}}/api/v1/protests`. No request body is required. A successful operation returns a `204 No Content` response, indicating the data has been removed with no response body."
+            "description": "Deletes all protest records by sending a DELETE request to `{{BASE_URL}}/api/v2/protests`. No request body is required. A successful operation returns a `204 No Content` response, indicating the data has been removed with no response body."
           },
           "response": []
         },
@@ -72,7 +72,7 @@
                 "loadInitialData"
               ]
             },
-            "description": "Triggers the initial data seeding process by sending a GET request to `{{BASE_URL}}/api/v1/protests/loadInitialData`. This is a utility endpoint used to populate the database with a predefined set of protest records. A successful operation returns `200 OK`."
+            "description": "Triggers the initial data seeding process by sending a GET request to `{{BASE_URL}}/api/v2/protests/loadInitialData`. This is a utility endpoint used to populate the database with a predefined set of protest records. A successful operation returns `200 OK`."
           },
           "response": []
         },
@@ -107,7 +107,7 @@
                 ""
               ]
             },
-            "description": "Retrieves the full list of protest records by sending a GET request to `{{BASE_URL}}/api/v1/protests/`. No request body is required. A successful response returns `200 OK` with an array of all available protest entries."
+            "description": "Retrieves the full list of protest records by sending a GET request to `{{BASE_URL}}/api/v2/protests/`. No request body is required. A successful response returns `200 OK` with an array of all available protest entries."
           },
           "response": []
         },
@@ -150,7 +150,7 @@
                 "protests"
               ]
             },
-            "description": "Creates a new protest record by sending a POST request to `{{BASE_URL}}/api/v1/protests`. The request body should include all required protest fields such as country, year, region, scores, and violence indicators. A successful creation returns a `201 Created` response."
+            "description": "Creates a new protest record by sending a POST request to `{{BASE_URL}}/api/v2/protests`. The request body should include all required protest fields such as country, year, region, scores, and violence indicators. A successful creation returns a `201 Created` response."
           },
           "response": []
         },
@@ -202,7 +202,76 @@
                 }
               ]
             },
-            "description": "Retrieves the full list of protest records by sending a GET request to `{{BASE_URL}}/api/v1/protests/`. No request body is required. A successful response returns `200 OK` with an array of all available protest entries."
+            "description": "Retrieves the full list of protest records by sending a GET request to `{{BASE_URL}}/api/v2/protests/`. No request body is required. A successful response returns `200 OK` with an array of all available protest entries."
+          },
+          "response": []
+        },
+        {
+          "name": "GET year filter (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Convertir la respuesta a un objeto JSON\r",
+                  "const responseData = pm.response.json();\r",
+                  "\r",
+                  "// Validar que el código de estado sea 200\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Validar que el resultado contiene exactamente 5 elementos (según el query param limit=5)\r",
+                  "pm.test(\"Se devuelven exactamente 5 registros\", function () {\r",
+                  "    pm.expect(responseData).to.be.an('array');\r",
+                  "    pm.expect(responseData.length).to.equal(5);\r",
+                  "});\r",
+                  "\r",
+                  "// Validar que todos los años estén en el rango de 1990 a 2000\r",
+                  "pm.test(\"Todos los años están en el rango 1990 - 2000\", function () {\r",
+                  "    const fromYear = 1990;\r",
+                  "    const toYear = 2000;\r",
+                  "    \r",
+                  "    responseData.forEach((item) => {\r",
+                  "        pm.expect(item.year).to.be.at.least(fromYear);\r",
+                  "        pm.expect(item.year).to.be.at.most(toYear);\r",
+                  "    });\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/protests/?limit=5&from=1990&to=2000",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "protests",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                },
+                {
+                  "key": "from",
+                  "value": "1990"
+                },
+                {
+                  "key": "to",
+                  "value": "2000"
+                }
+              ]
+            }
           },
           "response": []
         },
@@ -236,7 +305,7 @@
                 "902410001"
               ]
             },
-            "description": "Retrieves the protest record with ID `902410001` by sending a GET request to `{{BASE_URL}}/api/v1/protests/902410001`. No request body is required. A successful response returns `200 OK` along with the full details of the specified protest record."
+            "description": "Retrieves the protest record with ID `902410001` by sending a GET request to `{{BASE_URL}}/api/v2/protests/902410001`. No request body is required. A successful response returns `200 OK` along with the full details of the specified protest record."
           },
           "response": []
         },
@@ -279,7 +348,7 @@
                 "902410001"
               ]
             },
-            "description": "Updates the protest record with ID `902410001` by sending a PUT request to `{{BASE_URL}}/api/v1/protests/902410001`. The request body should contain the fields to be updated for that record. A successful update returns a `200 OK` response with the updated resource."
+            "description": "Updates the protest record with ID `902410001` by sending a PUT request to `{{BASE_URL}}/api/v2/protests/902410001`. The request body should contain the fields to be updated for that record. A successful update returns a `200 OK` response with the updated resource."
           },
           "response": []
         },
@@ -313,7 +382,7 @@
                 "902410001"
               ]
             },
-            "description": "Deletes the protest record with ID `902410001` by sending a DELETE request to `{{BASE_URL}}/api/v1/protests/902410001`. No request body is needed. A successful deletion returns a `204 No Content` response."
+            "description": "Deletes the protest record with ID `902410001` by sending a DELETE request to `{{BASE_URL}}/api/v2/protests/902410001`. No request body is needed. A successful deletion returns a `204 No Content` response."
           },
           "response": []
         }
@@ -360,7 +429,7 @@
                 "protests"
               ]
             },
-            "description": "Intentionally sends a PUT request to the collection endpoint `{{BASE_URL}}/api/v1/protests` (without a specific resource ID) to verify that the API correctly rejects unsupported methods on this route. The expected response is `405 Method Not Allowed`, confirming that PUT is not permitted on the collection-level endpoint."
+            "description": "Intentionally sends a PUT request to the collection endpoint `{{BASE_URL}}/api/v2/protests` (without a specific resource ID) to verify that the API correctly rejects unsupported methods on this route. The expected response is `405 Method Not Allowed`, confirming that PUT is not permitted on the collection-level endpoint."
           },
           "response": []
         },
@@ -445,7 +514,7 @@
                 "201990001"
               ]
             },
-            "description": "Attempts to update the protest record with ID `201990001` via a PUT request to `{{BASE_URL}}/api/v1/protests/201990001`, expecting a `400 Bad Request` response. This request is used to verify that the API correctly rejects invalid or malformed update data for an existing record."
+            "description": "Attempts to update the protest record with ID `201990001` via a PUT request to `{{BASE_URL}}/api/v2/protests/201990001`, expecting a `400 Bad Request` response. This request is used to verify that the API correctly rejects invalid or malformed update data for an existing record."
           },
           "response": []
         },
@@ -492,7 +561,7 @@
                 "protests"
               ]
             },
-            "description": "Sends a POST request to `{{BASE_URL}}/api/v1/protests` with intentionally invalid or unrecognized body fields to verify that the API enforces input validation. The expected response is `400 Bad Request`, confirming that the server rejects payloads that do not match the required schema."
+            "description": "Sends a POST request to `{{BASE_URL}}/api/v2/protests` with intentionally invalid or unrecognized body fields to verify that the API enforces input validation. The expected response is `400 Bad Request`, confirming that the server rejects payloads that do not match the required schema."
           },
           "response": []
         },
@@ -576,7 +645,7 @@
                 "201990001"
               ]
             },
-            "description": "Sends a PUT request to `{{BASE_URL}}/api/v1/protests/201990001` with intentionally wrong or unrecognized fields to test the API's validation on updates. The expected response is `400 Bad Request`, confirming that the server rejects payloads that do not conform to the expected schema."
+            "description": "Sends a PUT request to `{{BASE_URL}}/api/v2/protests/201990001` with intentionally wrong or unrecognized fields to test the API's validation on updates. The expected response is `400 Bad Request`, confirming that the server rejects payloads that do not conform to the expected schema."
           },
           "response": []
         }
