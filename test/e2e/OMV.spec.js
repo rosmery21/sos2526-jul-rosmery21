@@ -7,17 +7,28 @@ const CREATE_URL = 'http://localhost:3000/protests/create'; // O donde tengas el
 test.describe('Pruebas E2E para el recurso Protests', () => {
 
   test('0. Borrar todos los recursos', async ({ page }) => {
-
-    // Le decimos que acepte el dialogo de confirmación
-    page.once('dialog', dialog => dialog.accept());
-
     await page.goto(LIST_URL);
 
-    // Pulsa el boton de borrar todo
+    // Buscar los botones de borrar y cargar
     const deleteAllButton = page.getByRole('button', { name: /Eliminar la colección/i });
+    const loadInitialButton = page.getByRole('button', { name: /Cargar datos iniciales/i });
+
+    // Si no hay datos, los cargamos
+    if (!(await deleteAllButton.isVisible())) {
+      console.log("Tabla vacía, cargando datos iniciales...");
+      await loadInitialButton.click();
+
+      // Esperamos a que el botón de borrar aparezca
+      await expect(deleteAllButton).toBeVisible({ timeout: 5000 });
+    }
+
+    // Preparamos para aceptar el borrado
+    page.once('dialog', dialog => dialog.accept());
+
+    // Pulsamos el botón de borrar todo
     await deleteAllButton.click();
 
-    // Esperar a que aparezca el mensaje de confirmación
+    // Verificamos el mensaje final
     const mensajeH1 = page.getByRole('heading', { name: 'Datos eliminados correctamente', level: 1 });
     await expect(mensajeH1).toBeVisible();
     await expect(mensajeH1).toHaveText('Datos eliminados correctamente');
@@ -149,9 +160,9 @@ test.describe('Pruebas E2E para el recurso Protests', () => {
 
     // Para cada fila, comprobamos que tiene el texto Spain
     for (const fila of todosLosRegistros) {
-        await expect(fila).toContainText(paisBuscado);
+      await expect(fila).toContainText(paisBuscado);
     }
-});
+  });
 
   test('7. Filtrar por rango de años', async ({ page }) => {
     await page.goto(LIST_URL);
@@ -176,15 +187,15 @@ test.describe('Pruebas E2E para el recurso Protests', () => {
     // Para cada fila, comprobamos que el año está en el rango esperado
     for (const fila of todosLosRegistros) {
       // Guardamos en textoAño el valor de la segunda columna
-        const textoAño = await fila.locator('td').nth(2).innerText();
+      const textoAño = await fila.locator('td').nth(2).innerText();
 
-        // Pasamos el valor a entero
-        const añoFila = parseInt(textoAño);
+      // Pasamos el valor a entero
+      const añoFila = parseInt(textoAño);
 
-        // Comprobamos que el año está entre los valores esperados
-        expect(añoFila).toBeGreaterThanOrEqual(añoInicio);
-        expect(añoFila).toBeLessThanOrEqual(añoFin);
+      // Comprobamos que el año está entre los valores esperados
+      expect(añoFila).toBeGreaterThanOrEqual(añoInicio);
+      expect(añoFila).toBeLessThanOrEqual(añoFin);
     }
-});
+  });
 
 });

@@ -177,12 +177,12 @@
 			<input type="number" placeholder="Año fin"             bind:value={searchFilters.to} />
 		{/if}
 
-		<!-- Enteros (mínimo) -->
+		<!-- Enteros -->
 		<input type="number" placeholder="Min. Protesta"           bind:value={searchFilters.protest} />
 		<input type="number" placeholder="Min. Violencia"          bind:value={searchFilters.protesterviolence} />
 		<input type="number" placeholder="Min. Estado violento"    bind:value={searchFilters.violence_status} />
 
-		<!-- Decimales (mínimo) -->
+		<!-- Decimales -->
 		<input type="number" step="0.01" placeholder="Min. Pt. electoral"      bind:value={searchFilters.electoral_ecore} />
 		<input type="number" step="0.01" placeholder="Min. Pt. liberal"        bind:value={searchFilters.liberal_score} />
 		<input type="number" step="0.01" placeholder="Min. Pt. participación"  bind:value={searchFilters.participatory_score} />
