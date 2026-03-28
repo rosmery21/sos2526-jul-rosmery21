@@ -1,3 +1,7 @@
+<script>
+    /* eslint-disable svelte/no-navigation-without-resolve */
+</script>
+
 <header>
     <title>SOS2526-10 API</title>
     <h1>SOS2526-10</h1>
