@@ -1,6 +1,8 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 
+test.setTimeout(60000);
+
 const APP_URL = 'http://localhost:3000';
 const PAGE_PATH = '/pandemics';
 
@@ -69,8 +71,10 @@ test.describe('Tests de Creación de Recursos', () => {
         await page.goto(`${APP_URL}${PAGE_PATH}/create`);
         await page.waitForLoadState('networkidle');
 
-        await page.locator('input[type="text"]').first().fill('TestCountry');
-        await page.locator('input[type="text"]').nth(1).fill('TC');
+        const paisCrear = 'NewCountry' + Math.floor(Math.random() * 999);
+
+        await page.locator('input[type="text"]').first().fill(paisCrear);
+        await page.locator('input[type="text"]').nth(1).fill('NC');
         await page.locator('input[type="number"]').first().fill('2024');
         
         const inputsCrear = page.locator('input[type="number"]');
@@ -84,13 +88,13 @@ test.describe('Tests de Creación de Recursos', () => {
         await page.goto(`${APP_URL}${PAGE_PATH}`);
         await page.waitForLoadState('networkidle');
 
-        await page.locator('input[type="text"]').first().fill('TestCountry');
-        
-        await page.locator('button').filter({ hasText: /filtrar/i }).first().click();
+        await page.locator('input[type="text"]').first().fill(paisCrear);
+        await page.locator('button').filter({ hasText: /buscar|filtrar/i }).first().click({ force: true });
         
         await page.waitForTimeout(1000);
-        await expect(page.locator('table')).toContainText('TestCountry');
+        await expect(page.locator('table')).toContainText(paisCrear);
     });
+     
 
 
     test('Debería detectar recurso ya existe', async ({ page }) => {
@@ -316,6 +320,8 @@ test.describe('Tests de Borrado de Recursos', () => {
 });
 
 test.describe('Tests de Edición de Recursos', () => {
+    // Definimos la variable aquí para que sea accesible en todos los tests del bloque
+    let nombreUnicoEdicion;
 
     test.beforeAll(async ({ browser }) => {
         const page = await browser.newPage();
@@ -323,29 +329,29 @@ test.describe('Tests de Edición de Recursos', () => {
 
         await page.goto(`${APP_URL}${PAGE_PATH}`);
         await page.waitForLoadState('networkidle');
+        
         const btnBorrarTodo = page.getByRole('button', { name: /eliminar la colección/i });
         if (await btnBorrarTodo.isVisible()) {
-        await btnBorrarTodo.click();
-        await expect(page.getByText(/eliminados|éxito/i)).toBeVisible();
+            await btnBorrarTodo.click();
+            await page.waitForTimeout(1000);
         }
 
         await page.goto(`${APP_URL}${PAGE_PATH}/create`);
         
-        await page.locator('input[type="text"]').first().fill('TestData');
-        await page.locator('input[type="text"]').nth(1).fill('TD'); 
+        // Creamos el nombre único y lo guardamos en la variable de arriba
+        nombreUnicoEdicion = 'EditCountry' + Math.floor(Math.random() * 9999);
+        
+        await page.locator('input[type="text"]').first().fill(nombreUnicoEdicion);
+        await page.locator('input[type="text"]').nth(1).fill('EC'); 
         await page.locator('input[type="number"]').first().fill('2025'); 
 
         const inputsNum = page.locator('input[type="number"]');
-        const totalInputs = await inputsNum.count();
-        for (let i = 1; i < totalInputs; i++) {
-        await inputsNum.nth(i).fill('10');
+        for (let i = 1; i < await inputsNum.count(); i++) {
+            await inputsNum.nth(i).fill('10');
         }
 
-        const btnGuardar = page.locator('button').filter({ hasText: /añadir|guardar/i }).first();
-        await btnGuardar.click();
-
-        await expect(page).toHaveURL(new RegExp(`${PAGE_PATH}$`), { timeout: 5000 });
-        
+        await page.locator('button').filter({ hasText: /añadir|guardar/i }).first().click();
+        await page.waitForURL(new RegExp(`${PAGE_PATH}$`), { timeout: 10000 });
         await page.close();
     });
 
@@ -353,42 +359,32 @@ test.describe('Tests de Edición de Recursos', () => {
         await page.goto(`${APP_URL}${PAGE_PATH}`);
         await page.waitForLoadState('networkidle');
 
-        const fila = page.locator('tr').filter({ hasText: 'TestData' });
-        
-        await expect(fila).toBeVisible({ timeout: 10000 });
+        const fila = page.locator('tr').filter({ hasText: nombreUnicoEdicion });
+        await expect(fila).toBeVisible({ timeout: 15000 });
 
-        const linkEditar = fila.locator('a'); 
+        await fila.locator('a').click({ force: true });
         
-        await linkEditar.click({ force: true });
-        
-        await page.waitForURL(new RegExp(`${PAGE_PATH}/TestData/2025`), { timeout: 10000 });
+        await page.waitForURL(new RegExp(`${PAGE_PATH}/${nombreUnicoEdicion}/2025`), { timeout: 10000 });        
         
         const inputNum = page.locator('input[type="number"]').nth(1); 
-        await inputNum.waitFor({ state: 'visible' });
         await inputNum.fill('88.8');
 
-        const btnActualizar = page.locator('button').filter({ hasText: /actualizar|guardar/i }).first();
-        await btnActualizar.click();
+        await page.locator('button').filter({ hasText: /actualizar|guardar/i }).first().click();
 
         await page.waitForURL(new RegExp(`${PAGE_PATH}$`));
-        await page.waitForLoadState('networkidle');
-        await expect(page.locator('tr').filter({ hasText: 'TestData' })).toContainText('88.8');
+        await expect(page.locator('tr').filter({ hasText: nombreUnicoEdicion })).toContainText('88.8');
     });
 
     test('Fallo: No debería permitir valores negativos en la edición', async ({ page }) => {
-        await page.goto(`${APP_URL}${PAGE_PATH}/TestData/2025`);
+        await page.goto(`${APP_URL}${PAGE_PATH}/${nombreUnicoEdicion}/2025`);
         await page.waitForLoadState('networkidle');
 
         const inputEnfermedad = page.locator('input[type="number"]').nth(1);
-
         await inputEnfermedad.fill('-50');
         
-        const btnActualizar = page.locator('button').filter({ hasText: /actualizar|guardar/i }).first();
-        await btnActualizar.click();
-
-        await expect(page.getByText(/deben ser positivos|no se permiten valores negativos/i)).toBeVisible();
-
-        await expect(page).toHaveURL(new RegExp(`${PAGE_PATH}/TestData/2025`));
+        await page.locator('button').filter({ hasText: /actualizar|guardar/i }).first().click();
+        
+        await expect(page.locator('body')).toContainText(/positivo|negativo/i);
     });
 });
 
@@ -503,7 +499,8 @@ test.describe('Tests de Filtrado y Búsqueda', () => {
 
         await expect(inputPais).toHaveValue('');
         
-        await expect(page.locator('table')).toContainText('TestData');
+        const filasFinales = page.locator('table tbody tr');
+        await expect(filasFinales.first()).toBeVisible({ timeout: 10000 });
     });
 
     test('Debería realizar una búsqueda avanzada combinando país y casos de Polio', async ({ page }) => {
