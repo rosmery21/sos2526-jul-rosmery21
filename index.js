@@ -31,6 +31,7 @@ app.use(BASE_API_URL, pandemicsRoute);
 app.use(BASE_API_URL, childMalnutritions);
 
 app.use(V2_API_URL, deathsRouteV2);
+app.use(V2_API_URL, childMalnutritions);
 
 /* ROUTE SAMPLE F04 */
 app.get("/samples/rm", (req, res) => {

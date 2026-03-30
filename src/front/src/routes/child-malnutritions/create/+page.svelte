@@ -49,7 +49,7 @@
 {/if}
 
 <h2>Añadir Nuevo Dato</h2>
-<form onsubmit={(e) => { e.preventDefault(); handleAdd(); }} class="form-container">
+<form novalidate onsubmit={(e) => { e.preventDefault(); handleAdd(); }}> class="form-container">
     <input bind:value={country} placeholder="País (ej. Spain)" required /><br>
     <input type="number" bind:value={year} placeholder="Año (ej. 2024)" required /><br>
     <input bind:value={region} placeholder="Región" required /><br>

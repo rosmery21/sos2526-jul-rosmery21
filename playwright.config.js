@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -28,10 +29,15 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
-
+   baseURL: 'https://sos2526-10.onrender.com',
+    actionTimeout: 60000,
+    navigationTimeout: 60000,
+  
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+
+
 
   /* Configure projects for major browsers */
   projects: [
@@ -49,6 +55,7 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+ 
 
     /* Test against mobile viewports. */
     // {
