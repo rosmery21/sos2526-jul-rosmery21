@@ -99,7 +99,8 @@ test.describe('Tests de Creación de Recursos', () => {
 
     test('Debería detectar recurso ya existe', async ({ page }) => {
         await page.goto(`${APP_URL}${PAGE_PATH}/create`);
-        await page.locator('input[type="text"]').first().fill('TestCountry');
+        const paisExistente = 'ExistCountry' + Math.floor(Math.random() * 999);
+        await page.locator('input[type="text"]').first().fill(paisExistente);
         await page.locator('input[type="number"]').first().fill('2024');
         
         await page.locator('button').filter({ hasText: /guardar|añadir/i }).first().click();
@@ -271,6 +272,7 @@ test.describe('Tests de Borrado de Recursos', () => {
 
         await page.locator('button').filter({ hasText: /guardar|añadir/i }).first().click();
         
+        await page.waitForTimeout(2000); 
         await page.waitForURL(new RegExp(`${PAGE_PATH}$`));
         await page.close();
     });
