@@ -82,6 +82,9 @@ router.get("/child-malnutritions/:country/:year", (req, res) => {
     if (!data) return res.status(404).json({ error: "Not found" });
     res.json(data);
 });
+router.get("/child-malnutritions/docs", (req, res) => {
+    res.redirect("https://documenter.getpostman.com/view/53120972/2sBXijJBsH");
+});
 
 // POST
 router.post("/child-malnutritions", (req, res) => {
