@@ -1,7 +1,7 @@
 <script>
 /* eslint-disable svelte/no-navigation-without-resolve */
   import { goto } from '$app/navigation';
-
+  
   let API = '/api/v2/deaths-by-risk-factors';
 
   // Estados para los campos del formulario
@@ -14,6 +14,7 @@
   let high_fasting_plasma_glucose = $state(0);
 
   let errorMessage = $state('');
+  let infoMessage = $state('');
 
   async function handleAddResource() {
     // Construimos el objeto respetando los nombres de tu API
@@ -35,7 +36,8 @@
       });
 
       if (res.status === 201) {
-        // ÉXITO: Redirigimos al listado principal
+        infoMessage= `Recurso para ${entity} (${year}) creado con éxito.`
+        await new Promise(resolve => setTimeout(resolve, 2000));
         goto('/deaths-by-risk-factors');
       } else if (res.status === 409) {
         errorMessage = "Error: El recurso ya existe (Conflicto).";
@@ -52,22 +54,30 @@
 </script>
 
 <main>
-  <h2>Añadir Nuevo Recurso</h2>
 
-  {#if errorMessage}
+  {#if infoMessage}
+    <p>{infoMessage}</p>
+  {:else if errorMessage}
     <p style="color: red;">{errorMessage}</p>
   {/if}
+
+  <h2>Añadir Nuevo Recurso</h2>
 
   <form onsubmit={(e) => { e.preventDefault(); handleAddResource(); }}>
     <label>País: <input type="text" bind:value={entity} required /></label><br />
     <label>Año: <input type="number" bind:value={year} required /></label><br />
-    <label>Alta presión arterial: <input type="number" step="any" bind:value={high_systolic_blood_pressure} /></label><br />
-    <label>Contaminación del aire: <input type="number" step="any" bind:value={air_pollution} /></label><br />
-    <label>Desnutrición infantil: <input type="number" step="any" bind:value={child_wasting} /></label><br />
-    <label>Contaminación combustibles sólidos: <input type="number" step="any" bind:value={household_air_pollution_from_solid_fuels} /></label><br />
-    <label>Glucosa en sangre: <input type="number" step="any" bind:value={high_fasting_plasma_glucose} /></label><br />
+    <label>Alta presión arterial: <input type="number" step="any" bind:value={high_systolic_blood_pressure} 
+      min=0 /></label><br />
+    <label>Contaminación del aire: <input type="number" step="any" bind:value={air_pollution} 
+      min=0 /></label><br />
+    <label>Desnutrición infantil: <input type="number" step="any" bind:value={child_wasting}
+      min=0 /></label><br />
+    <label>Contaminación combustibles sólidos: <input type="number" step="any" bind:value={household_air_pollution_from_solid_fuels}
+      min=0 /></label><br />
+    <label>Glucosa en sangre: <input type="number" step="any" bind:value={high_fasting_plasma_glucose}
+      min=0 /></label><br />
 
-    <button type="submit">Guardar Recurso</button>
+    <button type="submit">Añadir Recurso</button>
     <button type="button" onclick={() => goto('/deaths-by-risk-factors')}>Cancelar</button>
   </form>
 </main>

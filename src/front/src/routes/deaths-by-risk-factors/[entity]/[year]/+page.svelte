@@ -18,6 +18,9 @@
     let newHouseholdAirPollutionFromSolidFuels = $state(0);
     let newHighFastingPlasmaGlucose = $state(0);
 
+    let errorMessage = $state('');
+    let infoMessage = $state('');
+
 	// @ts-ignore
 	async function getResource() {
 		try {
@@ -54,11 +57,12 @@
 			responseStatusCode = response.status;
 			if (response.ok) {
 				console.log(`Deleted resource: ${entity} (${year})`);
+                errorMessage = '';
+                infoMessage = `Eliminado el recurso: ${entity} (${year})`;
+                await returnToMainPage();
 			} else {
 				console.error('Failed to delete resource:', response.status);
 			}
-            // eslint-disable-next-line svelte/no-navigation-without-resolve
-            goto('/deaths-by-risk-factors');
 		} catch (error) {
 			console.error('Error deleting resource:', error);
 		}
@@ -84,18 +88,36 @@
             responseStatusCode = response.status;
             if (response.ok) {
                 console.log(`Updated resource: ${entity} (${year})`);
-                // eslint-disable-next-line svelte/no-navigation-without-resolve
-                goto('/deaths-by-risk-factors');
+                errorMessage = ''
+                infoMessage = `Actualizado el recurso: ${entity} (${year})`;
+                await returnToMainPage()
             } else {
                 console.error('Failed to update resource:', response.status);
+                if(await response.text() === "Bad request: Factors cannot be negative")
+                    errorMessage = "Todos los campos deben de ser positivos"
+                else
+                    errorMessage = "Debe rellenar todos los parametros"
             }
         } catch (error) {
             console.error('Error updating resource:', error);
         }
     }
 
+    async function returnToMainPage() {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        // eslint-disable-next-line svelte/no-navigation-without-resolve
+        goto('/deaths-by-risk-factors', {invalidateAll: true});
+
+    }
+
     onMount(getResource);
 </script>
+
+{#if infoMessage}
+    <p>{infoMessage}</p>
+{:else if errorMessage}
+    <p style="color: red;">{errorMessage}</p>
+{/if}
 
 <h3>Detalles para {entity} ({year})</h3>
 
@@ -116,11 +138,11 @@
             <tr>
                 <td>{entity}</td>
                 <td>{year}</td>
-                <td><input type="number" bind:value={newHighSystolicBloodPressure} /></td>
-                <td><input type="number" bind:value={newAirPollution} /></td>
-                <td><input type="number" bind:value={newChildWasting} /></td>
-                <td><input type="number" bind:value={newHouseholdAirPollutionFromSolidFuels} /></td>
-                <td><input type="number" bind:value={newHighFastingPlasmaGlucose} /></td>
+                <td><input type="number" bind:value={newHighSystolicBloodPressure} min=0/></td>
+                <td><input type="number" bind:value={newAirPollution} min=0/></td>
+                <td><input type="number" bind:value={newChildWasting} min=0/></td>
+                <td><input type="number" bind:value={newHouseholdAirPollutionFromSolidFuels} min=0/></td>
+                <td><input type="number" bind:value={newHighFastingPlasmaGlucose} min=0/></td>
             </tr>
         </tbody>
     </table>

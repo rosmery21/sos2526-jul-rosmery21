@@ -13,8 +13,8 @@ const apis = [
         miembro: 'Onésimo Morillo Vecino',
         recurso: 'protests',
         frontend: '/protests',
-        api: '/api/v1/protests',
-        docs: 'https://documenter.getpostman.com/view/52275979/2sBXiesEPb',
+        api: '/api/v2/protests',
+        docs: 'https://documenter.getpostman.com/view/52275979/2sBXinFVKK',
         github: 'https://github.com/onesimomorillo',
     },
     {
@@ -22,8 +22,8 @@ const apis = [
         miembro: 'Alexia Gutiérrez Casado',
         recurso: 'pandemics',
         frontend: '/pandemics',
-        api: '/api/v1/pandemics',
-        docs: 'https://documenter.getpostman.com/view/52276047/2sBXigLDEC',
+        api: '/api/v2/pandemics',
+        docs: 'https://documenter.getpostman.com/view/52276047/2sBXijKsCU',
         github: 'https://github.com/alexiagutierrezcasado',
     },
     {

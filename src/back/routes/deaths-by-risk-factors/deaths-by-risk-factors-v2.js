@@ -1,18 +1,18 @@
 import express from 'express';
-import { readFile } from '../utils/readFile.js';
-import dataStore from "nedb"
+import { readFile } from '../../utils/readFile.js';
+import store from '../../db/deaths-by-risk-factors.js';
+
+import { validateTypes, validateYear, validateRiskFactors } from '../../utils/validators/validateInputs.js';
 
 const router = express.Router();
-
-const store = new dataStore({filename: './data/storage/deaths-by-risk-factors.db', autoload: true});
 
 const data = [];
 const requiredFields = ['entity', 'year', 'high_systolic_blood_pressure', 'air_pollution', 'child_wasting',
    'household_air_pollution_from_solid_fuels', 'high_fasting_plasma_glucose'];
 
-store.insert(data); 
+//store.insert(data);
 
-const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXcLfcbP";
+const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXijHrJv";
 
 router.get('/deaths-by-risk-factors/docs', (req, res) => {
   res.redirect(DOCUMENTATION_URL);
@@ -34,9 +34,9 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
       household_air_pollution_from_solid_fuels: item['Household air pollution from solid fuels'],
       high_fasting_plasma_glucose: item['High fasting plasma glucose']
     }));
-    store.insert(filteredData.slice(0, 10), (err, docs) => {
+    store.insert(filteredData, (err, docs) => {
       docs.forEach(d => delete d._id);
-      res.status(201).json(docs);
+      res.status(201).send("CREATED");
     });
   });
 });
@@ -45,20 +45,30 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
 router.get('/deaths-by-risk-factors', (req, res) => {
   const query = {}
 
-  const offset = parseInt(req.query.offset) || 0;
-  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || null;
+  const limit = parseInt(req.query.limit) || null;
 
   const country = req.query.country;
   const year = req.query.year;
-  const blood_pressure = req.query.blood_pressure;
+  const high_systolic_blood_pressure = req.query.high_systolic_blood_pressure;
   const air_pollution = req.query.air_pollution;
   const child_wasting = req.query.child_wasting;
   const household_air_pollution_from_solid_fuels = req.query.household_air_pollution_from_solid_fuels;
   const high_fasting_plasma_glucose = req.query.high_fasting_plasma_glucose;
+  const from = req.query.from;
+  const to = req.query.to;
 
+  if (year)
+    query.year = parseInt(year);
+  else if (from || to) {
+    query.year = {};
+    if (from)
+      query.year.$gte = parseInt(from);
+    if (to)
+    query.year.$lte = parseInt(to);
+  }
   if (country) query.entity = new RegExp(`^${country}$`, "i");
-  if (year) query.year = parseInt(year);
-  if (blood_pressure) query.high_systolic_blood_pressure = { $gt: parseFloat(blood_pressure) };
+  if (high_systolic_blood_pressure) query.high_systolic_blood_pressure = { $gt: parseFloat(high_systolic_blood_pressure) };
   if (air_pollution) query.air_pollution = { $gt: parseFloat(air_pollution) };
   if (child_wasting) query.child_wasting = { $gt: parseFloat(child_wasting) };
   if (household_air_pollution_from_solid_fuels) query.household_air_pollution_from_solid_fuels = { $gt: parseFloat(household_air_pollution_from_solid_fuels) };
@@ -69,7 +79,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
     .limit(limit)
     .exec((err, data) => {
     if (data.length === 0)
-      return res.status(404).send("Data not found");
+      return res.status(404).send([]);
     data.forEach(d => delete d._id);
     if (data.length === 1)
       data = data[0];
@@ -81,10 +91,23 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 router.post('/deaths-by-risk-factors', (req, res) => {
   const newData = req.body;
 
-  const isMissingFields = requiredFields.some(field => !newData[field]);
+  const isMissingFields = requiredFields.some(field => newData[field] === null || newData[field] === undefined || newData[field] === "");
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
+
+  if( !validateTypes(newData.entity, newData.year)){
+    return res.status(400).send("Bad request: Invalid data types");
+  }
+
+  if( !validateYear(newData.year)){
+    return res.status(400).send("Bad request: Invalid year (year must be between 1900 and current year)");
+  }
+
+  if( !validateRiskFactors(newData)){
+    return res.status(400).send("Bad request: Factors cannot be negative");
+  }
+
   const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
   if (hasExtraFields) {
     return res.status(400).send("Bad request: Extra fields provided");
@@ -138,10 +161,33 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
   const year = parseInt(req.params.year);
   const newData = req.body;
 
-  const isMissingFields = requiredFields.some(field => !newData[field]);
+  const isMissingFields = requiredFields.some(field => newData[field] === null || newData[field] === undefined || newData[field] === "");
   if (isMissingFields) {
     return res.status(400).send("Bad request: Missing required fields");
   }
+
+  if( !validateTypes(newData.entity, newData.year)){
+    return res.status(400).send("Bad request: Invalid data types");
+  }
+
+  if( !validateYear(newData.year)){
+    return res.status(400).send("Bad request: Invalid year (year must be between 1900 and current year)");
+  }
+
+  if( !validateRiskFactors(newData)){
+    return res.status(400).send("Bad request: Factors cannot be negative");
+  }if( !validateTypes(newData.entity, newData.year)){
+    return res.status(400).send("Bad request: Invalid data types");
+  }
+
+  if( !validateYear(newData.year)){
+    return res.status(400).send("Bad request: Invalid year (year must be between 1900 and current year)");
+  }
+
+  if( !validateRiskFactors(newData)){
+    return res.status(400).send("Bad request: Factors cannot be negative");
+  }
+
   const hasExtraFields = Object.keys(newData).some(key => !requiredFields.includes(key));
   if (hasExtraFields) {
     return res.status(400).send("Bad request: Extra fields provided");
