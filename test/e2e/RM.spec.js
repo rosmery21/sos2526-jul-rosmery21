@@ -1,7 +1,9 @@
-// tests/childMalnutrition.spec.js
 import { test, expect } from '@playwright/test';
 
-test.describe('Child Malnutrition Tests', () => {
+const LIST_URL = '/child-malnutritions';
+const CREATE_URL = '/child-malnutritions/create';
+
+test.describe('Child Malnutrition E2E', () => {
 
   let country;
   let year;
@@ -13,64 +15,101 @@ test.describe('Child Malnutrition Tests', () => {
     year = '2025';
     region = 'Europe';
     rate = '12';
-    await page.goto('/child-malnutritions');
   });
 
-  // ---------------- CREATE ----------------
-  test.describe('Create Resource', () => {
-    test('should create a new child malnutrition record', async ({ page }) => {
-      await page.goto('/child-malnutritions/create');
+  //  0. DELETE ALL
+  test('0. Borrar toda la colección', async ({ page }) => {
+    await page.goto(LIST_URL);
 
-      await page.fill('input[placeholder="País"]', country);
-      await page.fill('input[placeholder="Año"]', year);
-      await page.fill('input[placeholder="Región"]', region);
-      await page.fill('input[placeholder="Tasa de retraso (%)"]', rate);
+    page.once('dialog', dialog => dialog.accept());
 
-      page.on('dialog', dialog => dialog.accept());
+    await page.getByRole('button', { name: /Eliminar toda la colección/i }).click();
 
-      await page.getByRole('button', { name: /guardar/i }).click();
-
-      await expect(page).toHaveURL('/child-malnutritions');
-      await expect(page.locator('table')).toContainText(country);
-    });
+    await expect(page.locator('table')).not.toBeVisible();
   });
 
-  // ---------------- READ ----------------
-  test.describe('Read / Search Resource', () => {
-    test('should find the created record', async ({ page }) => {
-      await page.fill('input[placeholder="País"]', country);
-      await page.getByRole('button', { name: /buscar/i }).click();
+  //  1. LOAD INITIAL DATA
+  test('1. Cargar datos iniciales', async ({ page }) => {
+    await page.goto(LIST_URL);
 
-      await expect(page.locator('table')).toContainText(country);
-    });
+    await page.getByRole('button', { name: /Cargar datos iniciales/i }).click();
+
+    await expect(page.locator('table')).toBeVisible();
   });
 
-  // ---------------- UPDATE ----------------
-  test.describe('Update Resource', () => {
-    test('should edit the existing record', async ({ page }) => {
-      await page.locator('text=Detalles').first().click();
+  //  2. CREATE
+  test('2. Crear recurso', async ({ page }) => {
+    await page.goto(CREATE_URL);
 
-      const newRegion = 'UpdatedRegion';
+    await page.fill('input[placeholder="País"]', country);
+    await page.fill('input[placeholder="Año"]', year);
+    await page.fill('input[placeholder="Región"]', region);
+    await page.fill('input[placeholder="Tasa de retraso (%)"]', rate);
 
-      await page.locator('input[placeholder="Región"]').fill(newRegion);
+    await page.getByRole('button', { name: /guardar/i }).click();
 
-      page.on('dialog', dialog => dialog.accept());
-
-      await page.getByRole('button', { name: /actualizar/i }).click();
-
-      await expect(page.locator('table')).toContainText(newRegion);
-    });
+    await expect(page).toHaveURL(LIST_URL);
+    await expect(page.locator('table')).toContainText(country);
   });
 
-  // ---------------- DELETE ----------------
-  test.describe('Delete Resource', () => {
-    test('should delete the record', async ({ page }) => {
-      page.on('dialog', dialog => dialog.accept());
+  //  3. DELETE ONE
+  test('3. Borrar un recurso', async ({ page }) => {
+    await page.goto(LIST_URL);
 
-      await page.getByRole('button', { name: /eliminar/i }).first().click();
+    const filas = page.locator('table tbody tr');
+    await expect(filas.first()).toBeVisible();
 
-      await expect(page.locator('table')).not.toContainText(country);
-    });
+    const countBefore = await filas.count();
+
+    page.once('dialog', dialog => dialog.accept());
+
+    await page.getByRole('button', { name: /Eliminar/i }).first().click();
+
+    await expect(filas).toHaveCount(countBefore - 1);
+  });
+
+  //  4. PAGINATION
+  test('4. Paginación', async ({ page }) => {
+    await page.goto(LIST_URL);
+
+    await page.getByRole('button', { name: /Cargar datos iniciales/i }).click();
+
+    await page.getByRole('button', { name: /Siguiente/i }).click();
+
+    await expect(page.getByText(/Página:/)).toBeVisible();
+  });
+
+  // 5. EDIT
+  test('5. Editar recurso', async ({ page }) => {
+    await page.goto(LIST_URL);
+
+    await page.locator('text=Detalles').first().click();
+
+    const newRegion = 'UpdatedRegion';
+
+    await page.locator('input').first().fill(newRegion);
+
+    await page.getByRole('button', { name: /Actualizar/i }).click();
+
+    await expect(page).toHaveURL(LIST_URL);
+    await expect(page.locator('table')).toContainText(newRegion);
+  });
+
+  //  6. SEARCH country
+  test('6. Buscar por país', async ({ page }) => {
+    await page.goto(LIST_URL);
+
+    await page.fill('input[placeholder="País"]', 'Spain');
+    await page.getByRole('button', { name: /Buscar/i }).click();
+
+    const filas = page.locator('table tbody tr');
+    await expect(filas.first()).toBeVisible();
+
+    const all = await filas.all();
+
+    for (const fila of all) {
+      await expect(fila).toContainText('Spain');
+    }
   });
 
 });
