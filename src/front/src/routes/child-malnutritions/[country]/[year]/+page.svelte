@@ -1,92 +1,63 @@
 <script>
-    import { page } from '$app/state';
-    import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
-    import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
 
-    const API = '/api/v1/child-malnutritions';
+  const API = '/api/v2/child-malnutritions';
+  const country = page.params.country;
+  const year = page.params.year;
 
-    let responseStatusCode = $state(0);
-    let feedback = $state({ msg: '', type: '' });
+  let resource = $state(null);
+  let region = $state('');
+  let stunting_rate = $state(0);
+  let feedback = $state({ msg:'', type:'' });
 
-    const country = page.params.country;
-    const year = page.params.year;
+  function showMsg(msg, type){ feedback={msg,type}; setTimeout(()=>feedback={msg:'',type:''},4000); }
 
-    let resource = $state(null);
-    let newRegion = $state('');
-    let newStunting = $state(0);
+  async function getResource() {
+      try {
+          const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`);
+          if(res.ok){
+              resource = await res.json();
+              region = resource.region;
+              stunting_rate = resource.stunting_rate;
+          } else if(res.status===404) showMsg(`No existe dato para ${country} (${year})`, "error");
+      } catch { showMsg("Error de conexión.", "error"); }
+  }
 
-    function showMsg(m, t) {
-        feedback = { msg: m, type: t };
-        setTimeout(() => feedback = { msg: '', type: '' }, 5000);
-    }
+  async function updateResource() {
+      if(stunting_rate<0){ showMsg("Valor negativo no permitido.", "error"); return; }
 
-    async function getResource() {
-        const response = await fetch(`${API}/${encodeURIComponent(country)}/${year}`);
-        responseStatusCode = response.status;
-        if (response.ok) {
-            resource = await response.json();
-            newRegion = resource.region;
-            newStunting = resource.stunting_rate;
-        }
-    }
+      const updated = { country, year: parseInt(year), region, stunting_rate: parseFloat(stunting_rate) };
+      try{
+          const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, {
+              method:'PUT',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify(updated)
+          });
+          if(res.ok){
+              showMsg("¡Actualizado con éxito!", "success");
+              setTimeout(()=>goto('/child-malnutritions'),1000);
+          } else showMsg("Error al actualizar el dato.", "error");
+      } catch { showMsg("Error de conexión.", "error"); }
+  }
 
-    async function updateResource() {
-        const response = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                country: country,
-                year: parseInt(year),
-                region: newRegion,
-                stunting_rate: parseFloat(newStunting)
-            })
-        });
-
-        if (response.ok) {
-            alert("¡Recurso actualizado con éxito!");
-            goto('/child-malnutritions');
-        } else {
-            if (response.status === 400) {
-                showMsg("Los datos introducidos no son válidos. Revisa los campos.", "error");
-            } else if (response.status === 404) {
-                showMsg(`No existe un recurso para ${country} en el año ${year}.`, "error");
-            } else {
-                showMsg("Ha ocurrido un error inesperado al intentar actualizar.", "error");
-            }
-        }
-    }
-
-    onMount(getResource);
+  onMount(getResource);
 </script>
 
 {#if feedback.msg}
-    <div class="alert {feedback.type}" transition:fade>
-        {feedback.msg}
-    </div>
+  <div class="alert {feedback.type}">{feedback.msg}</div>
 {/if}
-
-<h3>Detalles para {country} ({year})</h3>
 
 {#if resource}
-    <div class="form-container">
-        <label>Región: <input type="text" bind:value={newRegion} /></label><br>
-        <label>Stunting Rate: <input type="number" step="any" bind:value={newStunting} /></label><br>
-        <button onclick={updateResource}>Actualizar recurso</button>
-        <button class="secondary" onclick={() => goto('/child-malnutritions')}>Cancelar</button>
-    </div>
-{:else if responseStatusCode === 404}
-    <p>Error: No se encontró ningún dato para <strong>{country}</strong> en el año <strong>{year}</strong>.</p>
-    <button onclick={() => goto('/child-malnutritions')}>Volver al listado</button>
-{:else}
-    <p>Cargando datos del recurso...</p>
-{/if}
+<h2>Editar dato: {country} ({year})</h2>
+<form on:submit|preventDefault={updateResource}>
+  <input placeholder="Región" bind:value={region}/>
+  <input type="number" placeholder="Tasa Stunting %" bind:value={stunting_rate} min="0" step="any"/>
 
-<style>
-    .alert { padding: 15px; margin-bottom: 20px; color: white; border-radius: 5px; text-align: center; }
-    .error { background-color: #dc3545; }
-    .success { background-color: #28a745; }
-    .secondary { background-color: #6c757d; color: white; margin-left: 10px; }
-    .form-container { background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd; }
-    input { margin-bottom: 10px; padding: 5px; }
-</style>
+  <button type="submit">Guardar cambios</button>
+  <button type="button" on:click={()=>goto('/child-malnutritions')}>Cancelar</button>
+</form>
+{:else}
+<p>Cargando datos...</p>
+{/if}

@@ -7,7 +7,7 @@ import protestsRouteV2 from './src/back/routes/protests/protests-v2.js';
 import pandemicsRoute from './src/back/routes/pandemics/pandemics.js';
 import pandemicsRouteV2 from './src/back/routes/pandemics/pandemics-v2.js'
 import childMalnutritions from "./src/back/routes/child-malnutritions/child-malnutritions.js";
-
+import childMalnutritionsV2 from "./src/back/routes/child-malnutritions/child-malnutritions-v2.js";
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
 const BASE_API_URL = '/api/v1';
@@ -34,11 +34,9 @@ app.use(BASE_API_URL, childMalnutritions);
 
 app.use(V2_API_URL, protestsRouteV2);
 app.use(V2_API_URL, deathsRouteV2);
-<<<<<<< HEAD
-app.use(V2_API_URL, childMalnutritions);
-=======
+app.use(V2_API_URL, childMalnutritionsV2);
 app.use(V2_API_URL, pandemicsRouteV2)
->>>>>>> 348596666228ff8ed34b5cfb253a7429e7217f7b
+
 
 /* ROUTE SAMPLE F04 */
 app.get("/samples/rm", (req, res) => {

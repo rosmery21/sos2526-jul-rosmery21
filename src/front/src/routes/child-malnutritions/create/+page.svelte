@@ -1,67 +1,49 @@
 <script>
-    import { goto } from '$app/navigation';
-    import { fade } from 'svelte/transition';
+  import { goto } from '$app/navigation';
+  let API = '/api/v2/child-malnutritions';
 
-    let API = '/api/v1/child-malnutritions';
-    let feedback = $state({ msg: '', type: '' });
+  let country = $state(''), year = $state(''), region = $state('');
+  let stunting_rate = $state(0);
+  let feedback = $state({ msg:'', type:'' });
 
-    let country = $state('');
-    let year = $state('');
-    let region = $state('');
-    let stunting_rate = $state(0);
+  function showMsg(msg, type) { feedback={msg,type}; setTimeout(()=>feedback={msg:'',type:''},4000); }
 
-    function showMsg(m, t) {
-        feedback = { msg: m, type: t };
-        setTimeout(() => feedback = { msg: '', type: '' }, 5000);
-    }
+  async function handleSubmit() {
+      if(!country || !year || stunting_rate < 0 || year < 0) {
+          showMsg("Campos obligatorios o valores negativos no permitidos.", "error");
+          return;
+      }
 
-    async function handleAdd() {
-        const response = await fetch(API, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                country,
-                year: parseInt(year),
-                region,
-                stunting_rate: parseFloat(stunting_rate)
-            })
-        });
+      const newData = { country, year: parseInt(year), region, stunting_rate: parseFloat(stunting_rate) };
+      try {
+          const res = await fetch(API, {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify(newData)
+          });
 
-        if (response.ok) {
-            alert(`¡El recurso de ${country} se ha creado correctamente!`);
-            goto('/child-malnutritions');
-        } else {
-            if (response.status === 409) {
-                showMsg(`Error: Ya existe un registro para ${country} en el año ${year}.`, "error");
-            } else if (response.status === 400) {
-                showMsg("Error: Asegúrate de que todos los campos estén rellenos correctamente.", "error");
-            } else {
-                showMsg("No se ha podido guardar el dato. Inténtalo de nuevo más tarde.", "error");
-            }
-        }
-    }
+          if(res.status === 201) {
+              showMsg("Dato creado correctamente.", "success");
+              setTimeout(()=>goto('/child-malnutritions'),1000);
+          } else if(res.status===409) showMsg(`Ya existe un dato para ${country} (${year}).`, "error");
+          else showMsg("Error al guardar el dato.", "error");
+      } catch {
+          showMsg("Error de conexión.", "error");
+      }
+  }
 </script>
 
 {#if feedback.msg}
-    <div class="alert {feedback.type}" transition:fade>
-        {feedback.msg}
-    </div>
+  <div class="alert {feedback.type}">{feedback.msg}</div>
 {/if}
 
-<h2>Añadir Nuevo Dato</h2>
-<form novalidate onsubmit={(e) => { e.preventDefault(); handleAdd(); }}> class="form-container">
-    <input bind:value={country} placeholder="País (ej. Spain)" required /><br>
-    <input type="number" bind:value={year} placeholder="Año (ej. 2024)" required /><br>
-    <input bind:value={region} placeholder="Región" required /><br>
-    <input type="number" step="any" bind:value={stunting_rate} placeholder="Tasa de retraso (%)" /><br>
-    <button type="submit" style="background-color: #28a745; color: white;">Guardar Recurso</button>
-    <button type="button" class="secondary" onclick={() => goto('/child-malnutritions')}>Volver</button>
-</form>
+<h2>Añadir nuevo dato</h2>
+<form on:submit|preventDefault={handleSubmit}>
+  <input placeholder="País" bind:value={country} required/>
+  <input type="number" placeholder="Año" bind:value={year} min="0" required/>
+  <input placeholder="Región" bind:value={region}/>
+  <input type="number" placeholder="Tasa Stunting %" bind:value={stunting_rate} min="0" step="any"/>
 
-<style>
-    .alert { padding: 15px; margin-bottom: 20px; color: white; border-radius: 5px; text-align: center; }
-    .error { background-color: #dc3545; }
-    .form-container { background: #f4f4f4; padding: 20px; border-radius: 8px; }
-    input { margin-bottom: 10px; width: 100%; max-width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-    .secondary { background-color: #6c757d; color: white; margin-left: 10px; }
-</style>
+  <button type="submit">Guardar</button>
+  <button type="button" on:click={()=>goto('/child-malnutritions')}>Cancelar</button>
+</form>
