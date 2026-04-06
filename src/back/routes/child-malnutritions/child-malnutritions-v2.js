@@ -1,166 +1,187 @@
 import express from "express";
-import NeDB from "nedb";
-import { readFile } from "../../utils/readFile.js"; // if you have a CSV with initial data
+import fs from "fs";
 
 const router = express.Router();
-const db = new NeDB({ filename: "./data/storage/child-malnutritions-v2.db", autoload: true });
 
-const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/your-doc-id"; // replace with your documentation URL
-router.get("/child-malnutritions/docs", (req, res) => {
-  res.redirect(DOCUMENTATION_URL);
-});
+let childMalnutritions = [];
 
-// Required fields for each record
-const requiredFields = [
-  "country", "year", "stunting_rate", "wasting_rate", "underweight_rate", "population"
-];
-
-// Helper function for server errors
-const handleServerError = (err, res) => {
-  console.error(err);
-  res.status(500).json({ error: "Internal Server Error" });
-};
-
-// Remove _id field from DB documents before sending response
-const removeIdField = (data) => {
-  return data.map(({ _id, ...rest }) => rest);
-};
-
-/* ===========================================
-   COLLECTION METHODS
-=========================================== */
-
-// Load initial data from CSV if DB is empty
-router.get("/child-malnutritions/loadInitialData", (req, res) => {
-  db.find({}, (err, data) => {
-    if (err) return handleServerError(err, res);
-
-    if (data.length === 0) {
-      const initialData = readFile("child-malnutritions.csv"); // CSV with initial data
-      db.insert(initialData, (err, newDocs) => {
-        if (err) return handleServerError(err, res);
-        res.status(201).json("Data loaded successfully");
-      });
-    } else {
-      res.status(200).json("Data already loaded");
-    }
-  });
-});
-
-// GET all records with optional filters, offset and limit
+// ===== GET ALL =====
 router.get("/child-malnutritions", (req, res) => {
-  const query = {};
-  const offset = parseInt(req.query.offset) || 0;
-  const limit = parseInt(req.query.limit) || 0;
+    let { limit, offset, country, region, from, to } = req.query;
 
-  const country = req.query.country;
-  const year = req.query.year;
-  if (country) query.country = new RegExp(country, "i");
-  if (year) query.year = parseInt(year);
+    let filtered = [...childMalnutritions];
 
-  db.find(query).skip(offset).limit(limit).exec((err, data) => {
-    if (err) return handleServerError(err, res);
-    if (data.length === 0) return res.status(404).send("Data not found");
-    res.status(200).json(removeIdField(data));
-  });
+    if (country) filtered = filtered.filter(d => d.country.toLowerCase().includes(country.toLowerCase()));
+    if (region) filtered = filtered.filter(d => d.region.toLowerCase().includes(region.toLowerCase()));
+    if (from) filtered = filtered.filter(d => d.year >= parseInt(from));
+    if (to) filtered = filtered.filter(d => d.year <= parseInt(to));
+
+    const L = Math.min(parseInt(limit) || 10, 10);
+    const O = parseInt(offset) || 0;
+
+    const result = filtered.slice(O, O + L);
+
+    if (result.length === 0) return res.status(404).send("Data not found");
+
+    res.status(200).json(result);
 });
 
-// POST a new record
-router.post("/child-malnutritions", (req, res) => {
-  const newData = req.body;
 
-  // Check for required fields
-  const missingFields = requiredFields.filter(f => !(f in newData));
-  if (missingFields.length > 0) {
-    return res.status(400).json({ error: "Missing required fields", missing: missingFields });
-  }
+// ===== LOAD INITIAL DATA =====
+router.get("/child-malnutritions/loadInitialData", (req, res) => {
+    if (childMalnutritions.length > 0)
+        return res.status(200).send("Data already loaded");
 
-  // Check for extra fields
-  if (Object.keys(newData).length !== requiredFields.length) {
-    return res.status(400).json({ error: "Extra fields in request body", expected: requiredFields, received: Object.keys(newData) });
-  }
+    try {
+        const content = fs.readFileSync("./database/child-malnutritions.csv", "utf-8");
+        const lines = content.split("\n").slice(1);
 
-  // Check uniqueness by country + year
-  db.findOne({ country: newData.country, year: newData.year }, (err, doc) => {
-    if (err) return handleServerError(err, res);
-    if (doc) return res.status(409).json({ error: "Record already exists" });
+        lines.forEach(line => {
+            const col = line.split(",");
+            if (col.length >= 7) {
+                childMalnutritions.push({
+                    year: parseInt(col[0]),
+                    country: col[1].trim(),
+                    region: col[2].trim(),
+                    stunting_rate: parseFloat(col[3]) || 0,
+                    wasting_rate: parseFloat(col[4]) || 0,
+                    overweight_rate: parseFloat(col[5]) || 0,
+                    underweight_rate: parseFloat(col[6]) || 0
+                });
+            }
+        });
 
-    db.insert(newData, (err, newDoc) => {
-      if (err) return handleServerError(err, res);
-      res.status(201).json(removeIdField([newDoc])[0]);
-    });
-  });
+        return res.status(200).send("Data loaded");
+    } catch (e) {
+        childMalnutritions = [
+            { year: 2015, country: "Peru", region: "South America", stunting_rate: 13.2, wasting_rate: 1.8, overweight_rate: 7.5, underweight_rate: 4.1 },
+            { year: 2016, country: "Peru", region: "South America", stunting_rate: 12.9, wasting_rate: 1.7, overweight_rate: 7.8, underweight_rate: 3.9 },
+            { year: 2017, country: "Peru", region: "South America", stunting_rate: 12.3, wasting_rate: 1.6, overweight_rate: 8.0, underweight_rate: 3.7 },
+            { year: 2018, country: "Bolivia", region: "South America", stunting_rate: 16.5, wasting_rate: 2.2, overweight_rate: 6.1, underweight_rate: 5.0 },
+            { year: 2019, country: "Bolivia", region: "South America", stunting_rate: 16.1, wasting_rate: 2.1, overweight_rate: 6.3, underweight_rate: 4.8 },
+            { year: 2020, country: "Bolivia", region: "South America", stunting_rate: 15.8, wasting_rate: 2.0, overweight_rate: 6.5, underweight_rate: 4.6 }
+        ];
+        return res.status(200).send("Sample data loaded");
+    }
 });
 
-// PUT is not allowed on the collection
-router.put("/child-malnutritions", (req, res) => {
-  res.status(405).send("Method not allowed");
-});
 
-// DELETE all records
-router.delete("/child-malnutritions", (req, res) => {
-  db.remove({}, { multi: true }, (err, _) => {
-    if (err) return handleServerError(err, res);
-    res.status(204).send();
-  });
-});
-
-/* ===========================================
-   RESOURCE METHODS (single record)
-=========================================== */
-
-// GET a specific record by country + year
+// ===== GET ONE =====
 router.get("/child-malnutritions/:country/:year", (req, res) => {
-  const { country, year } = req.params;
-  const numericYear = parseInt(year);
+    const country = req.params.country.toLowerCase();
+    const year = parseInt(req.params.year);
 
-  if (isNaN(numericYear)) return res.status(400).json({ error: "Year must be a number" });
+    const data = childMalnutritions.find(d =>
+        d.country.toLowerCase() === country && d.year === year
+    );
 
-  db.findOne({ country: country, year: numericYear }, (err, doc) => {
-    if (err) return handleServerError(err, res);
-    if (!doc) return res.status(404).json({ error: "Data not found" });
-    res.status(200).json(removeIdField([doc])[0]);
-  });
+    if (!data) return res.status(404).json({ error: `No existe dato para ${req.params.country} (${req.params.year})` });
+
+    res.status(200).json(data);
 });
 
-// POST is not allowed on a single record
-router.post("/child-malnutritions/:country/:year", (req, res) => {
-  res.status(405).send("Method not allowed");
+
+// ===== POST =====
+router.post("/child-malnutritions", (req, res) => {
+    const {
+        year, country, region,
+        stunting_rate = 0,
+        wasting_rate = 0,
+        overweight_rate = 0,
+        underweight_rate = 0
+    } = req.body;
+
+    if (!year || !country || !region)
+        return res.status(400).send("Faltan campos obligatorios: year, country, region");
+
+    if (parseInt(year) < 0)
+        return res.status(400).send("El año no puede ser negativo");
+
+    if ([stunting_rate, wasting_rate, overweight_rate, underweight_rate].some(v => parseFloat(v) < 0))
+        return res.status(400).send("No se permiten valores negativos");
+
+    const exists = childMalnutritions.find(d =>
+        d.country.toLowerCase() === country.toLowerCase() &&
+        d.year === parseInt(year)
+    );
+
+    if (exists) return res.status(409).send(`Ya existe un dato para ${country} (${year})`);
+
+    childMalnutritions.push({
+        year: parseInt(year),
+        country,
+        region,
+        stunting_rate: parseFloat(stunting_rate) || 0,
+        wasting_rate: parseFloat(wasting_rate) || 0,
+        overweight_rate: parseFloat(overweight_rate) || 0,
+        underweight_rate: parseFloat(underweight_rate) || 0
+    });
+
+    res.status(201).send("Created");
 });
 
-// PUT to update a specific record
-router.put("/child-malnutritions/:country/:year", (req, res) => {
-  const { country, year } = req.params;
-  const numericYear = parseInt(year);
 
-  if (isNaN(numericYear)) return res.status(400).json({ error: "Year must be a number" });
-  if (req.body.country !== country || req.body.year !== numericYear) return res.status(400).json({ error: "Country/Year in body must match URL" });
-
-  // Check required fields
-  const missingFields = requiredFields.filter(f => !(f in req.body));
-  if (missingFields.length > 0) return res.status(400).json({ error: "Missing required fields", missing: missingFields });
-
-  if (Object.keys(req.body).length !== requiredFields.length) return res.status(400).json({ error: "Extra fields in request body" });
-
-  db.update({ country: country, year: numericYear }, req.body, {}, (err, numReplaced) => {
-    if (err) return handleServerError(err, res);
-    if (numReplaced === 0) return res.status(404).json({ error: "Data not found" });
-    res.status(200).json(req.body);
-  });
+// ===== DELETE ALL =====
+router.delete("/child-malnutritions", (req, res) => {
+    childMalnutritions = [];
+    res.status(200).send("Deleted all");
 });
 
-// DELETE a specific record
+
+// ===== DELETE ONE =====
 router.delete("/child-malnutritions/:country/:year", (req, res) => {
-  const { country, year } = req.params;
-  const numericYear = parseInt(year);
+    const country = req.params.country.toLowerCase();
+    const year = parseInt(req.params.year);
 
-  if (isNaN(numericYear)) return res.status(400).json({ error: "Year must be a number" });
+    const index = childMalnutritions.findIndex(d =>
+        d.country.toLowerCase() === country && d.year === year
+    );
 
-  db.remove({ country: country, year: numericYear }, {}, (err, numRemoved) => {
-    if (err) return handleServerError(err, res);
-    if (numRemoved === 0) return res.status(404).json({ error: "Data not found" });
+    if (index !== -1) childMalnutritions.splice(index, 1);
+
     res.status(204).send();
-  });
+});
+
+
+// ===== PUT =====
+router.put("/child-malnutritions/:country/:year", (req, res) => {
+    const country = req.params.country.toLowerCase();
+    const year = parseInt(req.params.year);
+
+    const {
+        year: y, country: c, region,
+        stunting_rate = 0,
+        wasting_rate = 0,
+        overweight_rate = 0,
+        underweight_rate = 0
+    } = req.body;
+
+    if (!y || !c || !region)
+        return res.status(400).send("Faltan campos obligatorios: year, country, region");
+
+    if ([stunting_rate, wasting_rate, overweight_rate, underweight_rate].some(v => parseFloat(v) < 0))
+        return res.status(400).send("No se permiten valores negativos");
+
+    if (c.toLowerCase() !== country || parseInt(y) !== year)
+        return res.status(400).send("El país y año no coinciden con la URL");
+
+    const index = childMalnutritions.findIndex(d =>
+        d.country.toLowerCase() === country && d.year === year
+    );
+
+    if (index === -1) return res.status(404).send(`No existe dato para ${req.params.country} (${req.params.year})`);
+
+    childMalnutritions[index] = {
+        year: parseInt(y),
+        country: c,
+        region,
+        stunting_rate: parseFloat(stunting_rate) || 0,
+        wasting_rate: parseFloat(wasting_rate) || 0,
+        overweight_rate: parseFloat(overweight_rate) || 0,
+        underweight_rate: parseFloat(underweight_rate) || 0
+    };
+
+    res.status(200).send("Updated");
 });
 
 export default router;
