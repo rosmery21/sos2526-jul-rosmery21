@@ -60,7 +60,8 @@
       } else if (res.status === 400) {
         errorMessage = 'Error: Faltan campos o el formato es incorrecto.';
       } else {
-        errorMessage = 'Error inesperado: ' + res.status;
+        errorMessage = 'Error inesperado ';
+        console.log(res.status);
       }
     } catch (error) {
       console.error('Error al añadir:', error);

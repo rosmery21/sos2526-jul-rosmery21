@@ -245,7 +245,7 @@
     <button onclick={updateResource}>Actualizar recurso</button>
 
 {:else if responseStatusCode === 404}
-    <p>No se encontró el recurso con id: {id}. Código de respuesta: {responseStatusCode}</p>
+    <p>No se encontró el recurso con id: {id}.</p>
 {:else}
     <p>Cargando detalles para la protesta #{id}...</p>
 {/if}

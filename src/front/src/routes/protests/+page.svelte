@@ -3,9 +3,9 @@
 	import { goto } from '$app/navigation';
 
 	const ERROR_MESSAGES = {
-		500: 'Error del servidor. Por favor, inténtalo de nuevo más tarde. (500)',
-		404: 'No se han encontrado datos para los campos especificados. (404)',
-		400: 'Solicitud incorrecta. Por favor, revisa los filtros establecidos. (400)'
+		500: 'Error del servidor. Por favor, inténtalo de nuevo más tarde.',
+		404: 'No se han encontrado datos para los campos especificados.',
+		400: 'Solicitud incorrecta. Por favor, revisa los filtros establecidos.'
 	};
 
 	const camposES = [
@@ -41,7 +41,8 @@
 	});
 
 	function cargarMsgError(codigo) {
-		error = ERROR_MESSAGES[codigo] || `Error: ${codigo}`;
+		error = ERROR_MESSAGES[codigo] || `Error inesperador al ejecutar la acción`;
+		console.log(codigo);
 		setTimeout(() => { error = ''; }, 3000);
 	}
 
