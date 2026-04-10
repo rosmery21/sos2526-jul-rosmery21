@@ -196,6 +196,7 @@
 	<div>
 		<button onclick={() => { page = 0; cargarDatos(); }}>Recargar datos</button>
 		<button onclick={limpiarFiltros}>Limpiar filtros</button>
+		<button onclick={goto('/protests/charts')}>Ir al gráfico</button>
 	</div>
 </section>
 
