@@ -1,13 +1,21 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+
 	import 'leaflet/dist/leaflet.css';
 
 	import { countryCoords } from '$lib/utils/coordinates.js';
+	import { dataIdNames } from '$lib/utils/deaths-by-risk-factors/dataNames.js';
 
 	let mapElement;
 	let map;
 	let L;
+
+	let dataId = page.params.data;
+	let dataName = $derived(dataIdNames.find(o => o.id === dataId)?.label);
+
 
 	onMount(async () => {
 		if (!browser) return;
@@ -34,7 +42,7 @@
 			const latestDataByCountry = stats.reduce((acc, current) => {
 				const country = current.entity;
 
-				if (!acc[country] || current.year > acc[country].year) {
+				if ((!acc[country] || current.year > acc[country].year) && current[dataId] !== 0) {
 					acc[country] = current;
 				}
 				return acc;
@@ -45,10 +53,10 @@
 			filteredData.forEach(item => {
 				const coords = countryCoords[item.entity];
 
-				if (!coords || !item.air_pollution || item.air_pollution <= 0) return;
+				if (!coords || !item[dataId] || item[dataId] <= 0) return;
 
 				// Escala logarítmica más controlada
-				const radius = Math.max(3, Math.log10(item.air_pollution) * 4);
+				const radius = Math.max(3, Math.log10(item[dataId]) * 4);
 
 				L.circleMarker(coords, {
 					radius,
@@ -61,7 +69,7 @@
 				.bindPopup(`
 					<strong>${item.entity}</strong><br>
 					Año: ${item.year}<br>
-					Muertes (Aire): ${item.air_pollution.toLocaleString()}
+					Muertes: ${item[dataId].toLocaleString()}
 				`);
 			});
 
@@ -77,7 +85,7 @@
 
 <main>
 	<div class="header">
-		<h2>Mapa Global: Muertes por Contaminación del Aire</h2>
+		<h2>Mapa Global: {dataName}</h2>
 		<p>Visualización de datos de muertes por factores de riesgo geolocalizados</p>
 	</div>
 
