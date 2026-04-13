@@ -47,7 +47,6 @@ app.get("/samples/rm", (req, res) => {
 
 });
 
-//com
 
 app.use(svelteHandler);
 
