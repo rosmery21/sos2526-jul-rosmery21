@@ -31,8 +31,16 @@
 			const data = await res.json();
 			const stats = Array.isArray(data) ? data : [data];
 
-			const latestYear = Math.max(...stats.map(d => d.year));
-			const filteredData = stats.filter(d => d.year === latestYear);
+			const latestDataByCountry = stats.reduce((acc, current) => {
+				const country = current.entity;
+
+				if (!acc[country] || current.year > acc[country].year) {
+					acc[country] = current;
+				}
+				return acc;
+			}, {});
+
+			const filteredData = Object.values(latestDataByCountry);
 
 			filteredData.forEach(item => {
 				const coords = countryCoords[item.entity];
@@ -69,9 +77,13 @@
 
 <main>
 	<div class="header">
-		<h1>Mapa Global: Muertes por Contaminación del Aire</h1>
-		<p>Visualización de datos geolocalizados desde la API</p>
+		<h2>Mapa Global: Muertes por Contaminación del Aire</h2>
+		<p>Visualización de datos de muertes por factores de riesgo geolocalizados</p>
 	</div>
+
+	<button onclick={() => goto('/analytics/deaths-by-risk-factors')}>
+		Volver
+	</button>
 
 	<div bind:this={mapElement} id="map"></div>
 </main>

@@ -21,6 +21,11 @@
 			goto(`/analytics/deaths-by-risk-factors/by-country/${selectedCountry}`);
 		}
 	}
+
+	function goToMapChart(){
+		goto('/analytics/deaths-by-risk-factors/map');
+	}
+	
 </script>
 
 <main>
@@ -37,6 +42,14 @@
 
 			<button class="primary" onclick={goToCountryChart} disabled={!selectedCountry}>
 				Ver Gráfica de {selectedCountry}
+			</button>
+		</div>
+		<div class="card">
+			<h3>Mapa de muertes por contaminación del aire</h3>
+			<p>Mapa global representando con burbujas las muertes causadas por contaminacióndel aire por país en el último año</p>
+
+			<button class="primary" onclick={goToMapChart}>
+				Ver Mapa
 			</button>
 		</div>
 	</div>

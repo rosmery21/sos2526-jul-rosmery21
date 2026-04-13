@@ -59,13 +59,13 @@
 	onMount(loadCountryData);
 </script>
 
-<section>
+<section>	
+	<h2>Datos históricos de {countryName}</h2>
+	
 	<button onclick={() => goto('/analytics/deaths-by-risk-factors')}>
 		Volver
 	</button>
 	
-	<h2>Datos históricos de {countryName}</h2>
-
 	{#if isLoading}
 		<p>Cargando datos...</p>
 	{:else if countryData.length === 0}
