@@ -283,7 +283,7 @@
 			<button onclick={() => deleteData()}>Eliminar la colección</button>
 		</div>
 		<div>
-			<button onclick={() => goto('/deaths-by-risk-factors/charts')}>Gráficos</button>
+			<button onclick={() => goto('/analytics/deaths-by-risk-factors')}>Gráficos</button>
 		</div>
 	{/if}
 </main>

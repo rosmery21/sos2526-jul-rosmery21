@@ -18,7 +18,7 @@
 	function goToCountryChart() {
 		if (selectedCountry) {
 			// Navegamos a una ruta dinámica
-			goto(`/deaths-by-risk-factors/charts/by-country/${selectedCountry}`);
+			goto(`/analytics/deaths-by-risk-factors/by-country/${selectedCountry}`);
 		}
 	}
 </script>

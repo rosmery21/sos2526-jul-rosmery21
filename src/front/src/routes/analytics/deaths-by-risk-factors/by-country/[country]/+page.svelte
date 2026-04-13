@@ -1,13 +1,13 @@
 <script>
 	// @ts-nocheck
 	import Highcharts from 'highcharts';
-	import { onMount, tick } from 'svelte'; // Importamos 'tick'
+	import { onMount, tick } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 
 	const countryName = page.params.country; 
 	let countryData = $state([]);
-	let isLoading = $state(true); // Estado para controlar o carregamento
+	let isLoading = $state(true)
 
 	async function loadCountryData() {
 		try {
@@ -18,10 +18,9 @@
 					.filter((d) => d.entity === countryName)
 					.sort((a, b) => a.year - b.year);
 				
-				isLoading = false; // Dados carregados
+				isLoading = false;
 
 				if (countryData.length > 0) {
-					// Esperamos que o Svelte atualize o DOM (crie o div do gráfico)
 					await tick(); 
 					renderChart();
 				}
@@ -33,7 +32,6 @@
 	}
 
 	function renderChart() {
-		// Verificação de segurança: o elemento existe?
 		const container = document.getElementById('chart-container');
 		if (!container) {
 			console.warn("Contenedor de gráfico no encontrado aún.");
@@ -42,7 +40,7 @@
 
 		Highcharts.chart('chart-container', {
 			chart: { type: 'area' },
-			title: { text: `Análisis de Riesgos: ${countryName}` },
+			title: { text: "Análisis de Muertes por Factores de Riesgo" },
 			xAxis: {
 				categories: countryData.map((d) => d.year),
 				title: { text: 'Año' }
@@ -62,8 +60,8 @@
 </script>
 
 <section>
-	<button onclick={() => goto('/deaths-by-risk-factors/chart')}>
-		Volver al menú
+	<button onclick={() => goto('/analytics/deaths-by-risk-factors')}>
+		Volver
 	</button>
 	
 	<h2>Datos históricos de {countryName}</h2>
