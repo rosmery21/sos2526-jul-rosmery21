@@ -275,8 +275,7 @@
 		<div>
 			<button onclick={() => (page = Math.max(0, page - 1))}>-</button>
 			<span>Página: {page}</span>
-			<button onclick={() => (page = page + 1)} disabled={deaths_by_risk_factors.length < 10}>+</button
-			>
+			<button onclick={() => (page = page + 1)} disabled={deaths_by_risk_factors.length < 10}>+</button>
 		</div>
 		<div>
 			<button onclick={() => deleteData()}>Eliminar la colección</button>
