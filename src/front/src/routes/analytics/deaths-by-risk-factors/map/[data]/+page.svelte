@@ -25,7 +25,7 @@
 		if (!map) {
 			map = L.map(mapElement, {
 				worldCopyJump: true
-			}).setView([20, 0], 2);
+			}).setView([20, 0], 1.5);
 
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				attribution: '&copy; OpenStreetMap'
