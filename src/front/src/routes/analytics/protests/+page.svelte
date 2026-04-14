@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
-	const API = 'http://localhost:3000/api/v2/protests';
+	const API = '/api/v2/protests';
 
 	let countries = $state([]);
 	let selectedCountry = $state('');

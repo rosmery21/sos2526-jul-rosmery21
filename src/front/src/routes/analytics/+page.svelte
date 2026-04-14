@@ -4,10 +4,10 @@
 	import { onMount } from 'svelte';
 
 	const APIs = [
-		{ name: 'Protests', url: 'http://localhost:3000/api/v2/protests' },
-		{ name: 'Pandemics', url: 'http://localhost:3000/api/v2/pandemics' },
-		{ name: 'Deaths by Risk Factors', url: 'http://localhost:3000/api/v2/deaths-by-risk-factors' },
-		{ name: 'Child Malnutritions', url: 'http://localhost:3000/api/v1/child-malnutritions' }
+		{ name: 'Protests', url: '/api/v2/protests' },
+		{ name: 'Pandemics', url: '/api/v2/pandemics' },
+		{ name: 'Deaths by Risk Factors', url: '/api/v2/deaths-by-risk-factors' },
+		{ name: 'Child Malnutritions', url: '/api/v1/child-malnutritions' }
 	];
 
 	let selectedYear = $state(2020);
