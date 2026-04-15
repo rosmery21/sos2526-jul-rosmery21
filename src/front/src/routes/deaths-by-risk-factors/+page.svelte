@@ -1,4 +1,6 @@
 <script>
+	import { goto } from "$app/navigation";
+
 	// @ts-nocheck
 
 	/* eslint-disable svelte/no-navigation-without-resolve */
@@ -16,7 +18,7 @@
 		year: '',
 		from: '',
 		to: '',
-		blood_pressure: '',
+		high_systolic_blood_pressure: '',
 		air_pollution: '',
 		child_wasting: '',
 		household_air_pollution_from_solid_fuels: '',
@@ -120,7 +122,7 @@
 			year: '',
 			from: '',
 			to: '',
-			blood_pressure: '',
+			high_systolic_blood_pressure: '',
 			air_pollution: '',
 			child_wasting: '',
 			household_air_pollution_from_solid_fuels: '',
@@ -272,13 +274,14 @@
 		</table>
 		<div>
 			<button onclick={() => (page = Math.max(0, page - 1))}>-</button>
-			<p>Página: {page}</p>
-			<button onclick={() => (page = page + 1)} disabled={deaths_by_risk_factors.length < 10}
-				>+</button
-			>
+			<span>Página: {page}</span>
+			<button onclick={() => (page = page + 1)} disabled={deaths_by_risk_factors.length < 10}>+</button>
 		</div>
 		<div>
 			<button onclick={() => deleteData()}>Eliminar la colección</button>
+		</div>
+		<div>
+			<button onclick={() => goto('/analytics/deaths-by-risk-factors')}>Gráficos</button>
 		</div>
 	{/if}
 </main>

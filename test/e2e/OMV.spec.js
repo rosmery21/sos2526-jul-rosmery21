@@ -110,7 +110,7 @@ test.describe('Pruebas E2E para el recurso Protests', () => {
   });
 
 
-  test('5. Editar un recurso en vista separada', async ({ page }) => {
+  test('4. Editar un recurso en vista separada', async ({ page }) => {
     await page.goto(LIST_URL);
 
     // Pulsamos el boton de editar el primer recurso que haya
@@ -143,7 +143,7 @@ test.describe('Pruebas E2E para el recurso Protests', () => {
     await expect(tabla).toContainText(nuevoAño);
   });
 
-  test('6. Filtrar por pais', async ({ page }) => {
+  test('5. Filtrar por pais', async ({ page }) => {
     await page.goto(LIST_URL);
 
     // Rellenamos el filtro con Spain
@@ -164,7 +164,7 @@ test.describe('Pruebas E2E para el recurso Protests', () => {
     }
   });
 
-  test('7. Filtrar por rango de años', async ({ page }) => {
+  test('6. Filtrar por rango de años', async ({ page }) => {
     await page.goto(LIST_URL);
 
     // Marcamos el filtro de rango de años

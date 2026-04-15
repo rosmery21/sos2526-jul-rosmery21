@@ -134,7 +134,7 @@
 <h3>Detalles para protesta #{id}</h3>
 
 {#if resource}
-    <form>
+    <form onsubmit={(e) => { e.preventDefault(); updateResource(); }}>
         <div>
             <label>
                 País
@@ -239,13 +239,14 @@
                 <input type="number" min="0" max="1" step="0.000000000000001" bind:value={newPredicted_prob} />
             </label>
         </div>
+
+        <button onclick={deleteResource}>Eliminar recurso</button>
+        <button type="submit">Actualizar recurso</button>
     </form>
 
-    <button onclick={deleteResource}>Eliminar recurso</button>
-    <button onclick={updateResource}>Actualizar recurso</button>
 
 {:else if responseStatusCode === 404}
-    <p>No se encontró el recurso con id: {id}. Código de respuesta: {responseStatusCode}</p>
+    <p>No se encontró el recurso con id: {id}.</p>
 {:else}
     <p>Cargando detalles para la protesta #{id}...</p>
 {/if}

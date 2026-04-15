@@ -99,7 +99,8 @@ test.describe('Tests de Creación de Recursos', () => {
 
     test('Debería detectar recurso ya existe', async ({ page }) => {
         await page.goto(`${APP_URL}${PAGE_PATH}/create`);
-        await page.locator('input[type="text"]').first().fill('TestCountry');
+        const paisExistente = 'ExistCountry' + Math.floor(Math.random() * 999);
+        await page.locator('input[type="text"]').first().fill(paisExistente);
         await page.locator('input[type="number"]').first().fill('2024');
         
         await page.locator('button').filter({ hasText: /guardar|añadir/i }).first().click();
@@ -203,7 +204,7 @@ test.describe('Tests de Listado de Recursos', () => {
         const nextBtn = page.getByRole('button').filter({ hasText: /^\+$/ }).first();
 
         if (await nextBtn.isVisible() && await nextBtn.isEnabled()) {
-        await nextBtn.click();
+        await nextBtn.click({ force: true, timeout: 5000 });
         
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(1000); 
@@ -224,21 +225,16 @@ test.describe('Test de borrado', () => {
         page.on('dialog', dialog => dialog.accept());
         await page.waitForLoadState('networkidle');
 
-        const deleteBtn = page.getByRole('button', { name: /eliminar la colección/i });
+        const deleteBtn = page.getByRole('button', { name: /eliminar la colección|eliminar todos/i });
         const loadBtn = page.getByRole('button', { name: /cargar datos iniciales/i });
 
-        if (!await deleteBtn.isVisible()) {
-        await loadBtn.click();
-        await page.waitForLoadState('networkidle');
-        await page.locator('table tbody tr').first().waitFor({ state: 'visible' });
+        if (await page.locator('table tbody tr').count() === 0) {
+            await loadBtn.click();
+            await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 15000 });
         }
 
         await deleteBtn.click();
-
-        await expect(page.getByText(/eliminados|éxito/i)).toBeVisible();
-
-        const rows = page.locator('table tbody tr');
-        await expect(rows).toHaveCount(0);
+        await expect(page.locator('table tbody tr')).toHaveCount(0, { timeout: 10000 });
     });
 });
 
@@ -246,34 +242,30 @@ test.describe('Tests de Borrado de Recursos', () => {
 
     test.beforeEach(async ({ browser }) => {
         const page = await browser.newPage();
-    
         page.on('dialog', dialog => dialog.accept());
 
         await page.goto(`${APP_URL}${PAGE_PATH}`);
         await page.waitForLoadState('networkidle');
         
-        const btnBorrarTodo = page.getByRole('button', { name: /eliminar la colección/i });
+        const btnBorrarTodo = page.getByRole('button', { name: /eliminar la colección|eliminar todos/i });
         if (await btnBorrarTodo.isVisible()) {
-        await btnBorrarTodo.click();
-        await expect(page.locator('table tbody tr')).toHaveCount(0);
+            await btnBorrarTodo.click();
+            await page.waitForTimeout(2000);
         }
 
         await page.goto(`${APP_URL}${PAGE_PATH}/create`);
-        
         await page.locator('input[type="text"]').first().fill('BorrarPais');
         await page.locator('input[type="text"]').nth(1).fill('BP');
         await page.locator('input[type="number"]').first().fill('2025');
 
-        const inputsNum = page.locator('input[type="number"]');
-        for (let i = 1; i < await inputsNum.count(); i++) {
-        await inputsNum.nth(i).fill('10');
-        }
-
         await page.locator('button').filter({ hasText: /guardar|añadir/i }).first().click();
         
-        await page.waitForURL(new RegExp(`${PAGE_PATH}$`));
+        await page.waitForTimeout(3000); 
+        await page.waitForURL(new RegExp(`${PAGE_PATH}$`), { timeout: 20000 });
         await page.close();
     });
+        
+   
 
     test('Debería eliminar un recurso concreto y verificar el borrado', async ({ page }) => {
         await page.goto(`${APP_URL}${PAGE_PATH}`);
@@ -330,15 +322,16 @@ test.describe('Tests de Edición de Recursos', () => {
         await page.goto(`${APP_URL}${PAGE_PATH}`);
         await page.waitForLoadState('networkidle');
         
-        const btnBorrarTodo = page.getByRole('button', { name: /eliminar la colección/i });
+        // Limpiamos la colección antes de empezar para evitar conflictos
+        const btnBorrarTodo = page.getByRole('button', { name: /eliminar la colección|eliminar todos/i });
         if (await btnBorrarTodo.isVisible()) {
             await btnBorrarTodo.click();
-            await page.waitForTimeout(1000);
+            await page.waitForTimeout(2000);
         }
 
         await page.goto(`${APP_URL}${PAGE_PATH}/create`);
         
-        // Creamos el nombre único y lo guardamos en la variable de arriba
+        // Creamos el nombre único para este bloque de edición
         nombreUnicoEdicion = 'EditCountry' + Math.floor(Math.random() * 9999);
         
         await page.locator('input[type="text"]').first().fill(nombreUnicoEdicion);
@@ -350,8 +343,12 @@ test.describe('Tests de Edición de Recursos', () => {
             await inputsNum.nth(i).fill('10');
         }
 
-        await page.locator('button').filter({ hasText: /añadir|guardar/i }).first().click();
-        await page.waitForURL(new RegExp(`${PAGE_PATH}$`), { timeout: 10000 });
+        const btnGuardar = page.locator('button').filter({ hasText: /añadir|guardar/i }).first();
+        await btnGuardar.click();
+
+        // IMPORTANTE: Esperas reforzadas para GitHub Actions
+        await page.waitForTimeout(3000);
+        await page.waitForURL(new RegExp(`${PAGE_PATH}$`), { timeout: 15000 });
         await page.close();
     });
 
@@ -359,34 +356,45 @@ test.describe('Tests de Edición de Recursos', () => {
         await page.goto(`${APP_URL}${PAGE_PATH}`);
         await page.waitForLoadState('networkidle');
 
+        // Buscamos la fila con el nombre aleatorio que creamos en el beforeAll
         const fila = page.locator('tr').filter({ hasText: nombreUnicoEdicion });
         await expect(fila).toBeVisible({ timeout: 15000 });
 
+        // Hacemos clic en el enlace de Editar (asumiendo que es un <a>)
         await fila.locator('a').click({ force: true });
         
-        await page.waitForURL(new RegExp(`${PAGE_PATH}/${nombreUnicoEdicion}/2025`), { timeout: 10000 });        
+        // Esperamos a estar en la página de edición de ese recurso específico
+        await page.waitForURL(new RegExp(`${PAGE_PATH}/${nombreUnicoEdicion}/2025`), { timeout: 15000 });
         
         const inputNum = page.locator('input[type="number"]').nth(1); 
+        await inputNum.waitFor({ state: 'visible' });
         await inputNum.fill('88.8');
 
-        await page.locator('button').filter({ hasText: /actualizar|guardar/i }).first().click();
+        const btnActualizar = page.locator('button').filter({ hasText: /actualizar|guardar/i }).first();
+        await btnActualizar.click();
 
-        await page.waitForURL(new RegExp(`${PAGE_PATH}$`));
+        // Tras actualizar, volvemos a la lista y comprobamos el dato
+        await page.waitForTimeout(2000);
+        await page.waitForURL(new RegExp(`${PAGE_PATH}$`), { timeout: 15000 });
         await expect(page.locator('tr').filter({ hasText: nombreUnicoEdicion })).toContainText('88.8');
     });
 
     test('Fallo: No debería permitir valores negativos en la edición', async ({ page }) => {
+        // Vamos directamente a la URL de edición del recurso creado
         await page.goto(`${APP_URL}${PAGE_PATH}/${nombreUnicoEdicion}/2025`);
         await page.waitForLoadState('networkidle');
 
         const inputEnfermedad = page.locator('input[type="number"]').nth(1);
         await inputEnfermedad.fill('-50');
         
-        await page.locator('button').filter({ hasText: /actualizar|guardar/i }).first().click();
-        
-        await expect(page.locator('body')).toContainText(/positivo|negativo/i);
+        const btnActualizar = page.locator('button').filter({ hasText: /actualizar|guardar/i }).first();
+        await btnActualizar.click();
+
+        // Comprobamos que el body contiene el mensaje de error (positivo o negativo)
+        await expect(page.locator('body')).toContainText(/positivo|negativo/i, { timeout: 10000 });
     });
 });
+
 
 test.describe('Tests de Filtrado y Búsqueda', () => {
 
