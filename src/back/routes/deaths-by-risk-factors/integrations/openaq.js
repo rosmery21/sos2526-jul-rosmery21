@@ -5,7 +5,7 @@ const API_KEY = process.env.OPENAQ_API_KEY;
 
 export async function getOpenAQData() {
   try {
-    const res = await fetch("https://api.openaq.org/v3/locations", {
+    const res = await fetch("https://api.openaq.org/v3/locations?limit=1000", {
       headers: {
         "X-API-Key": API_KEY || "" // Evita que sea undefined
       }

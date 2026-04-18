@@ -8,7 +8,7 @@
 	let countries = $state([]);
 	let selectedCountry = $state('');
 	let selectedMapData = $state('high_systolic_blood_pressure');
-	let selectedMapDataName = $derived(dataIdNames.find(o => o.id === selectedMapData)?.label);
+	let selectedMapDataName = $derived(dataIdNames.find((o) => o.id === selectedMapData)?.label);
 
 	onMount(async () => {
 		const res = await fetch('/api/v2/deaths-by-risk-factors');
@@ -26,10 +26,9 @@
 		}
 	}
 
-	function goToMapChart(){
+	function goToMapChart() {
 		goto(`/analytics/deaths-by-risk-factors/map/${selectedMapData}`);
 	}
-	
 </script>
 
 <main>
@@ -50,7 +49,10 @@
 		</div>
 		<div class="card">
 			<h3>Mapa de muertes por {selectedMapDataName}</h3>
-			<p>Mapa global representando con burbujas las muertes causadas por el motivo seleccionado en cada país en el último año</p>
+			<p>
+				Mapa global representando con burbujas las muertes causadas por el motivo seleccionado en
+				cada país en el último año
+			</p>
 
 			<select bind:value={selectedMapData}>
 				{#each dataIdNames as data (data)}
@@ -58,9 +60,11 @@
 				{/each}
 			</select>
 
-			<button class="primary" onclick={goToMapChart}>
-				Ver Mapa
-			</button>
+			<button class="primary" onclick={goToMapChart}> Ver Mapa </button>
 		</div>
+		
+		<button onclick={() => goto('/analytics/deaths-by-risk-factors/openaq')}>
+			Ver integración OpenAQ
+		</button>
 	</div>
 </main>
