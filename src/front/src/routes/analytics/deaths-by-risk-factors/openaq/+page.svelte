@@ -18,7 +18,7 @@
 
 	async function fetchCountries() {
 		try {
-			const res = await fetch(`${DEATHS_API}?limit=200`);
+			const res = await fetch(`${DEATHS_API}`);
 			if (!res.ok) return;
 			const data = await res.json();
 			const arr = Array.isArray(data) ? data : [data];
@@ -34,8 +34,8 @@
 
 		try {
 			const [deathsRes, openaqRes] = await Promise.all([
-				fetch(`${DEATHS_API}?country=${encodeURIComponent(selectedCountry)}&limit=100`),
-				fetch(`${OPENAQ_API}?country=${encodeURIComponent(selectedCountry)}`) // <- añadir country
+				fetch(`${DEATHS_API}?country=${encodeURIComponent(selectedCountry)}`),
+				fetch(`${OPENAQ_API}?country=${encodeURIComponent(selectedCountry)}`)
 			]);
 
 			if (!deathsRes.ok) throw new Error('Error al obtener datos de muertes');
@@ -65,15 +65,11 @@
 			statsMax = Math.round(maxItem.air_pollution || 0);
 			statsMaxYear = maxItem.year;
 
-			// ... después de const openaqRaw = await openaqRes.json();
-
       let pm25Avg = null;
       let stationsCount = 0;
       let sampleStations = [];
 
       if (openaqRaw && openaqRaw.results) {
-        // FILTRO CRÍTICO: Solo estaciones que pertenezcan al país seleccionado
-        // OpenAQ v3 suele traer el nombre del país en r.country.name
         const countryResults = openaqRaw.results.filter(r => 
           r.country?.name?.toLowerCase() === selectedCountry.toLowerCase()
         );
@@ -117,7 +113,6 @@
 		const years = deaths.map((d) => d.year);
 		const airDeaths = deaths.map((d) => Math.round(d.air_pollution || 0));
 
-		// Creamos la línea constante de OpenAQ para todos los años del gráfico
 		const pm25Line = pm25Avg != null ? years.map(() => parseFloat(pm25Avg.toFixed(2))) : [];
 
 		Highcharts.chart('chart-openaq', {

@@ -3,11 +3,10 @@ dotenv.config();
 
 const API_KEY = process.env.OPENAQ_API_KEY;
 
-export async function getOpenAQData(countryName) {
+export async function getOpenAQData(countryCode) {
   try {
-    // Aumentamos el límite considerablemente para que el frontend 
-    // tenga de dónde filtrar estaciones del país seleccionado
-    const res = await fetch("https://api.openaq.org/v3/locations?limit=1000", {
+    let url = `https://api.openaq.org/v3/locations?countries_id=${countryCode}&parameters_id=2`;
+    const res = await fetch(url, {
       headers: {
         "X-API-Key": API_KEY || ""
       }
