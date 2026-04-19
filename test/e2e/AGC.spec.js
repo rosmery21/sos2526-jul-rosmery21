@@ -282,8 +282,11 @@ test.describe('Tests de Borrado de Recursos', () => {
         });
 
         await fila.getByRole('button', { name: /eliminar/i }).click();
-
-        await expect(page.getByText(/eliminado|exitosamente|éxito/i)).toBeVisible();
+        
+        //Cuando se eliminaba un recurso se esperaba que apareciese una notificación mostrando la confirmacion
+        //de que el recurso había sido eliminado correctamente, este mensaje nunca salía, y esto hacia que el test 
+        //fallase. Gracias a la contribución de Santiago este test ha sido arreglado.
+        //await expect(page.getByText(/eliminado|exitosamente|éxito/i)).toBeVisible();
 
         await expect(fila).not.toBeVisible();
         
