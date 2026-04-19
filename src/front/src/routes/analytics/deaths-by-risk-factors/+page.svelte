@@ -63,8 +63,8 @@
 			<button class="primary" onclick={goToMapChart}> Ver Mapa </button>
 		</div>
 		
-		<button onclick={() => goto('/analytics/deaths-by-risk-factors/openaq')}>
-			Ver integración OpenAQ
+		<button onclick={() => goto('/analytics/deaths-by-risk-factors/aqapi')}>
+			Ver integración API calidad del aire OMS
 		</button>
 	</div>
 </main>
