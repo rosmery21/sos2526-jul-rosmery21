@@ -167,7 +167,7 @@
 	<div class="controls">
 		<label for="country-select">Seleccionar País:</label>
 		<select id="country-select" bind:value={selectedCountry} onchange={loadData}>
-			{#each countries as country}
+			{#each countries as country (country)}
 				<option value={country}>{country}</option>
 			{/each}
 		</select>

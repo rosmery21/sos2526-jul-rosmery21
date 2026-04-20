@@ -1,10 +1,10 @@
 <script>
 /* eslint-disable svelte/no-navigation-without-resolve */
+
   import { goto } from '$app/navigation';
   
   let API = '/api/v2/deaths-by-risk-factors';
 
-  // Estados para los campos del formulario
   let entity = $state('');
   let year = $state('');
   let high_systolic_blood_pressure = $state(0);
@@ -17,7 +17,6 @@
   let infoMessage = $state('');
 
   async function handleAddResource() {
-    // Construimos el objeto respetando los nombres de tu API
     const newResource = {
       entity,
       year: parseInt(year),

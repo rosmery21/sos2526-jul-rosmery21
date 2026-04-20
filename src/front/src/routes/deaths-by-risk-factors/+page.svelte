@@ -1,10 +1,9 @@
 <script>
+	// @ts-nocheck
+	/* eslint-disable svelte/no-navigation-without-resolve */
+	
 	import { goto } from "$app/navigation";
 
-	// @ts-nocheck
-
-	/* eslint-disable svelte/no-navigation-without-resolve */
-	// @ts-ignore
 	let deaths_by_risk_factors = $state([]);
 	let API = '/api/v2/deaths-by-risk-factors';
 	let responseStatusCode = $state(0);

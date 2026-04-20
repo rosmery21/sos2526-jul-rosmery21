@@ -1,5 +1,6 @@
 <script>
 	// @ts-nocheck
+	/* eslint-disable svelte/no-navigation-without-resolve */
 	import Highcharts from 'highcharts';
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/state';
