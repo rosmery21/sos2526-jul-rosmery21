@@ -40,13 +40,9 @@ app.use(BASE_API_URL, protestsRoute);
 app.use(BASE_API_URL, pandemicsRoute);
 app.use(BASE_API_URL, childMalnutritions);
 
-app.use(V2_API_URL, protestsRouteV2);
-
-app.use(V2_API_URL, deathsRouteV2);
 app.use(V2_API_URL + '/child-malnutritions', childMalnutritionsV2);
-
 app.use(`${V2_API_URL}/deaths-by-risk-factors`, deathsRouteV2);
-
+app.use(V2_API_URL, protestsRouteV2);
 app.use(V2_API_URL, pandemicsRouteV2)
 
 
