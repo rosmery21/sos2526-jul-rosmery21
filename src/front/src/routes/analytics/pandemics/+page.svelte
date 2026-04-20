@@ -7,9 +7,9 @@
     let errorMessage = $state("");
     let isLoading = $state(true);
 
-    let allData = $state([]); // Aquí guardamos TODO lo que viene de la API
-    let countries = $state([]); // Lista de países para el desplegable
-    let selectedCountry = $state("Todos"); // País elegido por el usuario
+    let allData = $state([]); 
+    let countries = $state([]); 
+    let selectedCountry = $state("Todos");
 
     async function loadData() {
         try {
