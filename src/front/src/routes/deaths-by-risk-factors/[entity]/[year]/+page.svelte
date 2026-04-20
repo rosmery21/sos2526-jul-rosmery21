@@ -1,5 +1,7 @@
 <script>
 	// @ts-nocheck
+    /* eslint-disable svelte/no-navigation-without-resolve */
+
 
 	import { page } from '$app/state';
     import { onMount } from 'svelte';
@@ -21,7 +23,6 @@
     let errorMessage = $state('');
     let infoMessage = $state('');
 
-	// @ts-ignore
 	async function getResource() {
 		try {
 			const response = await fetch(API + `/${encodeURIComponent(entity)}/${year}`, {
@@ -105,7 +106,6 @@
 
     async function returnToMainPage() {
         await new Promise(resolve => setTimeout(resolve, 2000));
-        // eslint-disable-next-line svelte/no-navigation-without-resolve
         goto('/deaths-by-risk-factors', {invalidateAll: true});
 
     }

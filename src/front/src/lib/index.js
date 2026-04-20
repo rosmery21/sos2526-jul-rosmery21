@@ -5,6 +5,7 @@ export function loadApisInfo() {
     return parsedApis;
 }
 
+// @ts-ignore
 function parseApi(api) {
     return `<article>
         <h3>${api.nombre}</h3>

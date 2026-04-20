@@ -32,7 +32,15 @@
 		"vite": "^7.3.1"
 	},
 	"dependencies": {
+<<<<<<< HEAD
 		"highcharts": "^12.6.0",
 		"leaflet": "^1.9.4"
+=======
+		"@highcharts/map-collection": "^2.3.2",
+		"d3": "^7.9.0",
+		"highcharts": "^12.6.0",
+		"leaflet": "^1.9.4",
+		"leaflet.heat": "^0.2.0"
+>>>>>>> 640fb2c65c26ac0464e685f5609890588603f414
 	}
 }

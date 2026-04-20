@@ -7,7 +7,13 @@ import protestsRouteV2 from './src/back/routes/protests/protests-v2.js';
 import pandemicsRoute from './src/back/routes/pandemics/pandemics.js';
 import pandemicsRouteV2 from './src/back/routes/pandemics/pandemics-v2.js'
 import childMalnutritions from "./src/back/routes/child-malnutritions/child-malnutritions.js";
+
 import childMalnutritionsV2 from "./src/back/routes/child-malnutritions/child-malnutritions-v2.js";
+
+
+import deathsIntegrations from './src/back/routes/deaths-by-risk-factors/integrations/index.js';
+
+
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
 const BASE_API_URL = '/api/v1';
@@ -27,14 +33,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(BASE_API_URL, deathsRoute);
+app.use(`${V2_API_URL}/deaths-by-risk-factors/integrations`, deathsIntegrations);
+
+app.use(`${BASE_API_URL}/deaths-by-risk-factors`, deathsRoute);
 app.use(BASE_API_URL, protestsRoute);
 app.use(BASE_API_URL, pandemicsRoute);
 app.use(BASE_API_URL, childMalnutritions);
 
 app.use(V2_API_URL, protestsRouteV2);
+
 app.use(V2_API_URL, deathsRouteV2);
 app.use(V2_API_URL + '/child-malnutritions', childMalnutritionsV2);
+
+app.use(`${V2_API_URL}/deaths-by-risk-factors`, deathsRouteV2);
+
 app.use(V2_API_URL, pandemicsRouteV2)
 
 

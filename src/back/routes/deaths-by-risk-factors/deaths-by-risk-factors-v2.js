@@ -14,12 +14,12 @@ const requiredFields = ['entity', 'year', 'high_systolic_blood_pressure', 'air_p
 
 const DOCUMENTATION_URL = "https://documenter.getpostman.com/view/52276011/2sBXijHrJv";
 
-router.get('/deaths-by-risk-factors/docs', (req, res) => {
+router.get('/docs', (req, res) => {
   res.redirect(DOCUMENTATION_URL);
 });
 
 // Loads the data from the file and stores it in memory for the route
-router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
+router.get('/loadInitialData', (req, res) => {
   store.count({}, (err, count) => {
     if (count > 0) {
       return res.status(409).send("Conflict: Data already loaded");
@@ -42,7 +42,7 @@ router.get('/deaths-by-risk-factors/loadInitialData', (req, res) => {
 });
 
 // Returns the data stored in memory for a specific country and year
-router.get('/deaths-by-risk-factors', (req, res) => {
+router.get('/', (req, res) => {
   const query = {}
 
   const offset = parseInt(req.query.offset) || null;
@@ -88,7 +88,7 @@ router.get('/deaths-by-risk-factors', (req, res) => {
 });
 
 // Creates a new entry in the data stored in memory for the route
-router.post('/deaths-by-risk-factors', (req, res) => {
+router.post('/', (req, res) => {
   const newData = req.body;
 
   const isMissingFields = requiredFields.some(field => newData[field] === null || newData[field] === undefined || newData[field] === "");
@@ -127,19 +127,19 @@ router.post('/deaths-by-risk-factors', (req, res) => {
 });
 
 // Method not allowed for the route, since we don't want to update all the data at once
-router.put('/deaths-by-risk-factors', (req, res) => {
+router.put('/', (req, res) => {
   res.status(405).send('Method not allowed');
 });
 
 // Deletes all the data stored in memory for the route
-router.delete('/deaths-by-risk-factors', (req, res) => {
+router.delete('/', (req, res) => {
   store.remove({}, { multi: true }, (err, numRemoved) => {
     res.status(204).send();
   });
 });
 
 // Returns the data stored in memory for a specific country and year
-router.get('/deaths-by-risk-factors/:country/:year', (req, res) => {
+router.get('/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
   store.find({ entity: new RegExp(`^${country}$`, "i"), year: year }, (err, data) => {
@@ -151,12 +151,12 @@ router.get('/deaths-by-risk-factors/:country/:year', (req, res) => {
 });
 
 // Method not allowed for the route, since we don't want to create a new country with a specific country
-router.post('/deaths-by-risk-factors/:country', (req, res) => {
+router.post('/:country', (req, res) => {
   res.status(405).send('Method not allowed');
 });
 
 // Updates the data stored in memory for a specific country
-router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
+router.put('/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
   const newData = req.body;
@@ -210,7 +210,7 @@ router.put('/deaths-by-risk-factors/:country/:year', (req, res) => {
 });
 
 // Deletes the data stored in memory for a specific country
-router.delete('/deaths-by-risk-factors/:country/:year', (req, res) => {
+router.delete('/:country/:year', (req, res) => {
   const country = req.params.country;
   const year = parseInt(req.params.year);
   store.remove({ entity: new RegExp(`^${country}$`, "i"), year: year }, {}, (err, numRemoved) => {
