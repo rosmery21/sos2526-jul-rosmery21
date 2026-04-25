@@ -35,7 +35,8 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
 
-   baseURL: 'https://sos2526-10.onrender.com',
+   
+   baseURL: 'http://localhost:3000',
     actionTimeout: 60000,
     navigationTimeout: 60000,
 

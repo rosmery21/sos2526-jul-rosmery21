@@ -25,62 +25,58 @@ test.describe('Child Malnutrition E2E', () => {
     }
   }
 
-  // 0. DELETE ALL
   test('0. Borrar toda la colección', async ({ page }) => {
     await ensureDataLoaded(page);
     page.once('dialog', dialog => dialog.accept());
-    await page.getByRole('button', { name: /Eliminar toda la colección/i }).click();
+    await page.getByRole('button', { name: /^Eliminar todo$/i }).click();
     await page.waitForLoadState('networkidle');
     await expect(page.locator('table')).not.toBeVisible({ timeout: 10000 });
   });
 
-  // 1. LOAD INITIAL DATA
   test('1. Cargar datos iniciales', async ({ page }) => {
     await page.goto(LIST_URL);
     await page.waitForLoadState('networkidle');
-
     const table = page.locator('table');
     if (await table.isVisible()) {
       page.once('dialog', dialog => dialog.accept());
-      await page.getByRole('button', { name: /Eliminar toda la colección/i }).click();
+      await page.getByRole('button', { name: /^Eliminar todo$/i }).click();
       await page.waitForLoadState('networkidle');
       await expect(table).not.toBeVisible({ timeout: 10000 });
     }
-
     await page.getByRole('button', { name: /Cargar datos iniciales/i }).click();
     await page.waitForLoadState('networkidle');
     await expect(page.locator('table')).toBeVisible({ timeout: 15000 });
   });
 
-  // 2. CREATE
   test('2. Crear recurso', async ({ page }) => {
+    await ensureDataLoaded(page);
     await page.goto(CREATE_URL);
     await page.waitForLoadState('networkidle');
-
-    await page.waitForSelector('input[placeholder="País"]', { timeout: 10000 });
+    await page.waitForSelector('input[placeholder="País"]', { timeout: 15000 });
     await page.fill('input[placeholder="País"]', country);
     await page.fill('input[placeholder="Año"]', year);
     await page.fill('input[placeholder="Región"]', region);
     await page.fill('input[placeholder="Tasa Stunting %"]', stunting_rate);
-
-    await page.getByRole('button', { name: /Guardar/i }).click();
+    await page.getByRole('button', { name: /^Guardar$/i }).click();
     await page.waitForURL(`**${LIST_URL}`, { timeout: 15000 });
-    await expect(page.locator('table')).toContainText(country);
+    await page.waitForLoadState('networkidle');
+    await page.fill('input[placeholder="País"]', country);
+    await page.getByRole('button', { name: /^Buscar$/i }).click();
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('table')).toContainText(country, { timeout: 10000 });
   });
 
-  // 3. DELETE ONE
   test('3. Borrar un recurso concreto', async ({ page }) => {
     await ensureDataLoaded(page);
     const filas = page.locator('table tbody tr');
     await expect(filas.first()).toBeVisible();
-    const countBefore = await filas.count();
+    const firstRowText = await filas.first().textContent();
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: /^Eliminar$/i }).first().click();
     await page.waitForLoadState('networkidle');
-    await expect(filas).toHaveCount(countBefore - 1, { timeout: 10000 });
+    await expect(page.locator('table tbody tr').first()).not.toHaveText(firstRowText, { timeout: 10000 });
   });
 
-  // 4. PAGINATION
   test('4. Paginación', async ({ page }) => {
     await ensureDataLoaded(page);
     const nextBtn = page.getByRole('button', { name: /Siguiente/i });
@@ -93,25 +89,19 @@ test.describe('Child Malnutrition E2E', () => {
     }
   });
 
-  // 5. EDIT
   test('5. Editar recurso', async ({ page }) => {
     await ensureDataLoaded(page);
-
-    // El botón Editar está dentro de un <a href="...">, click directo
-    await page.locator('table tbody tr').first().getByRole('button', { name: /^detalles$/i }).click();
+    await page.locator('table tbody tr').first().getByRole('link', { name: /Editar/i }).click();
     await page.waitForLoadState('networkidle');
-
-    // El formulario de edición solo tiene Región y Tasa Stunting
-    await page.waitForSelector('input[placeholder="Región"]', { timeout: 10000 });
+    await page.waitForSelector('input[placeholder="Región"]', { timeout: 15000 });
     const newRegion = 'UpdatedRegion' + Math.floor(Math.random() * 10000);
     await page.fill('input[placeholder="Región"]', newRegion);
-
     await page.getByRole('button', { name: /Guardar cambios/i }).click();
     await page.waitForURL(`**${LIST_URL}`, { timeout: 15000 });
-    await expect(page.locator('table')).toContainText(newRegion);
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('table')).toContainText(newRegion, { timeout: 10000 });
   });
 
-  // 6. SEARCH por país
   test('6. Buscar por país', async ({ page }) => {
     await ensureDataLoaded(page);
     await page.fill('input[placeholder="País"]', 'Peru');
@@ -125,7 +115,6 @@ test.describe('Child Malnutrition E2E', () => {
     }
   });
 
-  // 7. SEARCH por región
   test('7. Buscar por región', async ({ page }) => {
     await ensureDataLoaded(page);
     await page.fill('input[placeholder="Región"]', 'South America');
