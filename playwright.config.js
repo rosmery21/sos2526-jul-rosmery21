@@ -36,7 +36,7 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
    
-   baseURL: 'http://localhost:3000',
+   baseURL: 'https://sos2526-10.onrender.com',
     actionTimeout: 60000,
     navigationTimeout: 60000,
 
