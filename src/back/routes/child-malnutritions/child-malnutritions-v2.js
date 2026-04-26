@@ -6,13 +6,11 @@ const router = express.Router();
 
 let childMalnutritions = [];
 
-router.get("/child-malnutritions/loadInitialData", (req, res) => {
-    childMalnutritions = [];
+function loadCSV() {
     try {
         const filePath = path.join(process.cwd(), "data", "datasets", "child-malnutritions.csv");
         const content = fs.readFileSync(filePath, "utf-8");
         const lines = content.split("\n").filter(l => l.trim() !== "").slice(1);
-
         childMalnutritions = lines.map(line => {
             const col = line.split(",");
             return {
@@ -25,8 +23,7 @@ router.get("/child-malnutritions/loadInitialData", (req, res) => {
                 underweight_rate: Number(col[6]) || 0
             };
         });
-
-        return res.status(200).send("Data loaded");
+        console.log(`Child malnutritions: ${childMalnutritions.length} records loaded`);
     } catch (err) {
         console.error("CSV ERROR:", err);
         childMalnutritions = [
@@ -34,8 +31,14 @@ router.get("/child-malnutritions/loadInitialData", (req, res) => {
             { year: 2020, country: "Japan", region: "Asia", stunting_rate: 8, wasting_rate: 1, overweight_rate: 4, underweight_rate: 2 },
             { year: 2022, country: "Ecuador", region: "South America", stunting_rate: 14, wasting_rate: 3, overweight_rate: 4, underweight_rate: 2 }
         ];
-        return res.status(200).send("Sample data loaded");
     }
+}
+
+loadCSV();
+
+router.get("/child-malnutritions/loadInitialData", (req, res) => {
+    loadCSV();
+    return res.status(200).send("Data loaded");
 });
 
 router.get("/child-malnutritions", (req, res) => {
