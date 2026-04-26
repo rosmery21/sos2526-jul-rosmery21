@@ -87,7 +87,7 @@ onMount(async () => {
             attribution: '&copy; OpenStreetMap &copy; CartoDB'
         }).addTo(map);
 
-        const res = await fetch('/api/v2/child-malnutritions?limit=10000');
+        const res = await fetch('https://sos2526-10.onrender.com/api/v2/child-malnutritions?limit=10000');
         const rawData = await res.json();
 
         // Tomar el último año disponible por país

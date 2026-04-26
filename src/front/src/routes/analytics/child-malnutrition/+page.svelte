@@ -13,7 +13,7 @@ onMount(async () => {
 	try {
 		await fetch('/api/v2/child-malnutritions/loadInitialData');
 
-		const res = await fetch('/api/v2/child-malnutritions?limit=10000');
+		const res = await fetch('https://sos2526-10.onrender.com/api/v2/child-malnutritions?limit=10000');
 		if (!res.ok) throw new Error(await res.text());
 
 		const json = await res.json();

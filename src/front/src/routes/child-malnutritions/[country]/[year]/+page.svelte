@@ -1,12 +1,13 @@
 <script>
+// @ts-nocheck
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
 
   const API = '/api/v2/child-malnutritions';
 
-  let country = $derived(page.params.country);
-  let year = $derived(page.params.year);
+  let country = page.params.country;
+  let year = page.params.year;
 
   let resource = $state(null);
   let region = $state('');
@@ -29,7 +30,10 @@
         country,
         year: parseInt(year),
         region,
-        stunting_rate: parseFloat(stunting_rate)
+        stunting_rate: parseFloat(stunting_rate) || 0,
+        wasting_rate: resource.wasting_rate || 0,
+        overweight_rate: resource.overweight_rate || 0,
+        underweight_rate: resource.underweight_rate || 0
       })
     });
     await goto('/child-malnutritions');
