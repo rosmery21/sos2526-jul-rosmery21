@@ -3,11 +3,11 @@
 import Highcharts from 'highcharts';
 import { onMount } from 'svelte';
 
-let data = [];
-let countries = [];
-let selectedCountry = '';
-let loading = true;
-let error = null;
+let data = $state([]);
+let countries = $state([]);
+let selectedCountry = $state('');
+let loading = $state(true);
+let error = $state(null);
 
 onMount(async () => {
 	try {
