@@ -7,7 +7,8 @@ const APIs = [
 	{ name: 'Protests', url: '/api/v2/protests' },
 	{ name: 'Pandemics', url: '/api/v2/pandemics' },
 	{ name: 'Deaths by Risk Factors', url: '/api/v2/deaths-by-risk-factors' },
-	{ name: 'Child Malnutritions', url: 'http://localhost:3000/api/v2/child-malnutritions?limit=10000' },
+	{ name: 'Child Malnutritions', url: '/api/v2/child-malnutritions' },
+	
 ];
 
 let selectedYear = $state(2020);
