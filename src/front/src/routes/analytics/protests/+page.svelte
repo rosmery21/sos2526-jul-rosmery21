@@ -1,11 +1,11 @@
 <script>
 	// @ts-nocheck
-	import Highcharts from 'highcharts';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
 	const API = '/api/v2/protests';
 
+	let Highcharts;
 	let countries = $state([]);
 	let selectedCountry = $state('');
 	let showGraph = $state(false);
@@ -25,6 +25,7 @@
 	}
 
 	async function showGeneralGraph() {
+		if (!Highcharts) return;
 		const data = await loadData();
 		if (!data) return;
 		// Contar el número de datos por país
@@ -34,38 +35,54 @@
 		});
 		// Convertir el objeto en un formato adecuado para Highcharts
 		const seriesData = Object.entries(countryCount)
-			.map(([country, count]) => ({ name: country, y: count }))
-			.sort((a, b) => b.y - a.y); // Ordenar de mayor a menor
+			.map(([country, count]) => [country, count])
+			.sort((a, b) => b[1] - a[1]); // Ordenar de mayor a menor
 
 		Highcharts.chart('container', {
 			chart: {
-				type: 'column'
-			},
-			title: {
-				text: 'Número de datos por país'
+				type: 'column',
+				options3d: {
+					enabled: true,
+					alpha: 15,
+					beta: 15,
+					depth: 50,
+					viewDistance: 25
+				}
 			},
 			xAxis: {
-				title: {
-					text: 'País'
-				}
+				type: 'category'
 			},
 			yAxis: {
 				title: {
-					text: 'Número de datos'
+					enabled: false
 				}
 			},
-			series: [
-				{
-					name: 'Datos',
-					data: seriesData // [{name: 'España', y: 10}, ...]
+			tooltip: {
+				headerFormat: '<b>{point.key}</b><br>',
+				pointFormat: 'Número de protestas: {point.y}'
+			},
+			title: {
+				text: 'Número de protestas por país'
+			},
+			legend: {
+				enabled: false
+			},
+			plotOptions: {
+				column: {
+					depth: 25
 				}
-			]
+			},
+			series: [{
+				data: seriesData,
+				colorByPoint: true
+			}]
 		});
 		showGraph = true;
 		graphMode = 'general';
 	}
 
 	async function showCountryGraph() {
+		if (!Highcharts) return;
 		if (!selectedCountry) return;
 		const data = await loadData();
 		if (!data) return;
@@ -145,6 +162,9 @@
 	}
 
 	onMount(async () => {
+		const { default: HC } = await import('highcharts');
+		await import('highcharts/highcharts-3d');
+		Highcharts = HC;
 		await loadData();
 	});
 </script>
