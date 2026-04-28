@@ -61,14 +61,5 @@
 
 			<button class="primary" onclick={goToMapChart}> Ver Mapa </button>
 		</div>
-		<div class="card">
-			<h3>Integración de los datos con la api de la calidad del aire de la OMS</h3>
-			<p>
-				Representación de los datos recogidos de la api junto con la estimación hecha por la OMS
-			</p>
-			<button onclick={() => goto('/analytics/deaths-by-risk-factors/aqapi')}>
-				Ver integración API calidad del aire OMS
-			</button>
-		</div>
 	</div>
 </main>

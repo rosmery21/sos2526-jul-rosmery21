@@ -2,6 +2,7 @@
 	// @ts-nocheck
 	import Highcharts from 'highcharts';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let loading = $state(true);
 	let error = $state(null);
@@ -157,10 +158,15 @@
 	});
 </script>
 
-<section>
-	<h2>Integración OMS × Mortalidad Ambiental</h2>
+<main>
+	<h2>Integración OMS y Mortalidad Ambiental</h2>
+
+	<button onclick={() => goto('/integrations/deaths-by-risk-factors')}>
+		Volver
+	</button>
+
 	<p>
-		Esta gráfica compara la evolución temporal de los datos de mortalidad por factores de riesgo (nuestra API) 
+		Esta gráfica compara la evolución temporal de los datos de muertes por factores de riesgo debidas a la calidad del aire 
 		con los datos históricos de muertes atribuibles a la contaminación del aire exterior de la <strong>Organización Mundial de la Salud (indicador AIR_41)</strong>.
 	</p>
 
@@ -211,7 +217,7 @@
 			</table>
 		</div>
 	{/if}
-</section>
+</main>
 
 <style>
 	.controls { margin: 20px 0; display: flex; gap: 15px; align-items: center; background: #f9f9f9; padding: 15px; border-radius: 8px; }
