@@ -18,16 +18,18 @@
 				por las estimaciones de la OMS.
 			</p>
 			<button onclick={() => goto('/integrations/deaths-by-risk-factors/aqapi')}>
-				Ver integración API calidad del aire OMS
+				Ver integración con la API de calidad del aire OMS
 			</button>
 		</div>
 		<div class="card">
 			<h3>Integración de los datos con la api de worldbank</h3>
 			<p>
-				...
+				Esta integración nos permite ver una comparación de los datos de la api de Muertes por 
+				factores de riesgo, viendo el total de estas muertes por cada país, y los datos de la api de 
+				worldbank que nos ofrece la población de cada país.
 			</p>
 			<button onclick={() => goto('/integrations/deaths-by-risk-factors/worldbank')}>
-				Ver integración con API worldbank
+				Ver integración con la API de worldbank
 			</button>
 		</div>
     </div>
