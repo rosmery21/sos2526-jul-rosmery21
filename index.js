@@ -7,12 +7,9 @@ import protestsRouteV2 from './src/back/routes/protests/protests-v2.js';
 import pandemicsRoute from './src/back/routes/pandemics/pandemics.js';
 import pandemicsRouteV2 from './src/back/routes/pandemics/pandemics-v2.js'
 import childMalnutritions from "./src/back/routes/child-malnutritions/child-malnutritions.js";
-
 import childMalnutritionsV2 from "./src/back/routes/child-malnutritions/child-malnutritions-v2.js";
 
-
 import deathsIntegrations from './src/back/routes/deaths-by-risk-factors/integrations/index.js';
-
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
