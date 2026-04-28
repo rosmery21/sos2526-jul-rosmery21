@@ -16,4 +16,21 @@
 			</button>
 		</div>
 	</section>
+
+	
+	<section>
+		<h2>Integraciones de API "protests"</h2>
+
+		<div class="card" id="protests">
+			<h3>Integración con los datos de la api "social-drinking-behaviors"</h3>
+			<p>
+				Representación de los datos recogidos en la api protests junto
+				a los datos obtenidos por la api social-drinking-behaviors de otro compañero
+			</p>
+
+			<button onclick={() => goto('/integrations/protests/social-drinking-behaviors')}>
+				Ver integración con social-drinking-behaviors
+			</button>
+		</div>
+	</section>
 </main>
