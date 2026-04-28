@@ -46,17 +46,19 @@
     "newman-local-RM-v2": "npx newman run test/api/RM/test-RM-v2.json -e test/enviroments/local-env-v2.json",
     "test-local-RM-v2": "start-server-and-test start http://localhost:3000 newman-local-RM-v2",
     "test-child-malnutritions-v2": "npm run test-local-RM-v2",
-
- "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-SMJ-v2 && npm run newman-local-OMV && npm run newman-local-OMV-v2 && npm run newman-local-AGC && npm run newman-local-AGC-v2 && npm run newman-local-RM && npm run newman-local-RM-v2\""
+    "test": "start-server-and-test start http://localhost:3000 \"npm run newman-local-SMJ && npm run newman-local-SMJ-v2 && npm run newman-local-OMV && npm run newman-local-OMV-v2 && npm run newman-local-AGC && npm run newman-local-AGC-v2 && npm run newman-local-RM && npm run newman-local-RM-v2\""
   },
   "dependencies": {
+    "apexcharts": "^5.10.6",
     "cors": "^2.8.6",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.4.2",
+    "echarts": "^6.0.0",
     "express": "^5.2.1",
     "highcharts": "^12.6.0",
     "leaflet": "^1.9.4",
     "nedb": "^1.8.0",
+    "svelte-apexcharts": "^1.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

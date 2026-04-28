@@ -18,7 +18,9 @@ const V2_API_URL = '/api/v2';
 const PORT = process.env.PORT || 3000;
 
 const app = express();
-app.use(cors());       
+app.use(cors({
+  origin: "*"
+}));     
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -54,6 +56,22 @@ app.get("/samples/rm", (req, res) => {
   res.send("Average stunting rate: " + avg.toFixed(1));
 
 });
+
+/* PROXY PRUEBA PROTEST DINKING*/
+app.get("/api/proxy/social-drinking", async (req, res) => {
+  try {
+    const response = await fetch(
+      "https://sos2526-25.onrender.com/api/v2/social-drinking-behaviors/"
+    );
+
+    const data = await response.json();
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: "Proxy failed" });
+  }
+});
+/* fiiiiiiiiin*/
 
 
 app.use(svelteHandler);
