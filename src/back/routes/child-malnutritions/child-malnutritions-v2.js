@@ -104,6 +104,12 @@ router.delete("/child-malnutritions/:country/:year", (req, res) => {
     childMalnutritions.splice(index, 1);
     return res.status(204).send();
 });
+router.put('/', (req, res) => {
+  res.status(405).send('Method not allowed');
+});
+router.post('/:country/:year', (req, res) => {
+  res.status(405).send('Method not allowed');
+});
 
 router.put("/child-malnutritions/:country/:year", (req, res) => {
     const country = req.params.country.toLowerCase();

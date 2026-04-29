@@ -1,5 +1,4 @@
 <script>
-// @ts-nocheck
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
@@ -12,6 +11,7 @@
   let resource = $state(null);
   let region = $state('');
   let stunting_rate = $state('');
+  let message = $state('');
 
   async function load() {
     const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`);
@@ -23,7 +23,7 @@
   }
 
   async function update() {
-    await fetch(`${API}/${encodeURIComponent(country)}/${year}`, {
+    const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -36,17 +36,29 @@
         underweight_rate: resource.underweight_rate || 0
       })
     });
-    await goto('/child-malnutritions');
+
+    if (res.ok) {
+      message = 'Recurso actualizado correctamente';
+      setTimeout(() => goto('/child-malnutritions'), 800);
+    } else {
+      message = 'Error al actualizar el recurso';
+    }
   }
 
   onMount(load);
 </script>
 
+{#if message}
+  <div class="alert">{message}</div>
+{/if}
+
 {#if resource}
   <h2>Editar</h2>
+
   <input placeholder="Región" bind:value={region} />
   <input placeholder="Tasa Stunting %" bind:value={stunting_rate} />
-  <button onclick={update}>Guardar cambios</button>
+
+  <button on:click={update}>Guardar cambios</button>
 {:else}
   <p>Cargando...</p>
 {/if}

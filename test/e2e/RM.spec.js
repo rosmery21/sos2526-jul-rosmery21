@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const LIST_URL = '/child-malnutritions';
-const CREATE_URL = '/child-malnutritions/create';
+
+const LIST_URL = 'http://localhost:3000/child-malnutritions';
+const CREATE_URL = 'http://localhost:3000/child-malnutritions/create';
 
 test.describe('Child Malnutrition E2E', () => {
   let country, year, region, stunting_rate;
