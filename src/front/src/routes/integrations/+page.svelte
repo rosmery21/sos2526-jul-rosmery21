@@ -46,6 +46,20 @@
 			</button>
 		</div>
 	</section>
+
+	<section>
+        <h2>Integraciones de API "pandemics"</h2>
+
+        <div class="card">
+            <h3>Menú de Integraciones de Pandemias</h3>
+            <p>
+                Acceso a las distintas integraciones realizadas.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics')}>
+                Ver integraciones de Pandemias
+            </button>
+        </div>
+    </section>
 </main>
 
 <style>
