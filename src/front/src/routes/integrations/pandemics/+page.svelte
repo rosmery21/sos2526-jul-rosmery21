@@ -6,31 +6,37 @@
 <main>
     <h2>Mis Integraciones - Pandemias</h2>
     <p>
-        Aquí puedes acceder a mis distintas integraciones cruzando los datos de pandemias.
+        Aquí puedes acceder a mis distintas integraciones cruzando los datos de pandemias con otras apis.
     </p>
 
     <section>
         <div class="card">
-            <h3>1. Integración con REST Countries (Población)</h3>
+            <h3>1. Integración Pandemias - Población</h3>
             <p>
-                Uso de proxy propio. Gráfica de barras combinando muertes por pandemias con la población 
-                total usando Chart.js.
+                Gráfica de barras combinando muertes por pandemias con la población 
+                total.
             </p>
             <button onclick={() => goto('/integrations/pandemics/population')}>
                 Ver Integración de Población
             </button>
         </div>
 
-        <div class="card pending">
-            <h3>2. API Externa 2 (Gráfica)</h3>
-            <p>Próximamente... Aquí irá otra integración con gráfica usando una biblioteca distinta.</p>
-            <button disabled>En construcción</button>
+        <div class="card"> 
+            <h3>2. Integración Pandemias - Riqueza Mundial</h3>
+            <p>
+                Gráfica de tipo Polar Area combinando muertes por pandemias con 
+                datos de PIB (riqueza) y esperanza de vida.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics/worlddata')}>
+                Ver Integración de Riqueza
+            </button>
         </div>
 
-        <div class="card"> <h3>3. Integración Textual (Universidades)</h3>
+        <div class="card"> 
+            <h3>3. Integración Pandemias - Universidades</h3>
             <p>
-                Uso de proxy propio. Muestra una tabla comparativa entre el total de muertes por pandemias 
-                y el listado de universidades del país usando HTML puro.
+                Muestra una tabla comparativa entre el total de muertes por pandemias 
+                y el listado de universidades del país usando HTML.
             </p>
             <button onclick={() => goto('/integrations/pandemics/universities')}>
                 Ver Tabla de Universidades

@@ -15,7 +15,7 @@ router.get('/pandemics/docs', (req, res) => {
   res.redirect(DOCUMENTATION_URL);
 });
 
-// Loads the data from the file and stores it in memory for the route
+
 router.get('/pandemics/loadInitialData', (req, res) => {
   store.count({}, (err, count) => {
     if (count > 0) {
@@ -47,7 +47,7 @@ router.get('/pandemics', (req, res) => {
   const query = {}
 
   const offset = parseInt(req.query.offset) || 0;
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = req.query.limit ? parseInt(req.query.limit) : 0;
 
   const { entity, code, year, from, to, yaws, polio, guinea_worm, rabies, malaria, hiv_aids, tuberculosis, smallpox, cholera } = req.query;
 
@@ -88,7 +88,6 @@ router.get('/pandemics', (req, res) => {
     });
 });
 
-// Creates a new entry
 router.post('/pandemics', (req, res) => {
   const newData = req.body;
   const isMissingFields = requiredFields.some(field =>

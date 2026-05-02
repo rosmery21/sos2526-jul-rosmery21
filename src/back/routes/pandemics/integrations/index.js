@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPopulationData } from './population.js'; 
 import { getUniversitiesData } from './universities.js'; 
+import { getWorldData } from './worlddata.js';
 
 const router = express.Router();
 
@@ -22,6 +23,16 @@ router.get('/universities', async (req, res) => {
         res.json(data);
     } catch (err) {
         res.status(500).json({ error: "Proxy ha fallado" });
+    }
+});
+
+router.get('/worlddata', async (req, res) => {
+    try {
+        const country = req.query.country || 'Spain';
+        const data = await getWorldData(country);
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: "Proxy de WorldData ha fallado" });
     }
 });
 
