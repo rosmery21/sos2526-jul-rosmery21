@@ -16,6 +16,23 @@
     let selectedCountry = $state("");
     let yearsRange = $state("");
 
+    async function loadInitialDataFromBackend() {
+        loading = true;
+        try {
+            const res = await fetch('/api/v2/pandemics/loadInitialData');
+            if (res.ok) {
+                alert("Datos iniciales cargados con éxito en la base de datos");
+                await initData();
+            } else {
+                errorMsg = "Error al cargar los datos iniciales en el servidor.";
+            }
+        } catch (e) {
+            errorMsg = "Fallo de conexión con el servidor.";
+        } finally {
+            loading = false;
+        }
+    }
+
     async function initData() {
         loading = true; 
         errorMsg = "";  
@@ -86,10 +103,10 @@
                 if (pop > 0) {
                     cruceExitoso = true;
                 } else {
-                    externalApiWarning = `No se puede hacer el cruce: La API externa no tiene datos de población para ${selectedCountry}.`;
+                    externalApiWarning = `No hay datos de población para ${selectedCountry}.`;
                 }
             } else {
-                externalApiWarning = "La API de población no responde correctamente.";
+                externalApiWarning = "La API de población no responde.";
             }
 
             if (cruceExitoso) {
@@ -116,31 +133,11 @@
             data: {
                 labels: [`${selectedCountry}`],
                 datasets: [
-                    {
-                        label: 'Población Actual',
-                        data: [pop],
-                        backgroundColor: 'blue' 
-                    },
-                    {
-                        label: 'Media Malaria',
-                        data: [averageRecord.malaria],
-                        backgroundColor: 'pink' 
-                    },
-                    {
-                        label: 'Media Tuberculosis',
-                        data: [averageRecord.tuberculosis],
-                        backgroundColor: 'green' 
-                    },
-                    {
-                        label: 'Media VIH/SIDA',
-                        data: [averageRecord.hiv_aids],
-                        backgroundColor: 'yellow' 
-                    },
-                    {
-                        label: 'Media Cólera',
-                        data: [averageRecord.cholera],
-                        backgroundColor: 'red' 
-                    }
+                    { label: 'Población Actual', data: [pop], backgroundColor: 'blue' },
+                    { label: 'Media Malaria', data: [averageRecord.malaria], backgroundColor: 'pink' },
+                    { label: 'Media Tuberculosis', data: [averageRecord.tuberculosis], backgroundColor: 'green' },
+                    { label: 'Media VIH/SIDA', data: [averageRecord.hiv_aids], backgroundColor: 'yellow' },
+                    { label: 'Media Cólera', data: [averageRecord.cholera], backgroundColor: 'red' }
                 ]
             },
             options: {
@@ -153,46 +150,36 @@
 </script>
 
 <main>
-    <h2>Integración Pandemias y Población</h2>
+    <h2>Visualización Analítica: Pandemias y Población</h2>
     
     <div>
-        <button onclick={initData} disabled={loading}>
-            {loading ? 'Cargando datos...' : 'Recargar Datos Iniciales'}
-        </button>
+        <a href="/pandemics">
+            <button>Volver a la tabla</button>
+        </a>
+
+        <label>
+            País:
+            <select bind:value={selectedCountry} onchange={handleCountryChange}>
+                {#each countries as c}
+                    <option value={c}>{c}</option>
+                {/each}
+            </select>
+        </label>
     </div>
 
     <hr>
 
-    <div>
+    {#if yearsRange && !loading && !externalApiWarning && !errorMsg}
         <div>
-            <label>País:</label>
-            <input 
-                type="text" 
-                list="lista-paises" 
-                bind:value={selectedCountry} 
-                onchange={handleCountryChange} 
-                placeholder="Escribe para buscar..."
-            />
-            <datalist id="lista-paises">
-                {#each countries as c}
-                    <option value={c}></option>
-                {/each}
-            </datalist>
+            Medias calculadas entre: <strong>{yearsRange}</strong>
         </div>
-
-        {#if yearsRange && !loading && !externalApiWarning}
-            <div>
-                Calculando medias de la base de datos entre los años: <strong>{yearsRange}</strong>
-            </div>
-        {/if}
-    </div>
+    {/if}
 
     {#if loading}
-        <p> Buscando cruce de datos...</p>
+        <p>Buscando y cruzando datos...</p>
     {:else if externalApiWarning}
         <div>
-            <h3>Cruce no disponible</h3>
-            <p>{externalApiWarning}</p>
+            <strong>Atención:</strong> {externalApiWarning}
         </div>
     {:else if errorMsg}
         <p>{errorMsg}</p>
@@ -203,8 +190,4 @@
             <canvas bind:this={chartCanvas}></canvas>
         </div>
     {/if}
-
-    <div>
-        <a href="/integrations/pandemics"><button>Volver al Menú</button></a>
-    </div>
 </main>
