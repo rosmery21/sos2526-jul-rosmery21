@@ -40,6 +40,10 @@
     <h1>Integración Textual: Universidades vs Pandemias</h1>
 
     <div class="controls">
+        <a href="/pandemics">
+            <button class="btn-data">Volver a la tabla</button>
+        </a>
+
         <label>Selecciona País:</label>
         <select bind:value={selectedCountry} onchange={loadAll}>
             {#each countries as c}
@@ -78,7 +82,7 @@
                 {/each}
             </tbody>
         </table>
-        <p><em>(Mostrando las primeras 20 universidades)</em></p>
+        <p>(Mostrando las primeras 20 universidades)</p>
     {/if}
 
     <br>
@@ -86,7 +90,6 @@
 </main>
 
 <style>
-   
     /* Estilos para que la tabla parezca una tabla */
     table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
     th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
