@@ -4,17 +4,18 @@
 </script>
 
 <main>
-    <h2>Mis Integraciones - Pandemias</h2>
-    <p>
-        Aquí puedes acceder a mis distintas integraciones cruzando los datos de pandemias con otras apis.
-    </p>
+    <div class="header">
+        <h2>Panel de Integraciones: Pandemias</h2>
+        <p>
+            Explora los cruces de datos entre la API de Pandemias y otras apis.
+        </p>
+    </div>
 
-    <section>
+    <section class="grid">
         <div class="card">
-            <h3>1. Integración Pandemias - Población</h3>
+            <h3>1. Pandemias vs Población</h3>
             <p>
-                Gráfica de barras combinando muertes por pandemias con la población 
-                total.
+                Gráfica que analiza el impacto de la mortalidad por distintas pandemias frente al volumen total de población de cada país.
             </p>
             <button onclick={() => goto('/integrations/pandemics/population')}>
                 Ver Integración de Población
@@ -22,43 +23,53 @@
         </div>
 
         <div class="card"> 
-            <h3>2. Integración Pandemias - Riqueza Mundial</h3>
+            <h3>2. Pandemias vs Universidades</h3>
             <p>
-                Gráfica de tipo Polar Area combinando muertes por pandemias con 
-                datos de PIB (riqueza) y esperanza de vida.
-            </p>
-            <button onclick={() => goto('/integrations/pandemics/worlddata')}>
-                Ver Integración de Riqueza
-            </button>
-        </div>
-
-        <div class="card"> 
-            <h3>3. Integración Pandemias - Universidades</h3>
-            <p>
-                Muestra una tabla comparativa entre el total de muertes por pandemias 
-                y el listado de universidades del país usando HTML.
+                Tabla comparativa entre la mortalidad por distintas pandemias y las universidades en el país.
             </p>
             <button onclick={() => goto('/integrations/pandemics/universities')}>
                 Ver Tabla de Universidades
             </button>
         </div>
 
+        <div class="card highlights">
+            <h3>3. Pandemias vs COVID-19</h3>
+            <p>
+                Gráfica que analiza el impacto de la mortalidad por distintas pandemias frente a la mortalidad por COVID-19.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics/covid')}>
+                Ver Integración de COVID-19
+            </button>
+        </div>
+
         <div class="card pending">
             <h3>4. API de Compañeros SOS 1</h3>
-            <p>Próximamente... Cruzaremos datos con la API de otro grupo de la clase.</p>
+            <p>Próximamente... Integración con los datos de otro grupo del curso (SOS Group 1).</p>
             <button disabled>En construcción</button>
         </div>
 
         <div class="card pending">
-            <h3>5. API de Compañeros SOS 2</h3>
-            <p>Próximamente... Cruzaremos datos con la API de un segundo grupo de la clase.</p>
+            <h3>5. API de Compañeros SOS 1</h3>
+            <p>Próximamente... Integración con los datos de otro grupo del curso (SOS Group 1).</p>
+            <button disabled>En construcción</button>
+        </div>
+
+        <div class="card pending">
+            <h3>6. API de Compañeros SOS 3</h3>
+            <p>Próximamente... Integración con los datos de un segundo grupo del curso (SOS Group 3).</p>
+            <button disabled>En construcción</button>
+        </div>
+
+        <div class="card pending">
+            <h3>7. API de Compañeros SOS 4</h3>
+            <p>Próximamente... Integración con los datos de un segundo grupo del curso (SOS Group 4).</p>
             <button disabled>En construcción</button>
         </div>
     </section>
 
-    <div>
+    <div class="footer-nav">
         <button class="back-btn" onclick={() => goto('/integrations')}>
-            Volver a Integraciones del Grupo
+            Volver al Panel del Grupo
         </button>
     </div>
 </main>
