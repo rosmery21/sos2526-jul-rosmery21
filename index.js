@@ -10,6 +10,7 @@ import childMalnutritions from "./src/back/routes/child-malnutritions/child-maln
 import childMalnutritionsV2 from "./src/back/routes/child-malnutritions/child-malnutritions-v2.js";
 
 import deathsIntegrations from './src/back/routes/deaths-by-risk-factors/integrations/index.js';
+import pandemicsIntegrations from './src/back/routes/pandemics/integrations/index.js';
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.use(`${V2_API_URL}/deaths-by-risk-factors/integrations`, deathsIntegrations);
+app.use(`${V2_API_URL}/pandemics/integrations`, pandemicsIntegrations);
 
 app.use(`${BASE_API_URL}/deaths-by-risk-factors`, deathsRoute);
 app.use(BASE_API_URL, protestsRoute);
@@ -72,34 +74,6 @@ app.get("/api/proxy/social-drinking", async (req, res) => {
   }
 });
 /* fiiiiiiiiin*/
-
-/*Proxy prueba pandemics- population*/
-
-app.get("/api/proxy/population", async (req, res) => {
-    const rapidApiKey = 'ad97ef76e3msh2b781eca540599ep19e5fajsn89a7953f8f31'; 
-    const country = req.query.country || 'Spain';
-    const url = `https://get-population.p.rapidapi.com/population/country?country=${country}`;
-
-    const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': rapidApiKey,
-            'x-rapidapi-host': 'get-population.p.rapidapi.com'
-        }
-    };
-
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) throw new Error("Fallo en la API de población");
-        const data = await response.json();
-        res.json(data); // Enviamos los datos al frontend
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "proxy ha fallado" });
-    }
-});
-
-/*FIN*/
 
 
 app.use(svelteHandler);

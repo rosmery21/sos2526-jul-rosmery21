@@ -17,6 +17,8 @@
     let yearsRange = $state("");
 
     async function initData() {
+        loading = true; 
+        errorMsg = "";  
         try {
             const resMyApi = await fetch('/api/v2/pandemics?limit=20000');
             if (!resMyApi.ok) throw new Error("Fallo al conectar con tu API");
@@ -25,7 +27,7 @@
             countries = [...new Set(allMyData.map(d => d.entity))].sort();
 
             if (countries.length > 0) {
-                selectedCountry = countries[0];
+                if (!selectedCountry) selectedCountry = countries[0];
                 await loadData();
             } else {
                 errorMsg = "La base de datos está vacía.";
@@ -68,15 +70,18 @@
                 cholera: countCholera > 0 ? (totalCholera / countCholera) : 0
             };
             
-            const resExtApi = await fetch(`/api/proxy/population?country=${encodeURIComponent(selectedCountry)}`);
+            const resExtApi = await fetch(`/api/v2/pandemics/integrations/population?country=${encodeURIComponent(selectedCountry)}`);            
             let pop = 0;
             
             if (resExtApi.ok) {
                 const extData = await resExtApi.json();
 
-                if (extData && extData.count) { pop = extData.count; } 
-                else if (extData && extData.population) { pop = extData.population; } 
-                else if (extData && extData.body && extData.body.population) { pop = extData.body.population; }
+                if (Array.isArray(extData) && extData.length > 0 && extData[0].population) { 
+                    pop = extData[0].population; 
+                } 
+                else if (extData && extData.population) { 
+                    pop = extData.population; 
+                }
 
                 if (pop > 0) {
                     cruceExitoso = true;
@@ -84,7 +89,7 @@
                     externalApiWarning = `No se puede hacer el cruce: La API externa no tiene datos de población para ${selectedCountry}.`;
                 }
             } else {
-                externalApiWarning = "RapidAPI ha fallado.";
+                externalApiWarning = "La API de población no responde correctamente.";
             }
 
             if (cruceExitoso) {
@@ -109,7 +114,7 @@
         myChart = new Chart(chartCanvas, {
             type: 'bar',
             data: {
-                labels: [`${selectedCountry} (Promedio Histórico)`],
+                labels: [`${selectedCountry}`],
                 datasets: [
                     {
                         label: 'Población Actual',
@@ -149,12 +154,18 @@
 
 <main>
     <h2>Integración Pandemias y Población</h2>
+    
+    <div>
+        <button onclick={initData} disabled={loading}>
+            {loading ? 'Cargando datos...' : 'Recargar Datos Iniciales'}
+        </button>
+    </div>
+
     <hr>
 
     <div>
         <div>
             <label>País:</label>
-            
             <input 
                 type="text" 
                 list="lista-paises" 
