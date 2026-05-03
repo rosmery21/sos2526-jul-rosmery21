@@ -22,7 +22,7 @@
                 Gráfica que analiza el impacto de la mortalidad por distintas pandemias frente al volumen total de población de cada país.
             </p>
             <button onclick={() => goto('/integrations/pandemics/population')}>
-                Ver Integración de Población
+                Ver Integración Población
             </button>
         </div>
 
@@ -32,7 +32,7 @@
                 Tabla comparativa entre la mortalidad por distintas pandemias y las universidades en el país.
             </p>
             <button onclick={() => goto('/integrations/pandemics/universities')}>
-                Ver Tabla de Universidades
+                Ver Tabla Universidades
             </button>
         </div>
 
@@ -42,7 +42,7 @@
                 Gráfica que analiza el impacto de la mortalidad por distintas pandemias frente a la mortalidad por COVID-19.
             </p>
             <button onclick={() => goto('/integrations/pandemics/covid')}>
-                Ver Integración de COVID-19
+                Ver Integración COVID-19
             </button>
         </div>
 
@@ -76,10 +76,14 @@
             </button>
         </div>
 
-        <div class="card pending">
-            <h3>7. API de Compañeros SOS 4</h3>
-            <p>Próximamente... Integración con los datos de un segundo grupo del curso (SOS Group 4).</p>
-            <button disabled>En construcción</button>
+        <div class="card highlights">
+            <h3>7. Pandemias vs Sector Textil</h3>
+            <p>
+                Gráfico mixto de doble eje que cruza la mortalidad por pandemias con las estadísticas de producción o volumen de lana.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics/wool')}>
+                Ver Integración Lana
+            </button>
         </div>
     </section>
 </main>
