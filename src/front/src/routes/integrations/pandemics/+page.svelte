@@ -46,10 +46,14 @@
             </button>
         </div>
 
-        <div class="card pending">
-            <h3>4. API de Compañeros SOS 1</h3>
-            <p>Próximamente... Integración con los datos de otro grupo del curso (SOS Group 1).</p>
-            <button disabled>En construcción</button>
+        <div class="card highlights">
+            <h3>4. Pandemias vs Lanzamientos Espaciales</h3>
+            <p>
+                Gráfica que cruza el impacto de las pandemias con los lanzamientos espaciales.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics/space-launches')}>
+                Ver Integración Lanzamientos Espaciales
+            </button>
         </div>
 
         <div class="card pending">
