@@ -56,10 +56,14 @@
             </button>
         </div>
 
-        <div class="card pending">
-            <h3>5. API de Compañeros SOS 1</h3>
-            <p>Próximamente... Integración con los datos de otro grupo del curso (SOS Group 1).</p>
-            <button disabled>En construcción</button>
+        <div class="card highlights">
+            <h3>5. Pandemias vs Selecciones Nacionales</h3>
+            <p>
+                Gráfica que compara la mortalidad por distintas pandemias con el volumen de registros en el ranking de selecciones nacionales.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics/national-team-rankings-per-years')}>
+                Ver Integración Selecciones Nacionales
+            </button>
         </div>
 
         <div class="card pending">
