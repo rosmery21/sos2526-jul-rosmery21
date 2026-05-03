@@ -34,7 +34,7 @@
 		</div>
 
 
-				<div class="card">
+		<div class="card">
 			<h3>Integración con los datos de la api "meteorite-landings"</h3>
 			<p>
 				Representación de los datos recogidos en la api protests junto
@@ -43,6 +43,42 @@
 
 			<button onclick={() => goto('/integrations/protests/meteorite-landings')}>
 				Ver integración con meteorite-landings
+			</button>
+		</div>
+
+		<div class="card">
+			<h3>Integración con los datos de la api "openmeteo"</h3>
+			<p>
+				Representación de los datos recogidos en la api protests junto
+				a los datos obtenidos por la api "openmeteo" externa
+			</p>
+
+			<button onclick={() => goto('/integrations/protests/openmeteo')}>
+				Ver integración con openmeteo
+			</button>
+		</div>
+
+		<div class="card">
+			<h3>Integración con los datos de la api "wikidata"</h3>
+			<p>
+				Representación de los datos recogidos en la api protests junto
+				a los datos obtenidos por la api "wikidata" de otro compañero de SOS
+			</p>
+
+			<button onclick={() => goto('/integrations/protests/wikidata')}>
+				Ver integración con wikidata
+			</button>
+		</div>
+
+		<div class="card">
+			<h3>Integración con los datos de la api "restcountries"</h3>
+			<p>
+				Representación de los datos recogidos en la api protests junto
+				a los datos obtenidos por la api "restcountries" de otro compañero de SOS
+			</p>
+
+			<button onclick={() => goto('/integrations/protests/restcountries')}>
+				Ver integración con restcountries
 			</button>
 		</div>
 	</section>
