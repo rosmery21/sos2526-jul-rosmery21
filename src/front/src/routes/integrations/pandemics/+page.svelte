@@ -66,10 +66,14 @@
             </button>
         </div>
 
-        <div class="card pending">
-            <h3>6. API de Compañeros SOS 3</h3>
-            <p>Próximamente... Integración con los datos de un segundo grupo del curso (SOS Group 3).</p>
-            <button disabled>En construcción</button>
+        <div class="card highlights">
+            <h3>6. Pandemias vs Energía Renovable</h3>
+            <p>
+                Gráficos de área sincronizados que analizan la evolución temporal de las pandemias frente al consumo de energía renovable.
+            </p>
+            <button onclick={() => goto('/integrations/pandemics/energy')}>
+                Ver Integración Energía Renovable
+            </button>
         </div>
 
         <div class="card pending">
