@@ -4,7 +4,7 @@
 </script>
 
 <main>
-    <h2>Integraciones</h2>
+    <h2>Integraciones de API "deaths-by-risk-factors"</h2>
 	<section>
 		<div class="card" id="deaths-by-risk-factors">
 			<h3>Integración de los datos de la api Muertes por factores de riesgo</h3>
@@ -107,19 +107,5 @@ section > div.card {
 /* Texto */
 .card p {
   margin-bottom: 15px;
-}
-
-/* Botón */
-button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007acc;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #005fa3;
 }
 </style>

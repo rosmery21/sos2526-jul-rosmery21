@@ -9,6 +9,10 @@
         <p>
             Explora los cruces de datos entre la API de Pandemias y otras apis.
         </p>
+        
+        <button class="back-btn" onclick={() => goto('/integrations')}>
+            Volver al Panel del Grupo
+        </button>
     </div>
 
     <section class="grid">
@@ -66,10 +70,4 @@
             <button disabled>En construcción</button>
         </div>
     </section>
-
-    <div class="footer-nav">
-        <button class="back-btn" onclick={() => goto('/integrations')}>
-            Volver al Panel del Grupo
-        </button>
-    </div>
 </main>

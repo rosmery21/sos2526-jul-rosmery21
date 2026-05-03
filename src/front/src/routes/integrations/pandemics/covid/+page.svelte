@@ -41,10 +41,18 @@
 
         loading = true;
         externalApiWarning = ""; 
+        errorMsg = "";
         cruceExitoso = false;
 
         try {
             const countryRecords = allMyData.filter(d => d.entity === selectedCountry);
+            
+            if (countryRecords.length === 0) {
+                externalApiWarning = `No hay datos históricos en tu base de datos para ${selectedCountry}. No se pueden cruzar los datos.`;
+                loading = false;
+                return; 
+            }
+
             const years = countryRecords.map(d => d.year);
             yearsRange = `${Math.min(...years)} - ${Math.max(...years)}`;
 
@@ -67,14 +75,20 @@
             const extData = await resExtApi.json();
 
             if (extData.error) {
-                externalApiWarning = extData.error;
+                externalApiWarning = `No se pueden cruzar estos datos.`;
                 loading = false;
-                return;
+                return; 
             }
 
-            const covidDeaths = extData.stats?.totalDeaths || 0;
+            if (!extData.stats || extData.stats.totalDeaths === undefined) {
+                externalApiWarning = `No se pueden cruzar estos datos. La API externa no tiene registros de mortalidad para ${selectedCountry}.`;
+                loading = false;
+                return; 
+            }
 
-            const logZeroValue = 0.1;
+            const covidDeaths = extData.stats.totalDeaths;
+
+            const logZeroValue = 0.1; 
 
             const finalHiv = avgHiv === 0 ? logZeroValue : avgHiv;
             const finalTuberculosis = avgTuberculosis === 0 ? logZeroValue : avgTuberculosis;
@@ -87,7 +101,7 @@
             
             loading = false;
         } catch (e) {
-            errorMsg = "Error al realizar el cruce de datos.";
+            errorMsg = "Error crítico al intentar realizar el cruce de datos.";
             loading = false;
         }
     }
@@ -176,8 +190,8 @@
     
     <div>
         <div>
-            <a href="/integrations"><button> Volver</button></a>
             <a href="/pandemics"><button>Volver a la tabla</button></a>
+            <a href="/integrations/pandemics"><button> Volver</button></a>
         </div>
 
         <label>
@@ -192,11 +206,11 @@
 
     {#if loading}
         <div>
-            <p>Recopilando datos epidemiológicos...</p>
+            <p>Intentando cruzar los datos...</p>
         </div>
     {:else if externalApiWarning}
         <div>
-            <strong>Aviso:</strong> {externalApiWarning}
+            <strong>Cruce Imposible:</strong> {externalApiWarning}
         </div>
     {:else if errorMsg}
         <p>{errorMsg}</p>

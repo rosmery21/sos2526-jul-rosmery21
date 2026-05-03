@@ -40,9 +40,9 @@
     <h1>Integración Textual: Universidades vs Pandemias</h1>
 
     <div class="controls">
-        <a href="/pandemics">
-            <button class="btn-data">Volver a la tabla</button>
-        </a>
+        <a href="/pandemics"><button class="btn-data">Volver a la tabla</button></a>
+        <a href="/integrations/pandemics"><button> Volver</button></a>
+
 
         <label>Selecciona País:</label>
         <select bind:value={selectedCountry} onchange={loadAll}>
@@ -86,7 +86,6 @@
     {/if}
 
     <br>
-    <a href="/integrations/pandemics"><button>Volver</button></a>
 </main>
 
 <style>

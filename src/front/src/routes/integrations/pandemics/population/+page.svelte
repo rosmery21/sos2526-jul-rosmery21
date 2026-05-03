@@ -153,9 +153,9 @@
     <h2>Visualización Analítica: Pandemias y Población</h2>
     
     <div>
-        <a href="/pandemics">
-            <button>Volver a la tabla</button>
-        </a>
+        <a href="/pandemics"><button>Volver a la tabla</button></a>
+        <a href="/integrations/pandemics"><button> Volver</button></a>
+
 
         <label>
             País:
