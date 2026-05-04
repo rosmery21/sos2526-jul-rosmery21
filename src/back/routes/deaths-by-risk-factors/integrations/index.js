@@ -1,5 +1,6 @@
 import express from 'express';
 import { getAQapiData } from './aqapi.js';
+import { getDietCost } from './cost-of-healthy-diet.js';
 import { countriesCodes } from '../../../utils/countriesCodes/countriesCodes.js';
 
 const router = express.Router();
@@ -12,6 +13,15 @@ router.get('/aqapi', async (req, res) => {
         res.send(data);
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/cost-of-healthy-diet', async (req, res) => {
+    try{
+        const data = await getDietCost();
+        res.send(data);
+    } catch (err) {
+        res.status(500).json({error: err.message});
     }
 });
 
