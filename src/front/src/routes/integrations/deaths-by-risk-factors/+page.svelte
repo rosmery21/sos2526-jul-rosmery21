@@ -67,6 +67,15 @@
 				Ver integración con la API de PIB por país
 			</button>
 		</div>
+		<div class="card">
+			<h3>Integración de los datos con la api </h3>
+			<p>
+				...
+			</p>
+			<button onclick={() => goto('/integrations/deaths-by-risk-factors/temperature-map')}>
+				Ver integración con la API...
+			</button>
+		</div>
     </div>
 </main>
 
