@@ -22,63 +22,12 @@
 		<h2>Integraciones de API "protests"</h2>
 
 		<div class="card">
-			<h3>Integración con los datos de la api "social-drinking-behaviors"</h3>
+			<h3>Menú de Integraciones de Protestas</h3>
 			<p>
-				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api social-drinking-behaviors de otro compañero de SOS
+				Acceso a las distintas integraciones realizadas.
 			</p>
-
-			<button onclick={() => goto('/integrations/protests/social-drinking-behaviors')}>
-				Ver integración con social-drinking-behaviors
-			</button>
-		</div>
-
-
-		<div class="card">
-			<h3>Integración con los datos de la api "meteorite-landings"</h3>
-			<p>
-				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "meteorite-landings" de otro compañero de SOS
-			</p>
-
-			<button onclick={() => goto('/integrations/protests/meteorite-landings')}>
-				Ver integración con meteorite-landings
-			</button>
-		</div>
-
-		<div class="card">
-			<h3>Integración con los datos de la api "openmeteo"</h3>
-			<p>
-				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "openmeteo" externa
-			</p>
-
-			<button onclick={() => goto('/integrations/protests/openmeteo')}>
-				Ver integración con openmeteo
-			</button>
-		</div>
-
-		<div class="card">
-			<h3>Integración con los datos de la api "wikidata"</h3>
-			<p>
-				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "wikidata" de otro compañero de SOS
-			</p>
-
-			<button onclick={() => goto('/integrations/protests/wikidata')}>
-				Ver integración con wikidata
-			</button>
-		</div>
-
-		<div class="card">
-			<h3>Integración con los datos de la api "restcountries"</h3>
-			<p>
-				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "restcountries" de otro compañero de SOS
-			</p>
-
-			<button onclick={() => goto('/integrations/protests/restcountries')}>
-				Ver integración con restcountries
+			<button onclick={() => goto('/integrations/protests')}>
+				Ver integraciones de Protestas
 			</button>
 		</div>
 	</section>

@@ -219,7 +219,7 @@ function onCountryChange() {
   <!-- CHART -->
   <div bind:this={chartEl} style="width:100%; max-width:1000px; height:550px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);"></div>
 
-  <button onclick={() => goto("/integrations/")} style="padding:10px 30px; font-size:16px; background:#667eea; color:white; border:none; border-radius:4px; cursor:pointer; margin-top:10px;">
+  <button onclick={() => goto("/integrations/protests")} style="padding:10px 30px; font-size:16px; background:#667eea; color:white; border:none; border-radius:4px; cursor:pointer; margin-top:10px;">
     Volver
   </button>
 

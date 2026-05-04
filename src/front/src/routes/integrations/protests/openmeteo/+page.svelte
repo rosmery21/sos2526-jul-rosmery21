@@ -172,7 +172,7 @@ async function onChange() {
 
     <div bind:this={chartEl} style="width:900px;height:500px;"></div>
 
-    <button onclick={() => goto("/integrations/")}>
+    <button onclick={() => goto("/integrations/protests")}>
       Volver
     </button>
 

@@ -143,4 +143,4 @@ function renderChart() {
   <div bind:this={chartEl} style="width:900px;height:500px;"></div>
 </div>
 
-<button onclick={() => goto('/integrations/')}>Volver</button>
+<button onclick={() => goto('/integrations/protests')}>Volver</button>

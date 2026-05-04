@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 
+  import { goto } from "$app/navigation";
   import { onMount } from "svelte";
   import * as echarts from "echarts";
 
@@ -166,6 +167,10 @@
     <option value={c}>{c}</option>
   {/each}
 </select>
+
+<button onclick={() => goto("/integrations/protests")}>
+  Volver
+</button>
 
 <!-- CHARTS CENTRADOS -->
 <div style="display:flex; justify-content:center; gap:40px; margin-top:20px;">
