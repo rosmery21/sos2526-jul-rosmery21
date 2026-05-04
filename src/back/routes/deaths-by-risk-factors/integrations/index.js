@@ -25,4 +25,13 @@ router.get('/cost-of-healthy-diet', async (req, res) => {
     }
 });
 
+router.get('/happiness-indices', async (req, res) => {
+    try{
+        const data = await getHappinessIndices();
+        res.send(data);
+    }catch (err){
+        res.status(500).json({error: err.message});
+    }
+})
+
 export default router;
