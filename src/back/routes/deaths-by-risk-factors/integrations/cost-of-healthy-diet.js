@@ -21,7 +21,7 @@ export const getDietCost = async () => {
             country: item.country.split(',')[0].trim()
         }));
     } catch (error) {
-        console.error("Error integrando la API de muertes por riesgo:", error);
+        console.error("Error importando la API de coste de dieta saludable:", error);
         return [];
     }
 };

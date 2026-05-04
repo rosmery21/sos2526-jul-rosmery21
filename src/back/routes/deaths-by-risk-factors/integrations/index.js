@@ -1,6 +1,7 @@
 import express from 'express';
 import { getAQapiData } from './aqapi.js';
 import { getDietCost } from './cost-of-healthy-diet.js';
+import { getHappinessIndices } from './happiness-indices.js';
 import { countriesCodes } from '../../../utils/countriesCodes/countriesCodes.js';
 
 const router = express.Router();

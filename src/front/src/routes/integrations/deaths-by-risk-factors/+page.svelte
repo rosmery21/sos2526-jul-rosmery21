@@ -32,5 +32,28 @@
 				Ver integración con la API de worldbank
 			</button>
 		</div>
+		<div class="card">
+			<h3>Integración de los datos con la api de coste de una dieta saludable</h3>
+			<p>
+				En esta integración de la api de muertes por factores de riesgo con la api de el coste
+				de una dieta saludable podemos ver la relacción entre el coste de una dieta saludable y 
+				las muertes causadas por una mala alimentación, para observar como dependen estos datos.
+			</p>
+			<button onclick={() => goto('/integrations/deaths-by-risk-factors/cost-of-healthy-diet')}>
+				Ver integración con la API de coste de dieta saludable
+			</button>
+		</div>
+		<div class="card">
+			<h3>Integración de los datos con la api de indice de felicidad</h3>
+			<p>
+				Esta integración nos permite ver una comparación de los datos de la api de Muertes por 
+				factores de riesgo, viendo el total de estas muertes por cada país, y los datos de la api 
+				con los datos de los índices de felicidad por país, con esto podremos ver si existe alguna
+				relacción entre estos dos datos.
+			</p>
+			<button onclick={() => goto('/integrations/deaths-by-risk-factors/happiness-indices')}>
+				Ver integración con la API de indices de felicidad
+			</button>
+		</div>
     </div>
 </main>
