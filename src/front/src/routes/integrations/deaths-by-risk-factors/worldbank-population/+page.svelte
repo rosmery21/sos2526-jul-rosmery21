@@ -4,7 +4,7 @@
 
     import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { countryNameToISO3 } from '$lib/utils/countryCodesISO3/countryCodes.js';
+	import { countryNameToISO3 } from '$lib/utils/codes/countryNameToISO3.js'
 
 	let year = 2017;
 	let errorMsg = $state('');

@@ -64,16 +64,17 @@
 				api worldbank, y se consulta por el PIB.
 			</p>
 			<button onclick={() => goto('/integrations/deaths-by-risk-factors/worldbank-gdp')}>
-				Ver integración con la API de PIB por país
+				Ver representación de la API de PIB por país
 			</button>
 		</div>
 		<div class="card">
-			<h3>Integración de los datos con la api </h3>
+			<h3>Integración de los datos con la api open meteo </h3>
 			<p>
-				...
+				En este mapa podremos ver los últimos registros de temperatura en un mapa, que asocia 
+				colores diferentes a los países en función de la temperatura media registrada.
 			</p>
 			<button onclick={() => goto('/integrations/deaths-by-risk-factors/temperature-map')}>
-				Ver integración con la API...
+				Ver representación de la API open meteo
 			</button>
 		</div>
     </div>
