@@ -1,7 +1,10 @@
 <script>
     // @ts-nocheck
+    /* eslint-disable svelte/no-navigation-without-resolve */
+
     import { onMount } from 'svelte';
     import Chart from 'chart.js/auto';
+    import { goto } from '$app/navigation';
 
     let happinessData = [];
     let riskData = [];
@@ -113,6 +116,11 @@
 <main>
     <div class="container">
         <h2>Correlación: Felicidad vs. Factores de Riesgo</h2>
+
+        <button onclick={() => goto('/integrations/deaths-by-risk-factors')}>
+		    Volver
+	    </button>
+    
         <p class="description">
             Visualización de dispersión para identificar patrones entre el bienestar subjetivo y la mortalidad por riesgos ambientales y de salud.
         </p>
