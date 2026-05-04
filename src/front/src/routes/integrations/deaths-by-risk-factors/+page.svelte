@@ -10,6 +10,7 @@
 		Volver
 	</button>
     
+	<p><strong>Integraciones con otras APIs</strong></p>
 	<div>
         <div class="card">
 			<h3>Integración de los datos con la api de la calidad del aire de la OMS</h3>
@@ -55,8 +56,9 @@
 				Ver integración con la API de indices de felicidad
 			</button>
 		</div>
+		<p><strong>Usos de otras APIs</strong></p>
 		<div class="card">
-			<h3>Integración de los datos con la api de PIB por país</h3>
+			<h3>Uso de la api de PIB por país</h3>
 			<p>
 				En esta gráfica podemos ver la evolución del PIB de cada país desde el año 2000, se
 				puede seleccionar el país del que queramos consultar los datos y ver en la gráfica como los
@@ -68,7 +70,7 @@
 			</button>
 		</div>
 		<div class="card">
-			<h3>Integración de los datos con la api open meteo </h3>
+			<h3>Uso de los datos de la api open meteo </h3>
 			<p>
 				En este mapa podremos ver los últimos registros de temperatura en un mapa, que asocia 
 				colores diferentes a los países en función de la temperatura media registrada.
