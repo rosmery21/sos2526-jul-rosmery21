@@ -11,7 +11,7 @@ let SPACE_API = "https://meteorite-landings-tvcf.onrender.com/api/v2/meteorite-l
 let countries = [];
 let chart;
 let chartEl;
-let ready = false;
+let loading = $state(true);
 
 let protestData = [];
 let spaceData = [];
@@ -32,7 +32,8 @@ onMount(async () => {
 
   countries = [...new Set(allCountries)].sort();
 
-  ready = true;
+  console.log("Cargado");
+  loading = false;
   renderChart();
 });
 
@@ -137,6 +138,11 @@ function renderChart() {
   });
 }
 </script>
+
+
+{#if loading}
+  <p>Cargando...</p>
+{/if}
 
 <!-- CHART -->
 <div style="display:flex; justify-content:center; margin-top:20px;">

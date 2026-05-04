@@ -81,12 +81,6 @@ main {
   margin: 0 auto;
 }
 
-/* Separación clara entre secciones */
-section {
-  margin-bottom: 50px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-}
 
 /* Títulos */
 h2 {
@@ -119,5 +113,12 @@ section > div.card {
 /* Texto */
 .card p {
   margin-bottom: 15px;
+}
+
+button {
+  padding: 3px 5px;
+  border: solid 1px #000000;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

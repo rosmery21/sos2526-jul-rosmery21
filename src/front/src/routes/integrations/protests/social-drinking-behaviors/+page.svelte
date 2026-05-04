@@ -23,7 +23,7 @@
   let protestEl;
   let drinkEl;
 
-  let ready = $state(false);
+  let loading = $state(true);
 
   let noProtestData = $state(false);
   let noDrinkData = $state(false);
@@ -46,12 +46,12 @@
     selectedYear = years[0];
     selectedCountry = countries[0];
 
-    ready = true;
+    loading = false;
   });
 
   // Actualizacion automatica
   $effect(() => {
-    if (!ready) return;
+    //if (!loading) return;
     if (!selectedYear || !selectedCountry) return;
 
     loadData(selectedYear, selectedCountry);
@@ -68,6 +68,8 @@
 
   // Funcion de cargar datos
   async function loadData(year, country) {
+    loading = true;
+
     const pUrl = `${PROTEST_API}?country=${country}&year=${year}`;
     const dUrl = `${DRINK_API}?country=${country}&year=${year}`;
 
@@ -106,6 +108,7 @@
 
     noDrinkData = !drinkEntry;
     totalLiter = drinkEntry?.total_liter ?? null;
+    loading = false;
 
     renderCharts();
   }
@@ -155,6 +158,7 @@
   }
 </script>
 
+
 <!-- SELECTORES -->
 <select bind:value={selectedYear}>
   {#each years as y}
@@ -171,6 +175,9 @@
 <button onclick={() => goto("/integrations/protests")}>
   Volver
 </button>
+
+
+<p style="visibility: {loading ? 'visible' : 'hidden'}">Cargando. . .</p>
 
 <!-- CHARTS CENTRADOS -->
 <div style="display:flex; justify-content:center; gap:40px; margin-top:20px;">
