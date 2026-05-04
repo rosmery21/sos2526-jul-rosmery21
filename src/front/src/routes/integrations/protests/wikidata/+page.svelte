@@ -105,8 +105,8 @@ function buildPieData() {
 
   return Object.entries(counts)
     .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 8); // top 8 para no saturar el gráfico
+    .sort((a, b) => b.value - a.value) // ordenar de mayor a menor
+    .slice(0, 8); // top 8
 }
 
 // ----------------------

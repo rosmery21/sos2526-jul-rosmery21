@@ -28,7 +28,7 @@
   let noProtestData = $state(false);
   let noDrinkData = $state(false);
 
-  // 🔹 INIT
+  // Cargar datos
   onMount(async () => {
     const [pRes, dRes] = await Promise.all([
       fetch(PROTEST_API),
@@ -49,7 +49,7 @@
     ready = true;
   });
 
-  // 🔹 REACTIVE
+  // Actualizacion automatica
   $effect(() => {
     if (!ready) return;
     if (!selectedYear || !selectedCountry) return;
@@ -57,7 +57,7 @@
     loadData(selectedYear, selectedCountry);
   });
 
-  // 🔹 SAFE JSON
+  // Helper para manejar respuestas no JSON o errores
   async function safeJson(res) {
     try {
       return res.ok ? await res.json() : [];
@@ -66,7 +66,7 @@
     }
   }
 
-  // 🔹 LOAD DATA
+  // Funcion de cargar datos
   async function loadData(year, country) {
     const pUrl = `${PROTEST_API}?country=${country}&year=${year}`;
     const dUrl = `${DRINK_API}?country=${country}&year=${year}`;
@@ -80,7 +80,7 @@
     const dData = await safeJson(dRes);
 
     // =========================
-    // 🔴 PROTESTS
+    // PROTESTS
     // =========================
     noProtestData = !pData.length;
 
@@ -91,7 +91,7 @@
     liberalScore = protestEntry?.liberal_score ?? null;
 
     // =========================
-    // 🟠 DRINKING
+    // DRINKING
     // =========================
     let drinkEntry = null;
 
@@ -110,14 +110,14 @@
     renderCharts();
   }
 
-  // 🔹 CHARTS
+  // CHARTS
   function renderCharts() {
     if (!protestEl || !drinkEl) return;
 
     if (!protestChart) protestChart = echarts.init(protestEl);
     if (!drinkChart) drinkChart = echarts.init(drinkEl);
 
-    // 🔵 PROTESTS (0 - 1)
+    // PROTESTS (0 - 1)
     protestChart.setOption({
       title: { text: "Puntuación liberal", left: "center" },
       series: [
@@ -135,7 +135,7 @@
       ],
     });
 
-    // 🍺 DRINKING
+    // DRINKING
     drinkChart.setOption({
       title: { text: "Consumo de alcohol", left: "center" },
       series: [
