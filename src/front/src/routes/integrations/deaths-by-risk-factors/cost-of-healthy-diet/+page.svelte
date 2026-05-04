@@ -1,9 +1,12 @@
 <script>
 	// @ts-nocheck
     /* eslint-disable svelte/prefer-svelte-reactivity */
+    /* eslint-disable svelte/no-navigation-without-resolve */
+
 
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
+    import { goto } from '$app/navigation';
 
 	let dietDataRaw = [];
 	let deathData = [];
@@ -118,6 +121,11 @@
 
 <main class="container">
 	<h2>Integración: Coste de Alimentos vs. Riesgos de Salud</h2>
+
+    <button onclick={() => goto('/integrations/deaths-by-risk-factors')}>
+		Volver
+	</button>
+
 	<p>
 		Eje X: coste de vegetales (PPP USD) | Eje Y: muertes por glucosa alta en ayuno | Tamaño: coste
 		total de dieta saludable.
