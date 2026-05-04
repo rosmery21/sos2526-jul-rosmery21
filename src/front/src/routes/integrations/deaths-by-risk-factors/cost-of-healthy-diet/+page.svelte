@@ -1,150 +1,148 @@
 <script>
-	// @ts-nocheck
-    /* eslint-disable svelte/prefer-svelte-reactivity */
-    /* eslint-disable svelte/no-navigation-without-resolve */
+    import { onMount } from 'svelte';
 
+    let countries = [];
+    let selectedCountry = 'Spain'; 
+    let gdpData = [];
+    let loading = true;
+    let errorMsg = "";
 
-	import { onMount } from 'svelte';
-	import Chart from 'chart.js/auto';
-    import { goto } from '$app/navigation';
+    onMount(async () => {
+        try {
+            await loadCountries();
+            if (countries.length > 0) {
+                await loadGDP();
+            }
+        } catch (e) {
+            errorMsg = "Error al conectar con el servidor central.";
+        } finally {
+            loading = false;
+        }
+    });
 
-	let dietDataRaw = [];
-	let deathData = [];
-	let canvas;
-	let chart;
+    async function loadCountries() {
+        const res = await fetch("/api/v2/integrations/deaths-by-risk-factors/worldbank-gdp/countries");
+        if (res.ok) {
+            countries = await res.json();
+        } else {
+            throw new Error();
+        }
+    }
 
-	const cleanName = (name) => (name ? name.split(',')[0].trim() : '');
+    async function loadGDP() {
+        loading = true;
+        const res = await fetch(`/api/v2/integrations/deaths-by-risk-factors/worldbank-gdp/${selectedCountry}`);
+        if (res.ok) {
+            const result = await res.json();
+            // El Banco Mundial devuelve [metadatos, datos]
+            // Filtramos nulos y revertimos para que el tiempo fluya de izquierda a derecha[cite: 1]
+            gdpData = result[1]
+                .filter(d => d.value !== null)
+                .reverse();
+            renderChart();
+        } else {
+            errorMsg = "No se encontraron registros económicos para este país.";
+        }
+        loading = false;
+    }
 
-	onMount(async () => {
-		try {
-			const resDeaths = await fetch('/api/v2/deaths-by-risk-factors');
-			deathData = await resDeaths.json();
+    function renderChart() {
+        if (typeof Highcharts !== 'undefined' && gdpData.length > 0) {
+            // El formato Variwide requiere: [nombre/categoría, valor_y, valor_ancho]
+            const variwideSeries = gdpData.map(d => [
+                d.date, 
+                d.value, // Altura: PIB de ese año[cite: 1]
+                d.value  // Ancho: También proporcional al PIB para enfatizar volumen[cite: 1]
+            ]);
 
-			const resDiet = await fetch(
-				'/api/v2/deaths-by-risk-factors/integrations/cost-of-healthy-diet'
-			);
-			const dietJson = await resDiet.json();
-
-			// Limpiamos nombres y nos quedamos solo con el año más reciente por país
-			const allDiet = dietJson.map((d) => ({
-				...d,
-				countryClean: cleanName(d.country)
-			}));
-
-			const latestByCountry = new Map();
-			for (const d of allDiet) {
-				const existing = latestByCountry.get(d.countryClean);
-				if (!existing || d.year > existing.year) {
-					latestByCountry.set(d.countryClean, d);
-				}
-			}
-			dietDataRaw = Array.from(latestByCountry.values());
-
-			if (dietDataRaw.length > 0 && deathData.length > 0) {
-				renderChart();
-			}
-		} catch (e) {
-			console.error('Error cargando integración:', e);
-		}
-	});
-
-	function renderChart() {
-		const bubbleData = dietDataRaw
-			.map((dietItem) => {
-				const countryDeaths = deathData
-					.filter((d) => cleanName(d.entity) === dietItem.countryClean)
-					.sort((a, b) => b.year - a.year);
-
-				const deathMatch = countryDeaths[0];
-
-				if (deathMatch) {
-					return {
-						x: dietItem.cost_vegetables_ppp_usd,
-						y: deathMatch.high_fasting_plasma_glucose,
-						r: dietItem.cost_healthy_diet_ppp_usd * 4,
-						country: dietItem.countryClean,
-						dietYear: dietItem.year,
-						deathYear: deathMatch.year,
-						bloodPressure: deathMatch.high_systolic_blood_pressure,
-						airPollution: deathMatch.air_pollution
-					};
-				}
-				return null;
-			})
-			.filter((item) => item !== null);
-
-		if (chart) chart.destroy();
-
-		const ctx = canvas.getContext('2d');
-		chart = new Chart(ctx, {
-			type: 'bubble',
-			data: {
-				datasets: [
-					{
-						label: 'Países (Tamaño = Coste Dieta Total)',
-						data: bubbleData,
-						backgroundColor: 'rgba(54, 162, 235, 0.5)',
-						borderColor: 'rgba(54, 162, 235, 1)'
-					}
-				]
-			},
-			options: {
-				scales: {
-					x: {
-						title: { display: true, text: 'Coste Vegetales (PPP USD)' },
-						beginAtZero: false
-					},
-					y: {
-						title: { display: true, text: 'Muertes por Glucosa Alta en Ayuno' },
-						beginAtZero: false
-					}
-				},
-				plugins: {
-					tooltip: {
-						callbacks: {
-							label: (context) => {
-								const d = context.raw;
-								return [
-									`${d.country}`,
-									`Dieta (${d.dietYear}): ${d.x.toFixed(2)} USD vegetales`,
-									`Salud (${d.deathYear}): ${d.y.toFixed(0)} muertes glucosa`,
-									`Presión arterial: ${d.bloodPressure?.toFixed(0) ?? 'N/A'}`
-								];
-							}
-						}
-					}
-				}
-			}
-		});
-	}
+            Highcharts.chart('chart-variwide', {
+                chart: {
+                    type: 'variwide'
+                },
+                title: {
+                    text: `Análisis Variwide del PIB: ${gdpData[0].country.value}`
+                },
+                subtitle: {
+                    text: 'El ancho y la altura de las columnas representan el PIB anual'
+                },
+                xAxis: {
+                    type: 'category',
+                    title: { text: 'Años' }
+                },
+                yAxis: {
+                    title: { text: 'PIB (US$ actuales)' }
+                },
+                legend: { enabled: false },
+                series: [{
+                    name: 'PIB Anual',
+                    data: variwideSeries,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:,.0f}'
+                    },
+                    tooltip: {
+                        pointFormat: 'PIB: <b>{point.y:,.0f} $</b><br>'
+                    },
+                    colorByPoint: true
+                }]
+            });
+        }
+    }
 </script>
 
-<main class="container">
-	<h2>Integración: Coste de Alimentos vs. Riesgos de Salud</h2>
+<svelte:head>
+    <!-- Cargamos Highcharts y el módulo Variwide específico[cite: 1] -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/variwide.js" on:load={renderChart}></script>
+</svelte:head>
 
-    <button onclick={() => goto('/integrations/deaths-by-risk-factors')}>
-		Volver
-	</button>
+<div class="container mt-4 mb-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="display-6">Gráfico Variwide - PIB Mundial</h2>
+            <p class="text-secondary">Visualización de dos dimensiones en columnas de ancho variable.</p>
+        </div>
+    </div>
 
-	<p>
-		Eje X: coste de vegetales (PPP USD) | Eje Y: muertes por glucosa alta en ayuno | Tamaño: coste
-		total de dieta saludable.
-	</p>
+    {#if errorMsg}
+        <div class="alert alert-danger" role="alert">{errorMsg}</div>
+    {/if}
 
-	<div class="chart-container">
-		<canvas bind:this={canvas}></canvas>
-	</div>
-</main>
+    <div class="card bg-light border-0 shadow-sm p-4 mb-4">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-auto">
+                <label for="country" class="fw-bold">Explorar País:</label>
+            </div>
+            <div class="col-md-5">
+                <select id="country" class="form-select border-primary" bind:value={selectedCountry} on:change={loadGDP}>
+                    {#each countries as country}
+                        <option value={country.id}>{country.name}</option>
+                    {/each}
+                </select>
+            </div>
+            {#if loading}
+                <div class="col-auto">
+                    <div class="spinner-grow text-primary" role="status"></div>
+                </div>
+            {/if}
+        </div>
+    </div>
+
+    <!-- Contenedor del Gráfico Variwide -->
+    <div id="chart-variwide" class="border rounded bg-white shadow-sm" style="width:100%; height:550px;"></div>
+
+    <div class="mt-4">
+        <button class="btn btn-outline-dark" on:click={() => window.history.back()}>
+            Regresar a Integraciones
+        </button>
+    </div>
+</div>
 
 <style>
-	.container {
-		padding: 20px;
-		font-family: sans-serif;
-	}
-	.chart-container {
-		max-width: 800px;
-		margin: 0 auto 40px auto;
-		padding: 10px;
-		border: 1px solid #eee;
-	}
+    #chart-variwide {
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px;
+    }
 </style>

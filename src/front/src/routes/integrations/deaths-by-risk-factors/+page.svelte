@@ -22,13 +22,13 @@
 			</button>
 		</div>
 		<div class="card">
-			<h3>Integración de los datos con la api de worldbank</h3>
+			<h3>Integración de los datos con la api de población de worldbank</h3>
 			<p>
 				Esta integración nos permite ver una comparación de los datos de la api de Muertes por 
 				factores de riesgo, viendo el total de estas muertes por cada país, y los datos de la api de 
 				worldbank que nos ofrece la población de cada país.
 			</p>
-			<button onclick={() => goto('/integrations/deaths-by-risk-factors/worldbank')}>
+			<button onclick={() => goto('/integrations/deaths-by-risk-factors/worldbank-population')}>
 				Ver integración con la API de worldbank
 			</button>
 		</div>
@@ -55,5 +55,18 @@
 				Ver integración con la API de indices de felicidad
 			</button>
 		</div>
+		<div class="card">
+			<h3>Integración de los datos con la api de PIB por país</h3>
+			<p>
+				En esta gráfica podemos ver la evolución del PIB de cada país desde el año 2000, se
+				puede seleccionar el país del que queramos consultar los datos y ver en la gráfica como los
+				años con mayor PIB estan representados con una columna más ancha. Los datos se obtienen de la 
+				api worldbank, y se consulta por el PIB.
+			</p>
+			<button onclick={() => goto('/integrations/deaths-by-risk-factors/worldbank-gdp')}>
+				Ver integración con la API de PIB por país
+			</button>
+		</div>
     </div>
 </main>
+

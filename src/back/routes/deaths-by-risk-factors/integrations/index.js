@@ -2,7 +2,7 @@ import express from 'express';
 import { getAQapiData } from './aqapi.js';
 import { getDietCost } from './cost-of-healthy-diet.js';
 import { getHappinessIndices } from './happiness-indices.js';
-import { getWorldbankGDP } from './worldbank-gdp.js';
+import { getWorldbankGDP, getWorldbankCountries } from './worldbank-gdp.js';
 import { countriesCodes } from '../../../utils/countriesCodes/countriesCodes.js';
 
 const router = express.Router();
@@ -44,6 +44,15 @@ router.get('/worldbank-gdp', async (req, res) => {
         res.send(data);
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/worldbank-gdp/countries', async (req, res) => {
+    try{
+        const countries = await getWorldbankCountries();
+        res.send(countries);
+    }catch(err){
+        res.status(500).json({error: err.message});
     }
 });
 
