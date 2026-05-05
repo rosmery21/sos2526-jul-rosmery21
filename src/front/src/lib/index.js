@@ -15,5 +15,6 @@ function parseApi(api) {
         <p>API: <a href="${api.api}" target="_blank">${api.api}</a></p>
         <p>Docs: <a href="${api.docs}" target="_blank">${api.docs}</a></p>
         <p>GitHub: <a href="${api.github}" target="_blank">${api.github}</a></p>
+        <p>Video explicativo: <a href="${api.video}" target="_blank">${api.video}</a></p>
     </article>`;
 }

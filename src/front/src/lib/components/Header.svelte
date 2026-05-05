@@ -15,5 +15,6 @@
         <a href="/analytics">Analíticas</a>
         <a href="/integrations">Integraciones</a>
         <a href="https://github.com/gti-sos/SOS2526-10" target="_blank">GitHub del proyecto</a>
+        <a href="/about">About</a>
     </nav>
 </header>

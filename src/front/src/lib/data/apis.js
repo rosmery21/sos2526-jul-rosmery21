@@ -7,6 +7,7 @@ const apis = [
         api: '/api/v2/deaths-by-risk-factors',
         docs: 'https://documenter.getpostman.com/view/52276011/2sBXijHrJv',
         github: 'https://github.com/123smj123',
+        video: 'https://www.youtube.com',
     },
     {
         nombre: 'Protestas',
@@ -16,6 +17,7 @@ const apis = [
         api: '/api/v2/protests',
         docs: 'https://documenter.getpostman.com/view/52275979/2sBXinFVKK',
         github: 'https://github.com/onesimomorillo',
+        video: 'https://drive.google.com/file/d/19RqIsJKRy6IFuLeSsZhzNqQd7ixo-Rf4/view?usp=sharing',
     },
     {
         nombre: 'Pandemias',
@@ -25,6 +27,7 @@ const apis = [
         api: '/api/v2/pandemics',
         docs: 'https://documenter.getpostman.com/view/52276047/2sBXijKsCU',
         github: 'https://github.com/alexiagutierrezcasado',
+        video: 'https://www.youtube.com',
     },
     {
         nombre: 'Desnutrición infantil',
@@ -34,6 +37,7 @@ const apis = [
         api: '/api/v2/child-malnutritions',
         docs: 'https://documenter.getpostman.com/view/53120972/2sBXiqEp7S',
         github: 'https://github.com/rosmery21',
+        video: 'https://www.youtube.com',
     }
 ];
 
