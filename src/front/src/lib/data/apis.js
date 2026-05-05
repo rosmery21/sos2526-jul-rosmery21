@@ -7,7 +7,7 @@ const apis = [
         api: '/api/v2/deaths-by-risk-factors',
         docs: 'https://documenter.getpostman.com/view/52276011/2sBXijHrJv',
         github: 'https://github.com/123smj123',
-        video: 'https://www.youtube.com',
+        video: 'https://drive.google.com/file/d/10pLkEjMm6gZGJClml5bkxp_E8YJo__bp/view?usp=sharing',
     },
     {
         nombre: 'Protestas',
