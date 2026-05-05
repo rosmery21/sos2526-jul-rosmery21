@@ -144,7 +144,7 @@
             representación con respecto al total de muertes por factores de riesgo en el mundo, cuanto mayor sea el 
             numero de muertes mayor será la cuña del grafico de ese país. Tambien podemos ver el total de la población
             ese país, pasando el ratón por encima, este dato se ha obtenido de la api worldbank que nos ofrece los datos
-            sobre la población de cada país por año, hemos cogido los datos del año ${year} ya que es el último año en 
+            sobre la población de cada país por año, hemos cogido los datos del año {year} ya que es el último año en 
             nuestra api.
 		</p>
 	</section>
