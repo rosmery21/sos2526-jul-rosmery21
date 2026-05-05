@@ -6,7 +6,7 @@
 	import { iso3ToHcKey } from '$lib/utils/codes/iso3ToHcKey.js';
 	import { countryCoords } from '$lib/utils/coordinates';
 
-	let loading = true;
+	let loading = $state(true);
 	let container;
 
 	async function getTemperatureData() {
