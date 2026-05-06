@@ -27,7 +27,7 @@ const apis = [
         api: '/api/v2/pandemics',
         docs: 'https://documenter.getpostman.com/view/52276047/2sBXijKsCU',
         github: 'https://github.com/alexiagutierrezcasado',
-        video: 'https://www.youtube.com',
+        video: 'https://youtu.be/Gv5sMBgss9E',
     },
     {
         nombre: 'Desnutrición infantil',
