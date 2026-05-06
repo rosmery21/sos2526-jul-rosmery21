@@ -35,16 +35,18 @@
 	<section>
         <h2>Integraciones de API "pandemics"</h2>
 
-        <div class="card">
-            <h3>Menú de Integraciones de Pandemias</h3>
-            <p>
-                Acceso a las distintas integraciones realizadas.
-            </p>
-            <button onclick={() => goto('/integrations/pandemics')}>
-                Ver integraciones de Pandemias
-            </button>
-        </div>
-    </section>
+				<div class="card">
+			<h3>Integración con los datos de la api "meteorite-landings"</h3>
+			<p>
+				Representación de los datos recogidos en la api protests junto
+				a los datos obtenidos por la api "meteorite-landings" de otro compañero de SOS
+			</p>
+
+			<button onclick={() => goto('/integrations/protests/meteorite-landings')}>
+				Ver integración con meteorite-landings
+			</button>
+		</div>
+	</section>
 </main>
 
 <style>
