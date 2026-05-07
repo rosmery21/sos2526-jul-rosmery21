@@ -11,6 +11,8 @@ import childMalnutritionsV2 from "./src/back/routes/child-malnutritions/child-ma
 
 import deathsIntegrations from './src/back/routes/deaths-by-risk-factors/integrations/index.js';
 import pandemicsIntegrations from './src/back/routes/pandemics/integrations/index.js';
+import childMalnutritionsIntegrations from './src/back/routes/child-malnutritions/integrations/index.js';
+
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
@@ -35,6 +37,8 @@ app.use((req, res, next) => {
 
 app.use(`${V2_API_URL}/deaths-by-risk-factors/integrations`, deathsIntegrations);
 app.use(`${V2_API_URL}/pandemics/integrations`, pandemicsIntegrations);
+app.use(`${V2_API_URL}/child-malnutritions/integrations`, childMalnutritionsIntegrations);
+
 
 app.use(`${BASE_API_URL}/deaths-by-risk-factors`, deathsRoute);
 app.use(BASE_API_URL, protestsRoute);

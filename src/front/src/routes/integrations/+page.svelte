@@ -47,6 +47,23 @@
 			</button>
 		</div>
 	</section>
+
+	
+	<section>
+		<h2>Integraciones de API "child-malnutritions"</h2>
+
+		<div class="card">
+			<h3>Visualizaciones integradas de malnutrición infantil</h3>
+			<p>
+				Integraciones de la API de malnutrición infantil con datos de educación,
+				densidad de población, PIB, esperanza de vida y pobreza.
+			</p>
+			<button onclick={() => goto('/integrations/child-malnutritions')}>
+				Ver integraciones de Child Malnutritions
+			</button>
+		</div>
+	</section>
+
 </main>
 
 <style>
