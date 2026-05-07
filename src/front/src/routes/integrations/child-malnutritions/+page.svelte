@@ -67,16 +67,16 @@
 		</div>
 
 		<div class="card">
-			<h3>Perfil Global de Malnutrición Infantil</h3>
-			<p>
-				Tabla interactiva con los datos más recientes de stunting, wasting, overweight
-				y underweight por país, directamente desde la API child-malnutritions.
-				Permite ordenar por cualquier indicador.
-			</p>
-			<button onclick={() => goto('/integrations/child-malnutritions/global-analysis')}>
-				Ver perfil global de malnutrición
-			</button>
-		</div>
+    <h3>Inversión Educativa vs. Malnutrición</h3>
+    <p>
+        Análisis de la relación entre el <b>Gasto Público en Educación (% del PIB)</b> 
+        (datos de la World Bank) y la malnutrición infantil. 
+        Esta integración demuestra cómo la inversión en educación impacta en la salud.
+    </p>
+    <button onclick={() => goto('/integrations/child-malnutritions/education-expenditure')}>
+        Ver análisis de inversión educativa
+    </button>
+</div>
 	</section>
 </main>
 
