@@ -17,7 +17,7 @@ const apis = [
         api: '/api/v2/protests',
         docs: 'https://documenter.getpostman.com/view/52275979/2sBXinFVKK',
         github: 'https://github.com/onesimomorillo',
-        video: 'https://drive.google.com/file/d/19RqIsJKRy6IFuLeSsZhzNqQd7ixo-Rf4/view?usp=sharing',
+        video: 'https://drive.google.com/file/d/1gQZOHeVDH_TM_4sEEdeKWnS-PPdM7P5p/view?usp=sharing',
     },
     {
         nombre: 'Pandemias',
