@@ -58,7 +58,7 @@
                 if (!selectedCountry) selectedCountry = commonCountries[0];
                 await loadData();
             } else {
-                errorMsg = "La base de datos del compañero parece estar vacía o no tenéis países en común. ¡Prueba a darle al botón naranja de Cargar BD!";
+                errorMsg = "La base de datos del compañero parece estar vacía o no tenéis países en común.";
                 loading = false;
             }
         } catch (e) {
