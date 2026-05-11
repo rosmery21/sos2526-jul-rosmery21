@@ -90,7 +90,6 @@ onMount(async () => {
         const res = await fetch('/api/v2/child-malnutritions');
         const rawData = await res.json();
 
-        // Tomar el último año disponible por país
         const latestByCountry = {};
         rawData.forEach(d => {
             if (!latestByCountry[d.country] || d.year > latestByCountry[d.country].year) {
@@ -122,7 +121,6 @@ onMount(async () => {
             `);
         });
 
-        // Leyenda
         const legend = L.control({ position: 'bottomright' });
         legend.onAdd = () => {
             const div = L.DomUtil.create('div', 'legend');
@@ -156,10 +154,20 @@ onDestroy(() => { if (map) map.remove(); });
     <h1>🗺️ Mapa de Malnutrición Infantil</h1>
     <p>Tasa de stunting por país — último año disponible. Haz clic en un país para ver los detalles.</p>
 
-    <a href="/analytics/child-malnutrition"><button>← Volver a la Gráfica</button></a>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+       
+        <a href="/analytics/child-malnutritions"><button>← Volver a la Gráfica</button></a>
+        <a href="/child-malnutritions"><button>Volver a la Tabla</button></a>
+    </div>
 
     {#if isLoading}<p>Cargando mapa...</p>{/if}
     {#if errorMessage}<p style="color:red">{errorMessage}</p>{/if}
 
     <div bind:this={mapElement} style="height: 600px; width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
 </main>
+
+<style>
+button { padding: 8px 16px; border: 1px solid #000; border-radius: 4px; cursor: pointer; background: white; }
+button:hover { background: #f3f4f6; }
+a { text-decoration: none; }
+</style>

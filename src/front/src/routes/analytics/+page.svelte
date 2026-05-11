@@ -125,7 +125,7 @@ onMount(async () => {
         <button onclick={() => window.location.href = '/analytics/protests'}>Ir a gráfica protestas</button>
         <button onclick={() => window.location.href = '/analytics/pandemics'}>Ir a gráfica pandemias</button>
         <button onclick={() => window.location.href = '/analytics/deaths-by-risk-factors'}>Ir a gráfica factores de riesgo</button>
-        <button onclick={() => window.location.href = '/analytics/child-malnutrition'}>Ir a gráfica malnutrición infantil</button>
+        <button onclick={() => window.location.href = '/analytics/child-malnutritions'}>Ir a gráfica malnutrición infantil</button>
     </div>
 
     {#if loading}
