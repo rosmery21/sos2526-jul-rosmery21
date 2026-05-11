@@ -12,7 +12,7 @@ import childMalnutritionsV2 from "./src/back/routes/child-malnutritions/child-ma
 import deathsIntegrations from './src/back/routes/deaths-by-risk-factors/integrations/index.js';
 import pandemicsIntegrations from './src/back/routes/pandemics/integrations/index.js';
 import childMalnutritionsIntegrations from './src/back/routes/child-malnutritions/integrations/index.js';
-
+import protestProxy from './src/back/routes/protests/proxy.js';
 
 import { handler as svelteHandler } from './src/front/build/handler.js';
 
@@ -38,6 +38,7 @@ app.use((req, res, next) => {
 app.use(`${V2_API_URL}/deaths-by-risk-factors/integrations`, deathsIntegrations);
 app.use(`${V2_API_URL}/pandemics/integrations`, pandemicsIntegrations);
 app.use(`${V2_API_URL}/child-malnutritions/integrations`, childMalnutritionsIntegrations);
+app.use(`${V2_API_URL}/protests/proxy`, protestProxy);
 
 
 app.use(`${BASE_API_URL}/deaths-by-risk-factors`, deathsRoute);
@@ -63,7 +64,7 @@ app.get("/samples/rm", (req, res) => {
 
 });
 
-/* PROXY PRUEBA PROTEST DINKING*/
+/* PROXY PRUEBA PROTEST DINKING
 app.get("/api/proxy/social-drinking", async (req, res) => {
   try {
     const response = await fetch(
@@ -77,7 +78,7 @@ app.get("/api/proxy/social-drinking", async (req, res) => {
     res.status(500).json({ error: "Proxy failed" });
   }
 });
-/* fiiiiiiiiin*/
+*/
 
 
 app.use(svelteHandler);

@@ -6,7 +6,7 @@
   import * as echarts from "echarts";
 
   let PROTEST_API = "/api/v2/protests";
-  let DRINK_API = "/api/proxy/social-drinking";
+  let DRINK_API = "/api/v2/protests/proxy/social-drinking";
 
   let years = $state([]);
   let countries = $state([]);

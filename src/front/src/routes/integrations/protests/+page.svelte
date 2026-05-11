@@ -40,7 +40,7 @@
 			<h3>Integración con los datos de la api "openmeteo"</h3>
 			<p>
 				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "openmeteo" externa
+				a los datos obtenidos por la api externa "openmeteo"
 			</p>
 
 			<button onclick={() => goto('/integrations/protests/openmeteo')}>
@@ -52,7 +52,7 @@
 			<h3>Integración con los datos de la api "wikidata"</h3>
 			<p>
 				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "wikidata" de otro compañero de SOS
+				a los datos obtenidos por la api externa "wikidata"
 			</p>
 
 			<button onclick={() => goto('/integrations/protests/wikidata')}>
@@ -64,11 +64,23 @@
 			<h3>Integración con los datos de la api "restcountries"</h3>
 			<p>
 				Representación de los datos recogidos en la api protests junto
-				a los datos obtenidos por la api "restcountries" de otro compañero de SOS
+				a los datos obtenidos por la api externa "restcountries"
 			</p>
 
 			<button onclick={() => goto('/integrations/protests/restcountries')}>
 				Ver integración con restcountries
+			</button>
+		</div>
+
+		<div class="card">
+			<h3>Uso de la api "pokeapi"</h3>
+			<p>
+				Uso de la api externa "pokeapi" para obtener datos y representarlos en
+				un widget visual.
+			</p>
+
+			<button onclick={() => goto('/integrations/protests/pokeapi')}>
+				Ver integración con pokeapi
 			</button>
 		</div>
 	</section>
