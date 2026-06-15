@@ -1,23 +1,85 @@
-## SOS2526-10
+# SOS2526 JULY – Individual Project
 
-- **Team**
-  - Santiago Muñoz Jiménez (https://github.com/123smj123)
-  - Onésimo Morillo Vecino (https://github.com/onesimomorillo)
-  - Alexia Gutiérrez Casado  (https://github.com/alexiagutierrezcasado)
-  - Rosmery Marculli (https://github.com/rosmery21)
-- **Project description**: Our project focuses on the analysis of global health data through the development of an API that integrates information on deaths caused by risk factors across different countries, as well as data on pandemics and pandemic-related mortality. We examine the geographical and temporal distribution of these health outcomes and explore their relationship with global patterns of disease spread and public health impact. The objective is to provide a unified and accessible data source that facilitates the understanding of how risk factors and pandemics have affected populations worldwide over time.
-- **Repository**: [gti-sos/SOS2526-10](https://github.com/gti-sos/SOS2526-10)
-- **Live URL**: [SOS2526-10](https://sos2526-10.onrender.com/)
+## Student
 
-- **APIs:**
-  ### v1
-  - https://sos2526-10.onrender.com/api/v1/deaths-by-risk-factors/docs (Developed by Santiago Muñoz)
-  - https://sos2526-10.onrender.com/api/v1/protests/docs (Developed by Onésimo Morillo)
-  - https://sos2526-10.onrender.com/api/v1/pandemics/docs (Developed by Alexia Gutiérrez)
-  - https://sos2526-10.onrender.com/api/v1/child-malnutritions/docs (Developed by Rosmery Marculli)
-  ### v2
-  - https://sos2526-10.onrender.com/api/v2/deaths-by-risk-factors/docs (Developed by Santiago Muñoz)
-  - https://sos2526-10.onrender.com/api/v2/pandemics/docs (Developed by Alexia Gutiérrez)
-  - https://sos2526-10.onrender.com/api/v2/protests/docs (Developed by Onésimo Morillo)
-  - https://sos2526-10.onrender.com/api/v2/child-malnutritions/docs (Developed by Rosmery Marculli)
+* Rosmery Marculli
+* GitHub: https://github.com/rosmery21
 
+---
+
+## Project description
+
+This project focuses on the analysis of child malnutrition data through the development of an API and a web application.
+
+The objective is to provide an accessible platform to explore child malnutrition indicators across different countries and years through visual analytics and integrations.
+
+The project includes:
+
+* REST API (v1 and v2)
+* Frontend developed with Svelte
+* Charts and analytics
+* External integrations
+* Automated testing
+
+---
+
+## Repository
+
+https://github.com/rosmery21/sos2526-jul-rosmery21
+
+---
+
+## Live URL
+
+TO_BE_DEPLOYED
+
+---
+
+# APIs
+
+## v1
+
+/api/v1/child-malnutritions/docs
+
+Developed by Rosmery Marculli
+
+---
+
+## v2
+
+/api/v2/child-malnutritions/docs
+
+Developed by Rosmery Marculli
+
+---
+
+## Technologies
+
+* Node.js
+* Express
+* Svelte
+* JavaScript
+* Newman
+* Playwright
+
+---
+
+## Features
+
+* REST API
+* Filtering
+* Pagination
+* Charts
+* Integrations
+* Frontend
+* Analytics
+* Testing
+
+---
+
+## Author
+
+Rosmery Marculli
+
+GitHub:
+https://github.com/rosmery21
