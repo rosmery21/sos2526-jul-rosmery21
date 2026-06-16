@@ -12,6 +12,23 @@
       "name": "API",
       "item": [
         {
+          "name": "RESET - Delete All",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+              "host": [
+                "{{BASE_URL}}{{BASE_API_URL}}"
+              ],
+              "path": [
+                "deaths-by-risk-factors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Post",
           "item": [
             {
