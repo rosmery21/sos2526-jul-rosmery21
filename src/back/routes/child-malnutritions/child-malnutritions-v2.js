@@ -50,7 +50,7 @@ router.get("/child-malnutritions/loadInitialData", async (req, res) => {
 
     await store.insert(data);
 
-    return res.status(201).send("Loaded");
+    return res.status(200).send("Loaded");
 
   } catch (err) {
     return res.status(500).send("CSV error: " + err.message);
@@ -153,7 +153,7 @@ router.post("/child-malnutritions", async (req, res) => {
 /* DELETE ALL */
 router.delete("/child-malnutritions", async (req, res) => {
   await store.remove({}, { multi: true });
-  return res.status(204).send();
+  return res.status(200).send("Deleted");
 });
 
 /* DELETE ONE */
