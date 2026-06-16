@@ -1,139 +1,213 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import Datastore from "nedb-promises";
 
 const router = express.Router();
 
-let childMalnutritions = [];
-
-function loadCSV() {
-    try {
-        const filePath = path.join(process.cwd(), "data", "datasets", "child-malnutritions.csv");
-        const content = fs.readFileSync(filePath, "utf-8");
-        const lines = content.split("\n").filter(l => l.trim() !== "").slice(1);
-        childMalnutritions = lines.map(line => {
-            const col = line.split(",");
-            return {
-                year: Number(col[0]),
-                country: col[1]?.trim(),
-                region: col[2]?.trim(),
-                stunting_rate: Number(col[3]) || 0,
-                wasting_rate: Number(col[4]) || 0,
-                overweight_rate: Number(col[5]) || 0,
-                underweight_rate: Number(col[6]) || 0
-            };
-        });
-        console.log(`Child malnutritions: ${childMalnutritions.length} records loaded`);
-    } catch (err) {
-        console.error("CSV ERROR:", err);
-        childMalnutritions = [
-            { year: 2019, country: "Peru", region: "South America", stunting_rate: 12, wasting_rate: 2, overweight_rate: 3, underweight_rate: 1 },
-            { year: 2020, country: "Japan", region: "Asia", stunting_rate: 8, wasting_rate: 1, overweight_rate: 4, underweight_rate: 2 },
-            { year: 2022, country: "Ecuador", region: "South America", stunting_rate: 14, wasting_rate: 3, overweight_rate: 4, underweight_rate: 2 }
-        ];
-    }
-}
-
-loadCSV();
-
-router.get("/child-malnutritions/loadInitialData", (req, res) => {
-    loadCSV();
-    return res.status(200).send("Data loaded");
+/* DATABASE */
+const store = Datastore.create({
+  filename: "./data/storage/child-malnutritions.db",
+  autoload: true
 });
 
-router.get("/child-malnutritions", (req, res) => {
-    let { limit, offset, country, region, from, to } = req.query;
-    let data = [...childMalnutritions];
+/* LOAD CSV + INSERT INTO DB */
+router.get("/child-malnutritions/loadInitialData", async (req, res) => {
+  try {
+    const count = await store.count({});
 
-    if (country) data = data.filter(d => d.country.toLowerCase().includes(country.toLowerCase()));
-    if (region) data = data.filter(d => d.region.toLowerCase().includes(region.toLowerCase()));
-    if (from) data = data.filter(d => d.year >= Number(from));
-    if (to) data = data.filter(d => d.year <= Number(to));
+    if (count > 0) {
+      return res.status(409).send("Already loaded");
+    }
+
+    const filePath = path.join(
+      process.cwd(),
+      "data",
+      "datasets",
+      "child-malnutritions.csv"
+    );
+
+    const content = fs.readFileSync(filePath, "utf-8");
+
+    const lines = content
+      .split("\n")
+      .filter(l => l.trim() !== "")
+      .slice(1);
+
+    const data = lines.map(line => {
+      const col = line.split(",");
+
+      return {
+        year: Number(col[0]),
+        country: col[1]?.trim(),
+        region: col[2]?.trim(),
+        stunting_rate: Number(col[3]) || 0,
+        wasting_rate: Number(col[4]) || 0,
+        overweight_rate: Number(col[5]) || 0,
+        underweight_rate: Number(col[6]) || 0
+      };
+    });
+
+    await store.insert(data);
+
+    return res.status(201).send("Loaded");
+
+  } catch (err) {
+    return res.status(500).send("CSV error: " + err.message);
+  }
+});
+
+/* GET ALL */
+router.get("/child-malnutritions", async (req, res) => {
+  try {
+    const { limit, offset, country, region, from, to } = req.query;
+
+    let data = await store.find({});
+
+    if (country) {
+      data = data.filter(d =>
+        d.country.toLowerCase().includes(country.toLowerCase())
+      );
+    }
+
+    if (region) {
+      data = data.filter(d =>
+        d.region.toLowerCase().includes(region.toLowerCase())
+      );
+    }
+
+    if (from) {
+      data = data.filter(d => d.year >= Number(from));
+    }
+
+    if (to) {
+      data = data.filter(d => d.year <= Number(to));
+    }
 
     const L = limit ? Number(limit) : data.length;
     const O = offset ? Number(offset) : 0;
 
     return res.status(200).json(data.slice(O, O + L));
+
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
 });
 
-router.get("/child-malnutritions/:country/:year", (req, res) => {
-    const country = req.params.country.toLowerCase();
-    const year = Number(req.params.year);
-    const result = childMalnutritions.find(d => d.country.toLowerCase() === country && d.year === year);
+/* GET ONE */
+router.get("/child-malnutritions/:country/:year", async (req, res) => {
+  try {
+    const { country, year } = req.params;
 
-    if (!result) return res.status(404).json({ error: "Not found" });
-    return res.status(200).json(result);
+    const data = await store.findOne({
+      country: new RegExp(`^${country}$`, "i"),
+      year: Number(year)
+    });
+
+    if (!data) {
+      return res.status(404).send("Not found");
+    }
+
+    return res.status(200).json(data);
+
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
 });
 
-router.post("/child-malnutritions", (req, res) => {
-    const { year, country, region } = req.body;
+/* POST */
+router.post("/child-malnutritions", async (req, res) => {
+  try {
+    const body = req.body;
 
-    if (!year || !country || !region) return res.status(400).send("Bad request");
+    if (!body.year || !body.country || !body.region) {
+      return res.status(400).send("Bad request");
+    }
 
-    const exists = childMalnutritions.find(
-        d => d.country.toLowerCase() === country.toLowerCase() && d.year === Number(year)
-    );
+    const exists = await store.findOne({
+      country: new RegExp(`^${body.country}$`, "i"),
+      year: Number(body.year)
+    });
 
-    if (exists) return res.status(409).send("Conflict");
+    if (exists) {
+      return res.status(409).send("Conflict");
+    }
 
-    childMalnutritions.push({
-        year: Number(year),
-        country,
-        region,
-        stunting_rate: req.body.stunting_rate || 0,
-        wasting_rate: req.body.wasting_rate || 0,
-        overweight_rate: req.body.overweight_rate || 0,
-        underweight_rate: req.body.underweight_rate || 0
+    await store.insert({
+      year: Number(body.year),
+      country: body.country,
+      region: body.region,
+      stunting_rate: body.stunting_rate || 0,
+      wasting_rate: body.wasting_rate || 0,
+      overweight_rate: body.overweight_rate || 0,
+      underweight_rate: body.underweight_rate || 0
     });
 
     return res.status(201).send("Created");
+
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
 });
 
-router.delete("/child-malnutritions", (req, res) => {
-    childMalnutritions = [];
-    return res.status(200).send("Deleted all");
+/* DELETE ALL */
+router.delete("/child-malnutritions", async (req, res) => {
+  await store.remove({}, { multi: true });
+  return res.status(204).send();
 });
 
-router.delete("/child-malnutritions/:country/:year", (req, res) => {
-    const country = req.params.country.toLowerCase();
-    const year = Number(req.params.year);
-    const index = childMalnutritions.findIndex(d => d.country.toLowerCase() === country && d.year === year);
+/* DELETE ONE */
+router.delete("/child-malnutritions/:country/:year", async (req, res) => {
+  const removed = await store.remove(
+    {
+      country: new RegExp(`^${req.params.country}$`, "i"),
+      year: Number(req.params.year)
+    },
+    { multi: true }
+  );
 
-    if (index === -1) return res.status(404).send("Not found");
+  if (removed === 0) {
+    return res.status(404).send("Not found");
+  }
 
-    childMalnutritions.splice(index, 1);
-    return res.status(204).send();
+  return res.status(204).send();
 });
-router.put('/', (req, res) => {
-  res.status(405).send('Method not allowed');
-});
-router.post('/:country/:year', (req, res) => {
-  res.status(405).send('Method not allowed');
-});
 
-router.put("/child-malnutritions/:country/:year", (req, res) => {
-    const country = req.params.country.toLowerCase();
-    const year = Number(req.params.year);
-    const index = childMalnutritions.findIndex(d => d.country.toLowerCase() === country && d.year === year);
+/* PUT */
+router.put("/child-malnutritions/:country/:year", async (req, res) => {
+  const { country, year } = req.params;
+  const body = req.body;
 
-    if (index === -1) return res.status(404).send("Not found");
+  if (
+    body.country?.toLowerCase() !== country.toLowerCase() ||
+    Number(body.year) !== Number(year)
+  ) {
+    return res.status(400).send("ID mismatch");
+  }
 
-    const body = req.body;
-    if (!body.country || !body.year || body.country.toLowerCase() !== country || Number(body.year) !== year) {
-        return res.status(400).send("ID mismatch");
-    }
-
-    childMalnutritions[index] = {
-        year,
+  const updated = await store.update(
+    {
+      country: new RegExp(`^${country}$`, "i"),
+      year: Number(year)
+    },
+    {
+      $set: {
         country: body.country,
+        year: Number(body.year),
         region: body.region,
         stunting_rate: body.stunting_rate,
         wasting_rate: body.wasting_rate,
         overweight_rate: body.overweight_rate,
         underweight_rate: body.underweight_rate
-    };
+      }
+    }
+  );
 
-    return res.status(200).send("Updated");
+  if (updated === 0) {
+    return res.status(404).send("Not found");
+  }
+
+  return res.status(200).send("Updated");
 });
 
 export default router;
