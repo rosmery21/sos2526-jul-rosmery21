@@ -41,7 +41,7 @@ router.get("/child-malnutritions/loadInitialData", (req, res) => {
 
     try {
         // Proviamo a leggere il file CSV
-        const content = fs.readFileSync('./database/child-malnutritions.csv', 'utf-8');
+        const content = fs.readFileSync('./data/datasets/child-malnutritions.csv', 'utf-8');
         const lines = content.split('\n').slice(1); // Salta l'intestazione
         
         lines.forEach(line => {
