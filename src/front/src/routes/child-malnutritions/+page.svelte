@@ -116,7 +116,7 @@
   <div class="actions">
     <a href="/child-malnutritions/create"><button>➕ Añadir nuevo registro</button></a>
     <button onclick={loadInitialData}>📂 Cargar datos iniciales</button>
-    <button class="danger" onclick={deleteAll}>🗑️ Eliminar todos</button>
+    <button class="danger" onclick={deleteAll}>Eliminar todo</button>
   </div>
 
   {#if isLoading}
