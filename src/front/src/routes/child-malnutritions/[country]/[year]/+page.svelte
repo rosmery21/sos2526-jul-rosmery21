@@ -59,6 +59,7 @@
   <input placeholder="Tasa Stunting %" bind:value={stunting_rate} />
 
   <button on:click={update}>Guardar cambios</button>
+  <a href="/child-malnutritions"><button type="button">← Volver</button></a>
 {:else}
   <p>Cargando...</p>
 {/if}
