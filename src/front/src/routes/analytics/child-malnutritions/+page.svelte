@@ -42,6 +42,7 @@ function renderGlobalChart(chartData = data) {
 		title: { text: 'Malnutrición Infantil — Promedio Global' },
 		xAxis: { title: { text: 'Año' }, type: 'linear' },
 		yAxis: { title: { text: 'Porcentaje (%)' } },
+                tooltip: { pointFormat: '<b>{series.name}</b><br/>Año: {point.x}<br/>Valor: {point.y:.2f}%' },
 		series: [
 			{ name: 'Stunting',    data: years.map(y => [y, avg(y, 'stunting_rate')]) },
 			{ name: 'Wasting',     data: years.map(y => [y, avg(y, 'wasting_rate')]) },
