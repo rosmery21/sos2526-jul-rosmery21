@@ -9,7 +9,7 @@
   let message = $state('');
   let messageType = $state('success');
 
-  let searchFilters = $state({ country: '', region: '', year: '' });
+  let searchFilters = $state({ country: '', region: '', year: '', from: '', to: '' });
 
   async function loadData() {
     isLoading = true;
@@ -17,6 +17,7 @@
       const params = new URLSearchParams({ offset: (page * 10).toString(), limit: '10' });
       if (searchFilters.country) params.append('country', searchFilters.country);
       if (searchFilters.region) params.append('region', searchFilters.region);
+      if (searchFilters.year) params.append('year', searchFilters.year);
       if (searchFilters.from) params.append('from', searchFilters.from);
       if (searchFilters.to) params.append('to', searchFilters.to);
 
@@ -103,6 +104,7 @@
     <div class="filter-row">
       <input placeholder="País" bind:value={searchFilters.country} />
       <input placeholder="Región" bind:value={searchFilters.region} />
+      <input type="number" placeholder="Año" bind:value={searchFilters.year} />
       <input type="number" placeholder="Año desde" bind:value={searchFilters.from} />
       <input type="number" placeholder="Año hasta" bind:value={searchFilters.to} />
       <button onclick={search}>Buscar</button>
