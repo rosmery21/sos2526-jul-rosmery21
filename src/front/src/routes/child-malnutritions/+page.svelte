@@ -9,7 +9,7 @@
   let message = $state('');
   let messageType = $state('success');
 
-  let searchFilters = $state({ country: '', region: '', from: '', to: '' });
+  let searchFilters = $state({ country: '', region: '', year: '' });
 
   async function loadData() {
     isLoading = true;
@@ -24,6 +24,7 @@
       if (res.ok) {
         data = await res.json();
         if (!Array.isArray(data)) data = [data];
+        data = data.sort((a, b) => a.year - b.year);
       } else {
         data = [];
         showMessage('Error al cargar los datos', 'error');
