@@ -4,9 +4,11 @@
   import { page } from '$app/state';
 
   const API = '/api/v2/child-malnutritions';
-  let country = page.params.country;
-  let year = page.params.year;
+  let originalCountry = page.params.country;
+  let originalYear = page.params.year;
   let resource = $state(null);
+  let country = $state('');
+  let year = $state('');
   let region = $state('');
   let stunting_rate = $state('');
   let wasting_rate = $state('');
@@ -16,9 +18,11 @@
   let messageType = $state('success');
 
   async function load() {
-    const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`);
+    const res = await fetch(`${API}/${encodeURIComponent(originalCountry)}/${originalYear}`);
     if (res.ok) {
       resource = await res.json();
+      country = resource.country;
+      year = String(resource.year);
       region = resource.region;
       stunting_rate = resource.stunting_rate;
       wasting_rate = resource.wasting_rate;
@@ -31,32 +35,64 @@
   }
 
   async function update() {
-    const res = await fetch(`${API}/${encodeURIComponent(country)}/${year}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        country,
-        year: parseInt(year),
-        region,
-        stunting_rate: parseFloat(stunting_rate) || 0,
-        wasting_rate: parseFloat(wasting_rate) || 0,
-        overweight_rate: parseFloat(overweight_rate) || 0,
-        underweight_rate: parseFloat(underweight_rate) || 0
-      })
-    });
-    if (res.ok) {
-      message = 'Recurso actualizado correctamente';
-      messageType = 'success';
-      setTimeout(() => goto('/child-malnutritions'), 800);
-    } else if (res.status === 400) {
-      message = 'Datos incorrectos, verifica los campos';
-      messageType = 'error';
-    } else if (res.status === 404) {
-      message = 'No se encontró el recurso a actualizar';
-      messageType = 'error';
+    const newData = {
+      country,
+      year: parseInt(year),
+      region,
+      stunting_rate: parseFloat(stunting_rate) || 0,
+      wasting_rate: parseFloat(wasting_rate) || 0,
+      overweight_rate: parseFloat(overweight_rate) || 0,
+      underweight_rate: parseFloat(underweight_rate) || 0
+    };
+
+    const countryChanged = country !== originalCountry;
+    const yearChanged = year !== String(originalYear);
+
+    if (countryChanged || yearChanged) {
+      // DELETE old + POST new
+      const delRes = await fetch(`${API}/${encodeURIComponent(originalCountry)}/${originalYear}`, { method: 'DELETE' });
+      if (!delRes.ok) {
+        message = 'Error al eliminar el registro original';
+        messageType = 'error';
+        return;
+      }
+      const postRes = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newData)
+      });
+      if (postRes.ok || postRes.status === 201) {
+        message = 'Recurso actualizado correctamente';
+        messageType = 'success';
+        setTimeout(() => goto('/child-malnutritions'), 800);
+      } else if (postRes.status === 409) {
+        message = `Ya existe un registro para ${country} en el año ${year}`;
+        messageType = 'error';
+      } else {
+        message = 'Error al crear el nuevo registro';
+        messageType = 'error';
+      }
     } else {
-      message = 'Error al actualizar el recurso';
-      messageType = 'error';
+      // Normal PUT
+      const res = await fetch(`${API}/${encodeURIComponent(originalCountry)}/${originalYear}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newData)
+      });
+      if (res.ok) {
+        message = 'Recurso actualizado correctamente';
+        messageType = 'success';
+        setTimeout(() => goto('/child-malnutritions'), 800);
+      } else if (res.status === 400) {
+        message = 'Datos incorrectos, verifica los campos';
+        messageType = 'error';
+      } else if (res.status === 404) {
+        message = 'No se encontró el recurso';
+        messageType = 'error';
+      } else {
+        message = 'Error al actualizar el recurso';
+        messageType = 'error';
+      }
     }
   }
 
@@ -65,7 +101,6 @@
 
 <main>
   <h2>Editar registro</h2>
-  <p><b>País:</b> {country} — <b>Año:</b> {year}</p>
 
   {#if message}
     <div class="alert {messageType}">{message}</div>
@@ -73,6 +108,12 @@
 
   {#if resource}
     <div class="form">
+      <label>País
+        <input placeholder="País" bind:value={country} />
+      </label>
+      <label>Año
+        <input type="number" placeholder="Año" bind:value={year} />
+      </label>
       <label>Región
         <input placeholder="Región" bind:value={region} />
       </label>
