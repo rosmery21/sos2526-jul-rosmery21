@@ -67,7 +67,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"country\": \"Japan\",\n  \"year\": 2020,\n  \"region\": \"Asia\",\n  \"stunting_rate\": 7.1\n}"
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 7.1\n}"
         },
         "url": "http://localhost:3000/api/v1/child-malnutritions"
       },
@@ -94,7 +94,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"country\": \"Japan\",\n  \"year\": 2020,\n  \"region\": \"Asia\",\n  \"stunting_rate\": 7.1\n}"
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 7.1\n}"
         },
         "url": "http://localhost:3000/api/v1/child-malnutritions"
       },
@@ -113,7 +113,7 @@
       "name": "GET SINGLE",
       "request": {
         "method": "GET",
-        "url": "http://localhost:3000/api/v1/child-malnutritions/Japan/2020"
+        "url": "http://localhost:3000/api/v1/child-malnutritions/TestCountry/1800"
       },
       "event": [
         {
@@ -138,9 +138,9 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"country\": \"Japan\",\n  \"year\": 2020,\n  \"region\": \"Asia\",\n  \"stunting_rate\": 9.9\n}"
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 9.9\n}"
         },
-        "url": "http://localhost:3000/api/v1/child-malnutritions/Japan/2020"
+        "url": "http://localhost:3000/api/v1/child-malnutritions/TestCountry/1800"
       },
       "event": [
         {
@@ -165,9 +165,9 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"country\": \"Japan\",\n  \"year\": 2021,\n  \"region\": \"Asia\",\n  \"stunting_rate\": 9.9\n}"
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1801,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 9.9\n}"
         },
-        "url": "http://localhost:3000/api/v1/child-malnutritions/Japan/2020"
+        "url": "http://localhost:3000/api/v1/child-malnutritions/TestCountry/1800"
       },
       "event": [
         {
@@ -184,7 +184,7 @@
       "name": "DELETE ONE",
       "request": {
         "method": "DELETE",
-        "url": "http://localhost:3000/api/v1/child-malnutritions/Japan/2020"
+        "url": "http://localhost:3000/api/v1/child-malnutritions/TestCountry/1800"
       },
       "event": [
         {
@@ -201,7 +201,7 @@
       "name": "GET NOT FOUND",
       "request": {
         "method": "GET",
-        "url": "http://localhost:3000/api/v1/child-malnutritions/Japan/2020"
+        "url": "http://localhost:3000/api/v1/child-malnutritions/TestCountry/1800"
       },
       "event": [
         {
