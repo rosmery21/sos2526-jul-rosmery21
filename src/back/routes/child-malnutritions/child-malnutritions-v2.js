@@ -76,6 +76,10 @@ router.get("/child-malnutritions", async (req, res) => {
       );
     }
 
+    if (req.query.year) {
+      data = data.filter(d => d.year === Number(req.query.year));
+    }
+
     if (from) {
       data = data.filter(d => d.year >= Number(from));
     }
