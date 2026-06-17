@@ -151,7 +151,7 @@
               <a href={`/child-malnutritions/${encodeURIComponent(item.country)}/${item.year}`}>
                 <button>✏️ Editar</button>
               </a>
-              <button class="danger" onclick={() => deleteOne(item.country, item.year)}>🗑️ Eliminar</button>
+              <button class="danger" onclick={() => deleteOne(item.country, item.year)}>Eliminar</button>
             </td>
           </tr>
         {/each}
@@ -162,7 +162,7 @@
       <button onclick={() => { page = Math.max(0, page - 1); loadData(); }} disabled={page === 0}>
         ← Anterior
       </button>
-      <span>Página {page + 1}</span>
+      <span>Página: {page + 1}</span>
       <button onclick={() => { page += 1; loadData(); }} disabled={data.length < 10}>
         Siguiente →
       </button>
