@@ -9,7 +9,7 @@
   let message = $state('');
   let messageType = $state('success');
 
-  let searchFilters = $state({ country: '', region: '', year: '', from: '', to: '', min_stunting: '', max_stunting: '', min_wasting: '', max_wasting: '', min_overweight: '', max_overweight: '', min_underweight: '', max_underweight: '' });
+  let searchFilters = $state({ country: '', region: '', year: '', stunting_rate: '', wasting_rate: '', overweight_rate: '', underweight_rate: '' });
 
   async function loadData() {
     isLoading = true;
@@ -18,16 +18,10 @@
       if (searchFilters.country) params.append('country', searchFilters.country);
       if (searchFilters.region) params.append('region', searchFilters.region);
       if (searchFilters.year) params.append('year', searchFilters.year);
-      if (searchFilters.from) params.append('from', searchFilters.from);
-      if (searchFilters.to) params.append('to', searchFilters.to);
-      if (searchFilters.min_stunting) params.append('min_stunting', searchFilters.min_stunting);
-      if (searchFilters.max_stunting) params.append('max_stunting', searchFilters.max_stunting);
-      if (searchFilters.min_wasting) params.append('min_wasting', searchFilters.min_wasting);
-      if (searchFilters.max_wasting) params.append('max_wasting', searchFilters.max_wasting);
-      if (searchFilters.min_overweight) params.append('min_overweight', searchFilters.min_overweight);
-      if (searchFilters.max_overweight) params.append('max_overweight', searchFilters.max_overweight);
-      if (searchFilters.min_underweight) params.append('min_underweight', searchFilters.min_underweight);
-      if (searchFilters.max_underweight) params.append('max_underweight', searchFilters.max_underweight);
+      if (searchFilters.stunting_rate) params.append('stunting_rate', searchFilters.stunting_rate);
+      if (searchFilters.wasting_rate) params.append('wasting_rate', searchFilters.wasting_rate);
+      if (searchFilters.overweight_rate) params.append('overweight_rate', searchFilters.overweight_rate);
+      if (searchFilters.underweight_rate) params.append('underweight_rate', searchFilters.underweight_rate);
 
       const res = await fetch(`${API}?${params}`);
       if (res.ok) {
@@ -87,7 +81,7 @@
   }
 
   function clearSearch() {
-    searchFilters = { country: '', region: '', year: '', from: '', to: '', min_stunting: '', max_stunting: '', min_wasting: '', max_wasting: '', min_overweight: '', max_overweight: '', min_underweight: '', max_underweight: '' };
+    searchFilters = { country: '', region: '', year: '', stunting_rate: '', wasting_rate: '', overweight_rate: '', underweight_rate: '' };
     page = 0;
     showMessage('Filtros limpiados', 'success');
     loadData();
@@ -112,19 +106,11 @@
     <div class="filter-group">
       <label>País<input placeholder="País" bind:value={searchFilters.country} /></label>
       <label>Región<input placeholder="Región" bind:value={searchFilters.region} /></label>
-      <label>Año<input type="number" placeholder="Año exacto" bind:value={searchFilters.year} /></label>
-      <label>Año desde<input type="number" placeholder="Desde" bind:value={searchFilters.from} /></label>
-      <label>Año hasta<input type="number" placeholder="Hasta" bind:value={searchFilters.to} /></label>
-    </div>
-    <div class="filter-group">
-      <label>Stunting mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_stunting} /></label>
-      <label>Stunting máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_stunting} /></label>
-      <label>Wasting mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_wasting} /></label>
-      <label>Wasting máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_wasting} /></label>
-      <label>Sobrepeso mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_overweight} /></label>
-      <label>Sobrepeso máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_overweight} /></label>
-      <label>Bajo peso mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_underweight} /></label>
-      <label>Bajo peso máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_underweight} /></label>
+      <label>Año<input type="number" placeholder="Año" bind:value={searchFilters.year} /></label>
+      <label>Retraso en crecimiento (%)<input type="number" step="0.1" placeholder="Stunting %" bind:value={searchFilters.stunting_rate} /></label>
+      <label>Emaciación (%)<input type="number" step="0.1" placeholder="Wasting %" bind:value={searchFilters.wasting_rate} /></label>
+      <label>Sobrepeso (%)<input type="number" step="0.1" placeholder="Overweight %" bind:value={searchFilters.overweight_rate} /></label>
+      <label>Bajo peso (%)<input type="number" step="0.1" placeholder="Underweight %" bind:value={searchFilters.underweight_rate} /></label>
     </div>
     <div class="filter-buttons">
       <button onclick={search}>Buscar</button>
@@ -193,9 +179,9 @@
   main { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
   h1 { color: #1e3a5f; }
   .filters { background: #f0f4f8; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
-  .filter-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
-  label { display: flex; flex-direction: column; font-size: 0.8rem; font-weight: bold; color: #374151; }
-  input { padding: 0.4rem 0.6rem; border: 1px solid #ccc; border-radius: 6px; width: 120px; }
+  .filter-group { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 0.5rem; }
+  label { display: flex; flex-direction: column; font-size: 0.8rem; font-weight: bold; color: #374151; gap: 0.2rem; }
+  input { padding: 0.4rem 0.6rem; border: 1px solid #ccc; border-radius: 6px; width: 130px; }
   .filter-buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
   button { padding: 0.4rem 0.9rem; border: none; border-radius: 6px; cursor: pointer; background: #2563eb; color: white; }
   button:hover { background: #1d4ed8; }
