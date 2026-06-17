@@ -3,134 +3,69 @@
 import Highcharts from 'highcharts';
 import { onMount } from 'svelte';
 
-const APIs = [
-    { name: 'Protests', url: '/api/v2/protests?limit=1000' },
-    { name: 'Pandemics', url: '/api/v2/pandemics?limit=1000' },
-    { name: 'Deaths by Risk Factors', url: '/api/v2/deaths-by-risk-factors?limit=1000' },
-    { name: 'Child Malnutritions', url: '/api/v2/child-malnutritions?limit=1000' }
-];
-
 let selectedYear = $state(2020);
 let availableYears = $state([]);
 let chartData = $state({});
 let loading = $state(true);
 
-async function loadAllData() {
+async function loadData() {
     loading = true;
     chartData = {};
     const yearsSet = new Set();
 
-    for (const api of APIs) {
-        try {
-            const res = await fetch(api.url);
-            if (res.ok) {
-                const data = await res.json();
-                const apiResponse = Array.isArray(data) ? data : [data];
+    try {
+        const res = await fetch('/api/v2/child-malnutritions?limit=1000');
+        if (res.ok) {
+            const data = await res.json();
+            const apiResponse = Array.isArray(data) ? data : [data];
 
-                apiResponse.forEach(item => {
-                    const year = item.year;
-                    if (year) yearsSet.add(year);
-                });
+            apiResponse.forEach(item => {
+                const year = item.year;
+                if (year) yearsSet.add(year);
+            });
 
-                const countByCountry = {};
+            const countByRegion = {};
+            apiResponse.forEach(item => {
+                const region = item.region;
+                if (region) {
+                    countByRegion[region] = (countByRegion[region] || 0) + 1;
+                }
+            });
 
-                apiResponse.forEach(item => {
-                    const country = item.country || item.entity;
-                    
-                    if (country) {
-                        countByCountry[country] = (countByCountry[country] || 0) + 1;
-                    }
-                });
-
-                chartData[api.name] = countByCountry;
-            }
-        } catch (error) {
-            console.error(`Error loading ${api.name}:`, error);
+            chartData['Child Malnutritions'] = countByRegion;
         }
+    } catch (error) {
+        console.error('Error loading child-malnutritions:', error);
     }
 
-    availableYears = Array.from(yearsSet).sort((a, b) => a - b);
-    if (availableYears.length > 0) {
-        selectedYear = availableYears[0];
-    }
-
-    renderChart();
-}
-
-function renderChart() {
-    const countries = new Set();
-
-    Object.values(chartData).forEach(apiData => {
-        Object.keys(apiData).forEach(country => countries.add(country));
-    });
-
-    const sortedCountries = Array.from(countries).sort().slice(0, 15);
-
-    const series = APIs.map((api, idx) => ({
-        name: api.name,
-        data: sortedCountries.map(country => chartData[api.name]?.[country] || 0)
-    }));
-
-    Highcharts.chart('analytics-container', {
-        chart: {
-            type: 'column',
-            height: 500
-        },
-        title: {
-            text: 'Datos Integrados de Todos los Miembros del Grupo'
-        },
-        subtitle: {
-            text: 'Número total de registros (filas) por país'
-        },
-        xAxis: {
-            categories: sortedCountries,
-            crosshair: true,
-            title: { text: 'País' }
-        },
-        yAxis: {
-            title: { text: 'Número de Registros' },
-            type: 'logarithmic'
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat:
-                '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y} registros</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series
-    });
-
+    availableYears = [...yearsSet].sort((a, b) => a - b);
     loading = false;
 }
 
 onMount(async () => {
-    await loadAllData();
+    await loadData();
+    renderChart();
 });
+
+function renderChart() {
+    const categories = Object.keys(chartData['Child Malnutritions'] || {});
+    const values = categories.map(k => chartData['Child Malnutritions'][k]);
+
+    Highcharts.chart('analytics-chart', {
+        chart: { type: 'bar' },
+        title: { text: 'Child Malnutritions por Región' },
+        xAxis: { categories },
+        yAxis: { title: { text: 'Número de registros' } },
+        series: [{ name: 'Child Malnutritions', data: values }]
+    });
+}
 </script>
 
-<div class="analytics-page">
-    <h1>Análisis Integrado</h1>
-    <p>Visualización combinada de datos de todos los miembros del grupo</p>
-
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-        <button onclick={() => window.location.href = '/analytics/protests'}>Ir a gráfica protestas</button>
-        <button onclick={() => window.location.href = '/analytics/pandemics'}>Ir a gráfica pandemias</button>
-        <button onclick={() => window.location.href = '/analytics/deaths-by-risk-factors'}>Ir a gráfica factores de riesgo</button>
-        <button onclick={() => window.location.href = '/analytics/child-malnutritions'}>Ir a gráfica malnutrición infantil</button>
-    </div>
-
+<main>
+    <h1>Analytics - Child Malnutritions</h1>
     {#if loading}
-        <div class="loading">Cargando datos de las APIs...</div>
+        <p>Cargando datos...</p>
+    {:else}
+        <div id="analytics-chart" style="width:100%;height:400px;"></div>
     {/if}
-
-    <div id="analytics-container"></div>
-</div>
+</main>

@@ -36,7 +36,7 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
    
-   baseURL: 'https://sos2526-10.onrender.com',
+   baseURL: 'https://sos2526-jul-rosmery21.onrender.com',
     actionTimeout: 60000,
     navigationTimeout: 60000,
 
