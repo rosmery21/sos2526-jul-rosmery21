@@ -84,6 +84,31 @@ router.get("/child-malnutritions", async (req, res) => {
       data = data.filter(d => d.year <= Number(to));
     }
 
+    if (req.query.min_stunting) {
+      data = data.filter(d => d.stunting_rate >= Number(req.query.min_stunting));
+    }
+    if (req.query.max_stunting) {
+      data = data.filter(d => d.stunting_rate <= Number(req.query.max_stunting));
+    }
+    if (req.query.min_wasting) {
+      data = data.filter(d => d.wasting_rate >= Number(req.query.min_wasting));
+    }
+    if (req.query.max_wasting) {
+      data = data.filter(d => d.wasting_rate <= Number(req.query.max_wasting));
+    }
+    if (req.query.min_overweight) {
+      data = data.filter(d => d.overweight_rate >= Number(req.query.min_overweight));
+    }
+    if (req.query.max_overweight) {
+      data = data.filter(d => d.overweight_rate <= Number(req.query.max_overweight));
+    }
+    if (req.query.min_underweight) {
+      data = data.filter(d => d.underweight_rate >= Number(req.query.min_underweight));
+    }
+    if (req.query.max_underweight) {
+      data = data.filter(d => d.underweight_rate <= Number(req.query.max_underweight));
+    }
+
     const L = limit ? Number(limit) : data.length;
     const O = offset ? Number(offset) : 0;
 

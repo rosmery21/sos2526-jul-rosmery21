@@ -9,7 +9,7 @@
   let message = $state('');
   let messageType = $state('success');
 
-  let searchFilters = $state({ country: '', region: '', year: '', from: '', to: '' });
+  let searchFilters = $state({ country: '', region: '', year: '', from: '', to: '', min_stunting: '', max_stunting: '', min_wasting: '', max_wasting: '', min_overweight: '', max_overweight: '', min_underweight: '', max_underweight: '' });
 
   async function loadData() {
     isLoading = true;
@@ -20,6 +20,14 @@
       if (searchFilters.year) params.append('year', searchFilters.year);
       if (searchFilters.from) params.append('from', searchFilters.from);
       if (searchFilters.to) params.append('to', searchFilters.to);
+      if (searchFilters.min_stunting) params.append('min_stunting', searchFilters.min_stunting);
+      if (searchFilters.max_stunting) params.append('max_stunting', searchFilters.max_stunting);
+      if (searchFilters.min_wasting) params.append('min_wasting', searchFilters.min_wasting);
+      if (searchFilters.max_wasting) params.append('max_wasting', searchFilters.max_wasting);
+      if (searchFilters.min_overweight) params.append('min_overweight', searchFilters.min_overweight);
+      if (searchFilters.max_overweight) params.append('max_overweight', searchFilters.max_overweight);
+      if (searchFilters.min_underweight) params.append('min_underweight', searchFilters.min_underweight);
+      if (searchFilters.max_underweight) params.append('max_underweight', searchFilters.max_underweight);
 
       const res = await fetch(`${API}?${params}`);
       if (res.ok) {
@@ -79,7 +87,7 @@
   }
 
   function clearSearch() {
-    searchFilters = { country: '', region: '', from: '', to: '' };
+    searchFilters = { country: '', region: '', year: '', from: '', to: '', min_stunting: '', max_stunting: '', min_wasting: '', max_wasting: '', min_overweight: '', max_overweight: '', min_underweight: '', max_underweight: '' };
     page = 0;
     showMessage('Filtros limpiados', 'success');
     loadData();
@@ -101,12 +109,24 @@
 
   <section class="filters">
     <h3>Filtros de búsqueda</h3>
-    <div class="filter-row">
-      <input placeholder="País" bind:value={searchFilters.country} />
-      <input placeholder="Región" bind:value={searchFilters.region} />
-      <input type="number" placeholder="Año" bind:value={searchFilters.year} />
-      <input type="number" placeholder="Año desde" bind:value={searchFilters.from} />
-      <input type="number" placeholder="Año hasta" bind:value={searchFilters.to} />
+    <div class="filter-group">
+      <label>País<input placeholder="País" bind:value={searchFilters.country} /></label>
+      <label>Región<input placeholder="Región" bind:value={searchFilters.region} /></label>
+      <label>Año<input type="number" placeholder="Año exacto" bind:value={searchFilters.year} /></label>
+      <label>Año desde<input type="number" placeholder="Desde" bind:value={searchFilters.from} /></label>
+      <label>Año hasta<input type="number" placeholder="Hasta" bind:value={searchFilters.to} /></label>
+    </div>
+    <div class="filter-group">
+      <label>Stunting mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_stunting} /></label>
+      <label>Stunting máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_stunting} /></label>
+      <label>Wasting mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_wasting} /></label>
+      <label>Wasting máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_wasting} /></label>
+      <label>Sobrepeso mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_overweight} /></label>
+      <label>Sobrepeso máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_overweight} /></label>
+      <label>Bajo peso mín (%)<input type="number" step="0.1" placeholder="Mín" bind:value={searchFilters.min_underweight} /></label>
+      <label>Bajo peso máx (%)<input type="number" step="0.1" placeholder="Máx" bind:value={searchFilters.max_underweight} /></label>
+    </div>
+    <div class="filter-buttons">
       <button onclick={search}>Buscar</button>
       <button onclick={clearSearch}>Limpiar filtros</button>
     </div>
@@ -162,13 +182,9 @@
     </table>
 
     <div class="pagination">
-      <button onclick={() => { page = Math.max(0, page - 1); loadData(); }} disabled={page === 0}>
-        ← Anterior
-      </button>
+      <button onclick={() => { page = Math.max(0, page - 1); loadData(); }} disabled={page === 0}>← Anterior</button>
       <span>Página: {page + 1}</span>
-      <button onclick={() => { page += 1; loadData(); }} disabled={data.length < 10}>
-        Siguiente →
-      </button>
+      <button onclick={() => { page += 1; loadData(); }} disabled={data.length < 10}>Siguiente →</button>
     </div>
   {/if}
 </main>
@@ -177,8 +193,10 @@
   main { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
   h1 { color: #1e3a5f; }
   .filters { background: #f0f4f8; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
-  .filter-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-  input { padding: 0.4rem 0.8rem; border: 1px solid #ccc; border-radius: 6px; }
+  .filter-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+  label { display: flex; flex-direction: column; font-size: 0.8rem; font-weight: bold; color: #374151; }
+  input { padding: 0.4rem 0.6rem; border: 1px solid #ccc; border-radius: 6px; width: 120px; }
+  .filter-buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
   button { padding: 0.4rem 0.9rem; border: none; border-radius: 6px; cursor: pointer; background: #2563eb; color: white; }
   button:hover { background: #1d4ed8; }
   button.danger { background: #dc2626; }
