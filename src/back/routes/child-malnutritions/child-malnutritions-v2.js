@@ -90,19 +90,19 @@ router.get("/child-malnutritions", async (req, res) => {
 
     if (req.query.stunting_rate) {
       const val = Number(req.query.stunting_rate);
-      data = data.filter(d => Math.abs(d.stunting_rate - val) < 1);
+      data = data.filter(d => d.stunting_rate === val);
     }
     if (req.query.wasting_rate) {
       const val = Number(req.query.wasting_rate);
-      data = data.filter(d => Math.abs(d.wasting_rate - val) < 1);
+      data = data.filter(d => d.wasting_rate === val);
     }
     if (req.query.overweight_rate) {
       const val = Number(req.query.overweight_rate);
-      data = data.filter(d => Math.abs(d.overweight_rate - val) < 1);
+      data = data.filter(d => d.overweight_rate === val);
     }
     if (req.query.underweight_rate) {
       const val = Number(req.query.underweight_rate);
-      data = data.filter(d => Math.abs(d.underweight_rate - val) < 1);
+      data = data.filter(d => d.underweight_rate === val);
     }
 
     const L = limit ? Number(limit) : data.length;
