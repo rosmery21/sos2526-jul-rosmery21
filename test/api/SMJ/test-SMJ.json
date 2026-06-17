@@ -12,17 +12,19 @@
       "name": "API",
       "item": [
         {
-          "name": "RESET - Delete All",
+          "name": "RESET - Delete Spain/2025",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors",
+              "raw": "{{BASE_URL}}{{BASE_API_URL}}/deaths-by-risk-factors/Spain/2025",
               "host": [
                 "{{BASE_URL}}{{BASE_API_URL}}"
               ],
               "path": [
-                "deaths-by-risk-factors"
+                "deaths-by-risk-factors",
+                "Spain",
+                "2025"
               ]
             }
           },
