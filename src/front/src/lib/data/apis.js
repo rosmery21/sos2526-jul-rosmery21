@@ -5,7 +5,7 @@ const apis = [
         recurso: 'child-malnutritions',
         frontend: '/child-malnutritions',
         api: '/api/v2/child-malnutritions',
-        docs: 'https://documenter.getpostman.com/view/53120972/2sBXiqEp7S',
+        docs: 'https://documenter.getpostman.com/view/53120972/2sBXiqE8cY',
         github: 'https://github.com/rosmery21',
         video: 'https://www.youtube.com/watch?v=FFiFUWnNiGc',
     }
