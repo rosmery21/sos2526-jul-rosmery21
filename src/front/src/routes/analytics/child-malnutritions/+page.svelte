@@ -13,7 +13,7 @@ let error = $state(null);
 onMount(async () => {
 	try {
 		await fetch('/api/v2/child-malnutritions/loadInitialData');
-		const res = await fetch('/api/v2/child-malnutritions');
+		const res = await fetch('/api/v2/child-malnutritions?limit=10000');
 		if (!res.ok) throw new Error(await res.text());
 		const json = await res.json();
 		data = json;
