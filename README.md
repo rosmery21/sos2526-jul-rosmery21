@@ -10,4 +10,3 @@
      * https://sos2526-jul-rosmery21.onrender.com/api/v1/child-malnutritions/docs (Developed by Rosmery Marculli)
   * v2
      * https://sos2526-jul-rosmery21.onrender.com/api/v2/child-malnutritions/docs (Developed by Rosmery Marculli)
-* Video: https://youtu.be/RNaLOF_jBgk
