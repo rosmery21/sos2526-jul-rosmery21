@@ -231,4 +231,8 @@ router.put("/child-malnutritions/:country/:year", async (req, res) => {
   return res.status(200).send("Updated");
 });
 
+router.get('/child-malnutritions/docs', (req, res) => {
+  res.redirect('https://documenter.getpostman.com/view/53120972/2sBXiqE8cY');
+});
+
 export default router;
