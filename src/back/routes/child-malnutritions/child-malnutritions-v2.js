@@ -108,7 +108,8 @@ router.get("/child-malnutritions", async (req, res) => {
     const L = limit ? Number(limit) : data.length;
     const O = offset ? Number(offset) : 0;
 
-    return res.status(200).json(data.slice(O, O + L));
+    const clean = data.slice(O, O + L).map(({ _id, ...rest }) => rest);
+    return res.status(200).json(clean);
 
   } catch (err) {
     return res.status(500).send(err.message);
@@ -129,7 +130,8 @@ router.get("/child-malnutritions/:country/:year", async (req, res) => {
       return res.status(404).send("Not found");
     }
 
-    return res.status(200).json(data);
+    const { _id, ...cleanData } = data;
+    return res.status(200).json(cleanData);
 
   } catch (err) {
     return res.status(500).send(err.message);

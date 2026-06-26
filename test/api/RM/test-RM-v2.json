@@ -7,53 +7,388 @@
   "item": [
     {
       "name": "DELETE ALL (RESET)",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status code is correct\", function () {","    pm.response.to.have.status(200);","});"],"type": "text/javascript"}}],
-      "request": {"method": "DELETE","header": [],"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is correct\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions"
+          ]
+        }
+      }
     },
     {
       "name": "LOAD INITIAL DATA",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status code is correct\", function () {","    pm.response.to.have.status(200);","});"],"type": "text/javascript"}}],
-      "request": {"method": "GET","header": [],"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions/loadInitialData","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions","loadInitialData"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is correct\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions/loadInitialData",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions",
+            "loadInitialData"
+          ]
+        }
+      }
     },
     {
       "name": "GET ALL",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status code is correct\", function () {","    pm.response.to.have.status(200);","});"],"type": "text/javascript"}}],
-      "request": {"method": "GET","header": [],"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is correct\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions"
+          ]
+        }
+      }
     },
     {
       "name": "POST",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status 201\", () => {","    pm.response.to.have.status(201);","});"],"type": "text/javascript"}}],
-      "request": {"method": "POST","header": [],"body": {"mode": "raw","raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 7.1,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}","options": {"raw": {"language": "json"}}},"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status 201\", () => {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 7.1,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions"
+          ]
+        }
+      }
     },
     {
       "name": "POST Copy",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status 409\", () => {","    pm.response.to.have.status(409);","});"],"type": "text/javascript"}}],
-      "request": {"method": "POST","header": [],"body": {"mode": "raw","raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 7.1,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}","options": {"raw": {"language": "json"}}},"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status 409\", () => {",
+              "    pm.response.to.have.status(409);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 7.1,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions"
+          ]
+        }
+      }
     },
     {
       "name": "GET SINGLE",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status code is correct\", function () {","    pm.response.to.have.status(200);","});"],"type": "text/javascript"}}],
-      "request": {"method": "GET","header": [],"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions","TestCountry","1800"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is correct\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions",
+            "TestCountry",
+            "1800"
+          ]
+        }
+      }
     },
     {
       "name": "PUT",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status code is correct\", function () {","    pm.response.to.have.status(200);","});"],"type": "text/javascript"}}],
-      "request": {"method": "PUT","header": [],"body": {"mode": "raw","raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 9.9,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}","options": {"raw": {"language": "json"}}},"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions","TestCountry","1800"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is correct\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1800,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 9.9,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions",
+            "TestCountry",
+            "1800"
+          ]
+        }
+      }
     },
     {
       "name": "PUT Copy",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status 400\", () => {","    pm.response.to.have.status(400);","});"],"type": "text/javascript"}}],
-      "request": {"method": "PUT","header": [],"body": {"mode": "raw","raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1801,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 9.9,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}","options": {"raw": {"language": "json"}}},"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions","TestCountry","1800"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status 400\", () => {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"country\": \"TestCountry\",\n  \"year\": 1801,\n  \"region\": \"TestRegion\",\n  \"stunting_rate\": 9.9,\n  \"wasting_rate\": 2.0,\n  \"overweight_rate\": 1.0,\n  \"underweight_rate\": 3.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions",
+            "TestCountry",
+            "1800"
+          ]
+        }
+      }
     },
     {
       "name": "DELETE ONE",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status code is correct\", function () {","    pm.response.to.have.status(204);","});"],"type": "text/javascript"}}],
-      "request": {"method": "DELETE","header": [],"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions","TestCountry","1800"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is correct\", function () {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions",
+            "TestCountry",
+            "1800"
+          ]
+        }
+      }
     },
     {
       "name": "GET NOT FOUND",
-      "event": [{"listen": "test","script": {"exec": ["pm.test(\"Status 404\", () => {","    pm.response.to.have.status(404);","});"],"type": "text/javascript"}}],
-      "request": {"method": "GET","header": [],"url": {"raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800","protocol": "http","host": ["localhost"],"port": "3000","path": ["api","v2","child-malnutritions","TestCountry","1800"]}}
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status 404\", () => {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v2/child-malnutritions/TestCountry/1800",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v2",
+            "child-malnutritions",
+            "TestCountry",
+            "1800"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FINAL RESET - Delete All",
+      "request": {
+        "method": "DELETE",
+        "url": "http://localhost:3000/api/v2/child-malnutritions"
+      },
+      "response": []
     }
   ]
 }
