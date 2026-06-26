@@ -18,7 +18,6 @@
 
 	function loadHighcharts() {
 		return new Promise((resolve, reject) => {
-			if (typeof Highcharts !== 'undefined') return resolve();
 			const script = document.createElement('script');
 			script.src = 'https://code.highcharts.com/highcharts.js';
 			script.onload = () => {
