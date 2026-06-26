@@ -42,7 +42,7 @@
 	async function loadData() {
 		const [malRes, litRes] = await Promise.all([
 			fetch('/api/v2/child-malnutritions'),
-			fetch('https://sos2526-11.onrender.com/api/v1/literacy-rates')
+			fetch('/api/v2/child-malnutritions/integrations/literacy-rates')
 		]);
 		if (!malRes.ok) throw new Error(`Error child-malnutritions: ${malRes.status}`);
 		if (!litRes.ok) throw new Error(`Error literacy-rates SOS2526-11: ${litRes.status}`);
